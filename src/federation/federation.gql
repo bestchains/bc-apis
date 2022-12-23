@@ -1,0 +1,6 @@
+# 获取联盟
+query getFederations {
+  federations {
+    name
+  }
+}
