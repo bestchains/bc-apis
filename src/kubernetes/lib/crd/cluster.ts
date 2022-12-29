@@ -1,5 +1,5 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
 /**

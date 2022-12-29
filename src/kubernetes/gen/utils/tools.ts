@@ -6,7 +6,11 @@ const _replaceSpecialName = (name: string) =>
   name
     .replace(/^VM/, 'vm')
     .replace(/^OAuth2/, 'oauth2')
-    .replace(/^TF/, 'tf');
+    .replace(/^TF/, 'tf')
+    .replace(/^IBPCA/, 'ibpca')
+    .replace(/^IBPConsole/, 'ibpconsole')
+    .replace(/^IBPOrderer/, 'ibporderer')
+    .replace(/^IBPPeer/, 'ibppeer');
 /**
  * 将命名转换为横线命名
  * TwoWords => two-words

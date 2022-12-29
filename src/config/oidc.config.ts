@@ -11,6 +11,5 @@ export default registerAs('oidc', () => ({
     // 这里填写 oidc client 的配置
     client_id: env.OIDC_SERVER_CLIENT_ID || 'bc-client',
     client_secret: env.OIDC_SERVER_CLIENT_SECRET || 'bc-secret',
-    redirect_uri: env.OIDC_REDIRECT_URL || 'http://localhost:8000', // 控制台host
   },
 }));

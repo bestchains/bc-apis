@@ -146,56 +146,56 @@ export class KubernetesService {
       authenticationV1Api,
       // ~ core
       // <replace type="core">
-pod: new lib.Pod(coreV1Api),
-node: new lib.Node(coreV1Api),
-configMap: new lib.ConfigMap(coreV1Api),
-endpoints: new lib.Endpoints(coreV1Api),
-event: new lib.Event(coreV1Api),
-limitRange: new lib.LimitRange(coreV1Api),
-namespace: new lib.Namespace(coreV1Api),
-persistentVolumeClaim: new lib.PersistentVolumeClaim(coreV1Api),
-persistentVolume: new lib.PersistentVolume(coreV1Api),
-podTemplate: new lib.PodTemplate(coreV1Api),
-replicationController: new lib.ReplicationController(coreV1Api),
-resourceQuota: new lib.ResourceQuota(coreV1Api),
-secret: new lib.Secret(coreV1Api),
-serviceAccount: new lib.ServiceAccount(coreV1Api),
-service: new lib.Service(coreV1Api),
-// </replace type="core">
+      pod: new lib.Pod(coreV1Api),
+      node: new lib.Node(coreV1Api),
+      configMap: new lib.ConfigMap(coreV1Api),
+      endpoints: new lib.Endpoints(coreV1Api),
+      event: new lib.Event(coreV1Api),
+      limitRange: new lib.LimitRange(coreV1Api),
+      namespace: new lib.Namespace(coreV1Api),
+      persistentVolumeClaim: new lib.PersistentVolumeClaim(coreV1Api),
+      persistentVolume: new lib.PersistentVolume(coreV1Api),
+      podTemplate: new lib.PodTemplate(coreV1Api),
+      replicationController: new lib.ReplicationController(coreV1Api),
+      resourceQuota: new lib.ResourceQuota(coreV1Api),
+      secret: new lib.Secret(coreV1Api),
+      serviceAccount: new lib.ServiceAccount(coreV1Api),
+      service: new lib.Service(coreV1Api),
+      // </replace type="core">
       // ~ crd
       // <replace type="crd">
-application: new lib.Application(customObjectsApi),
-cluster: new lib.Cluster(customObjectsApi),
-federation: new lib.Federation(customObjectsApi),
-iBPCA: new lib.IBPCA(customObjectsApi),
-iBPOrderer: new lib.IBPOrderer(customObjectsApi),
-iBPPeer: new lib.IBPPeer(customObjectsApi),
-network: new lib.Network(customObjectsApi),
-organization: new lib.Organization(customObjectsApi),
-proposal: new lib.Proposal(customObjectsApi),
-user: new lib.User(customObjectsApi),
-vote: new lib.Vote(customObjectsApi),
-// </replace type="crd">
+      application: new lib.Application(customObjectsApi),
+      cluster: new lib.Cluster(customObjectsApi),
+      federation: new lib.Federation(customObjectsApi),
+      ibpca: new lib.IBPCA(customObjectsApi),
+      ibporderer: new lib.IBPOrderer(customObjectsApi),
+      ibppeer: new lib.IBPPeer(customObjectsApi),
+      network: new lib.Network(customObjectsApi),
+      organization: new lib.Organization(customObjectsApi),
+      proposal: new lib.Proposal(customObjectsApi),
+      user: new lib.User(customObjectsApi),
+      vote: new lib.Vote(customObjectsApi),
+      // </replace type="crd">
       // ~ rbac
       // <replace type="rbac">
-clusterRoleBinding: new lib.ClusterRoleBinding(rbacAuthorizationV1Api),
-clusterRole: new lib.ClusterRole(rbacAuthorizationV1Api),
-roleBinding: new lib.RoleBinding(rbacAuthorizationV1Api),
-role: new lib.Role(rbacAuthorizationV1Api),
-// </replace type="rbac">
+      clusterRoleBinding: new lib.ClusterRoleBinding(rbacAuthorizationV1Api),
+      clusterRole: new lib.ClusterRole(rbacAuthorizationV1Api),
+      roleBinding: new lib.RoleBinding(rbacAuthorizationV1Api),
+      role: new lib.Role(rbacAuthorizationV1Api),
+      // </replace type="rbac">
       // ~ apps
       // <replace type="apps">
-controllerRevision: new lib.ControllerRevision(appsV1Api),
-daemonSet: new lib.DaemonSet(appsV1Api),
-deployment: new lib.Deployment(appsV1Api),
-replicaSet: new lib.ReplicaSet(appsV1Api),
-statefulSet: new lib.StatefulSet(appsV1Api),
-// </replace type="apps">
+      controllerRevision: new lib.ControllerRevision(appsV1Api),
+      daemonSet: new lib.DaemonSet(appsV1Api),
+      deployment: new lib.Deployment(appsV1Api),
+      replicaSet: new lib.ReplicaSet(appsV1Api),
+      statefulSet: new lib.StatefulSet(appsV1Api),
+      // </replace type="apps">
       // ~ batch
       // <replace type="batch">
-cronJob: new lib.CronJob(batchV1Api),
-job: new lib.Job(batchV1Api),
-// </replace type="batch">
+      cronJob: new lib.CronJob(batchV1Api),
+      job: new lib.Job(batchV1Api),
+      // </replace type="batch">
     };
   }
 }

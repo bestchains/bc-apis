@@ -1,5 +1,5 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
 /* tslint:disable */
@@ -65,7 +65,7 @@ export interface Cluster {
     /**
      * SyncMode describes how a cluster sync resources from karmada control plane.
      */
-    syncMode: "Push" | "Pull";
+    syncMode: 'Push' | 'Pull';
     /**
      * Taints attached to the member cluster. Taints on the cluster have the "effect" on any resource that does not tolerate the Taint.
      */
@@ -145,7 +145,7 @@ export interface Cluster {
       /**
        * status of the condition, one of True, False, Unknown.
        */
-      status: "True" | "False" | "Unknown";
+      status: 'True' | 'False' | 'Unknown';
       /**
        * type of condition in CamelCase or in foo.example.com/CamelCase. --- Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be useful (see .node.status.conditions), the ability to deconflict is important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
        */

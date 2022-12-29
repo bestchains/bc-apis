@@ -7,6 +7,7 @@ import { UsersService } from './users/users.service';
 import { IS_PROD, K8S_SA_TOKEN_PATH, USER_GROUPS } from './common/utils';
 import kubernetesConfig from './config/kubernetes.config';
 import { readFileSync } from 'fs';
+import { GetTokenDto } from './common/models/get-token.dto';
 
 @Injectable()
 export class AppService {
@@ -23,9 +24,9 @@ export class AppService {
     return 'bc-apis is running.';
   }
 
-  getOidcAuthUrl() {
+  getOidcAuthUrl(redirect_uri: string) {
     const {
-      client: { client_id, redirect_uri },
+      client: { client_id },
       server: { url },
     } = this.oidc;
     const searchParams = new URLSearchParams({
@@ -37,9 +38,10 @@ export class AppService {
     return url + '/auth?' + searchParams.toString();
   }
 
-  async getOidcToken(code: string) {
+  async getOidcToken(tokenDto: GetTokenDto) {
+    const { code, redirect_uri } = tokenDto;
     const {
-      client: { client_id, client_secret, redirect_uri },
+      client: { client_id, client_secret },
       server: { url },
     } = this.oidc;
     const res = await urllib.request(url + '/token', {

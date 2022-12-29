@@ -1,8 +1,7 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
-
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -49,7 +48,11 @@ export class ReplicationController {
    * @param {K8s.V1ReplicationController} body ReplicationController 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  create(namespace: string, body: K8s.V1ReplicationController, options?: CreateOptions) {
+  create(
+    namespace: string,
+    body: K8s.V1ReplicationController,
+    options?: CreateOptions,
+  ) {
     this.debug('[create]', body, options);
     const { pretty, dryRun, fieldManager, fieldValidation, headers } =
       options || {};
@@ -288,7 +291,12 @@ export class ReplicationController {
   read(name: string, namespace: string, options?: ReadOptions) {
     this.debug(`[read] ns:${namespace} => ${name}`, options);
     const { pretty, headers } = options || {};
-    return this.k8sApi.readNamespacedReplicationController(name, namespace, pretty, { headers });
+    return this.k8sApi.readNamespacedReplicationController(
+      name,
+      namespace,
+      pretty,
+      { headers },
+    );
   }
 
   /**

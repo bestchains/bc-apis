@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Redirect } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Redirect } from '@nestjs/common';
 import { AppService } from './app.service';
+import { GetTokenDto } from './common/models/get-token.dto';
 
 @Controller()
 export class AppController {
@@ -10,22 +11,19 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  // 1. 前端判断token不存在，调用/login
   @Get('/login')
   @Redirect()
-  login() {
-    const redirectUrl = this.appService.getOidcAuthUrl();
+  login(@Query('redirect_uri') redirect_uri: string) {
+    const redirectUrl = this.appService.getOidcAuthUrl(redirect_uri);
     return {
       url: redirectUrl,
       statusCode: 303,
     };
   }
 
-  // 2. localhost:8000/?code 存在code时，就去调用/token?code
-  // 3. 得到token，存入local storage
-  @Get('/token')
-  async token(@Query('code') code: string) {
-    const token = await this.appService.getOidcToken(code);
+  @Post('/token')
+  async token(@Body() tokenDto: GetTokenDto) {
+    const token = await this.appService.getOidcToken(tokenDto);
     const { preferred_username } = this.appService.decodeToken(token.id_token);
     await this.appService.updateUserGroup({
       name: preferred_username,

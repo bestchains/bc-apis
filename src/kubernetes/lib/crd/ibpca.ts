@@ -1,5 +1,5 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
 /**
@@ -26,17 +26,17 @@ import {
   STRATEGIC_MERGE_PATCH_CONTENT_TYPE,
 } from '../utils/constants';
 
-export const I_B_P_PEER_CRD_SPEC = {
-  kind: 'IBPPeer',
-  listKind: 'IBPPeerList',
-  plural: 'ibppeers',
-  singular: 'ibppeer',
+export const IBPCA_CRD_SPEC = {
+  kind: 'IBPCA',
+  listKind: 'IBPCAList',
+  plural: 'ibpcas',
+  singular: 'ibpca',
   scope: 'Namespaced',
   group: 'ibp.com',
   version: 'v1beta1',
 };
 
-const { kind, group, version, plural } = I_B_P_PEER_CRD_SPEC;
+const { kind, group, version, plural } = IBPCA_CRD_SPEC;
 const DEFAULT_BODY = {
   kind,
   apiVersion: `${group}/${version}`,
@@ -45,7 +45,7 @@ const DEFAULT_BODY = {
 /**
  * @category crd
  */
-export class IBPPeer {
+export class IBPCA {
   constructor(private readonly k8sApi: K8s.CustomObjectsApi) {}
 
   kind = kind;
@@ -64,13 +64,13 @@ export class IBPPeer {
   }
 
   /**
-   * 创建 IBPPeer
+   * 创建 IBPCA
    *
    * @param {string} namespace 命名空间
-   * @param {CRD.IBPPeer} body IBPPeer 对象
+   * @param {CRD.IBPCA} body IBPCA 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  create(namespace: string, body: CRD.IBPPeer, options?: CreateOptions) {
+  create(namespace: string, body: CRD.IBPCA, options?: CreateOptions) {
     this.debug('[create]', body, options);
     const { pretty, dryRun, fieldManager, headers } = options || {};
     return this.k8sApi.createNamespacedCustomObject(
@@ -85,22 +85,22 @@ export class IBPPeer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 替换指定的 IBPPeer
+   * 替换指定的 IBPCA
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
-   * @param {CRD.IBPPeer} body IBPPeer 对象
+   * @param {CRD.IBPCA} body IBPCA 对象
    * @param {CreateOptions} [options] 可选配置项
    */
   replace(
     name: string,
     namespace: string,
-    body: CRD.IBPPeer,
+    body: CRD.IBPCA,
     options?: CreateOptions,
   ) {
     this.debug(`[replace] ns:${namespace} => ${name}`, body, options);
@@ -117,16 +117,16 @@ export class IBPPeer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPPeer (JSON Patch)
+   * 部分更新指定的 IBPCA (JSON Patch)
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
-   * @param {JsonPatchOp[]} body IBPPeer 对象
+   * @param {JsonPatchOp[]} body IBPCA 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patch(
@@ -154,16 +154,16 @@ export class IBPPeer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPPeer (Merge Patch)
+   * 部分更新指定的 IBPCA (Merge Patch)
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
-   * @param {object} body IBPPeer 对象
+   * @param {object} body IBPCA 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patchMerge(
@@ -191,16 +191,16 @@ export class IBPPeer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPPeer (Strategic Merge Patch)
+   * 部分更新指定的 IBPCA (Strategic Merge Patch)
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
-   * @param {object} body IBPPeer 对象
+   * @param {object} body IBPCA 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patchStrategicMerge(
@@ -232,14 +232,14 @@ export class IBPPeer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 根据名称删除一个  IBPPeer
+   * 根据名称删除一个  IBPCA
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
    * @param {DeleteOptions} [options] 可选配置项
    */
@@ -267,12 +267,12 @@ export class IBPPeer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 根据选择器删除多个 IBPPeer
+   * 根据选择器删除多个 IBPCA
    *
    * @param {string} namespace 命名空间
    * @param {DeleteCollectionOptions} [options] 可选配置项
@@ -307,9 +307,9 @@ export class IBPPeer {
   }
 
   /**
-   * 根据名称获取 IBPPeer 详情 (指定 namespace 下)
+   * 根据名称获取 IBPCA 详情 (指定 namespace 下)
    *
-   * @param {string} name IBPPeer 名称
+   * @param {string} name IBPCA 名称
    * @param {string} namespace 命名空间
    * @param {ListOptions} [options] 可选配置项
    */
@@ -325,12 +325,12 @@ export class IBPPeer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeer;
+      body: CRD.IBPCA;
     }>;
   }
 
   /**
-   * 列取 IBPPeer 列表
+   * 列取 IBPCA 列表
    *
    * @param {string} namespace 命名空间
    * @param {ListOptions} [options] 可选配置项
@@ -368,7 +368,7 @@ export class IBPPeer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPPeerList;
+      body: CRD.IBPCAList;
     }>;
   }
 }

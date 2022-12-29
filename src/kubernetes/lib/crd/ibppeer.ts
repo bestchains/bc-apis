@@ -1,5 +1,5 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
 /**
@@ -26,17 +26,17 @@ import {
   STRATEGIC_MERGE_PATCH_CONTENT_TYPE,
 } from '../utils/constants';
 
-export const I_B_P_ORDERER_CRD_SPEC = {
-  kind: 'IBPOrderer',
-  listKind: 'IBPOrdererList',
-  plural: 'ibporderers',
-  singular: 'ibporderer',
+export const IBPPEER_CRD_SPEC = {
+  kind: 'IBPPeer',
+  listKind: 'IBPPeerList',
+  plural: 'ibppeers',
+  singular: 'ibppeer',
   scope: 'Namespaced',
   group: 'ibp.com',
   version: 'v1beta1',
 };
 
-const { kind, group, version, plural } = I_B_P_ORDERER_CRD_SPEC;
+const { kind, group, version, plural } = IBPPEER_CRD_SPEC;
 const DEFAULT_BODY = {
   kind,
   apiVersion: `${group}/${version}`,
@@ -45,7 +45,7 @@ const DEFAULT_BODY = {
 /**
  * @category crd
  */
-export class IBPOrderer {
+export class IBPPeer {
   constructor(private readonly k8sApi: K8s.CustomObjectsApi) {}
 
   kind = kind;
@@ -64,13 +64,13 @@ export class IBPOrderer {
   }
 
   /**
-   * 创建 IBPOrderer
+   * 创建 IBPPeer
    *
    * @param {string} namespace 命名空间
-   * @param {CRD.IBPOrderer} body IBPOrderer 对象
+   * @param {CRD.IBPPeer} body IBPPeer 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  create(namespace: string, body: CRD.IBPOrderer, options?: CreateOptions) {
+  create(namespace: string, body: CRD.IBPPeer, options?: CreateOptions) {
     this.debug('[create]', body, options);
     const { pretty, dryRun, fieldManager, headers } = options || {};
     return this.k8sApi.createNamespacedCustomObject(
@@ -85,22 +85,22 @@ export class IBPOrderer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 替换指定的 IBPOrderer
+   * 替换指定的 IBPPeer
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
-   * @param {CRD.IBPOrderer} body IBPOrderer 对象
+   * @param {CRD.IBPPeer} body IBPPeer 对象
    * @param {CreateOptions} [options] 可选配置项
    */
   replace(
     name: string,
     namespace: string,
-    body: CRD.IBPOrderer,
+    body: CRD.IBPPeer,
     options?: CreateOptions,
   ) {
     this.debug(`[replace] ns:${namespace} => ${name}`, body, options);
@@ -117,16 +117,16 @@ export class IBPOrderer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPOrderer (JSON Patch)
+   * 部分更新指定的 IBPPeer (JSON Patch)
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
-   * @param {JsonPatchOp[]} body IBPOrderer 对象
+   * @param {JsonPatchOp[]} body IBPPeer 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patch(
@@ -154,16 +154,16 @@ export class IBPOrderer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPOrderer (Merge Patch)
+   * 部分更新指定的 IBPPeer (Merge Patch)
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
-   * @param {object} body IBPOrderer 对象
+   * @param {object} body IBPPeer 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patchMerge(
@@ -191,16 +191,16 @@ export class IBPOrderer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 部分更新指定的 IBPOrderer (Strategic Merge Patch)
+   * 部分更新指定的 IBPPeer (Strategic Merge Patch)
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
-   * @param {object} body IBPOrderer 对象
+   * @param {object} body IBPPeer 对象
    * @param {PatchOptions} [options] 可选配置项
    */
   patchStrategicMerge(
@@ -232,14 +232,14 @@ export class IBPOrderer {
       },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 根据名称删除一个  IBPOrderer
+   * 根据名称删除一个  IBPPeer
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
    * @param {DeleteOptions} [options] 可选配置项
    */
@@ -267,12 +267,12 @@ export class IBPOrderer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 根据选择器删除多个 IBPOrderer
+   * 根据选择器删除多个 IBPPeer
    *
    * @param {string} namespace 命名空间
    * @param {DeleteCollectionOptions} [options] 可选配置项
@@ -307,9 +307,9 @@ export class IBPOrderer {
   }
 
   /**
-   * 根据名称获取 IBPOrderer 详情 (指定 namespace 下)
+   * 根据名称获取 IBPPeer 详情 (指定 namespace 下)
    *
-   * @param {string} name IBPOrderer 名称
+   * @param {string} name IBPPeer 名称
    * @param {string} namespace 命名空间
    * @param {ListOptions} [options] 可选配置项
    */
@@ -325,12 +325,12 @@ export class IBPOrderer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrderer;
+      body: CRD.IBPPeer;
     }>;
   }
 
   /**
-   * 列取 IBPOrderer 列表
+   * 列取 IBPPeer 列表
    *
    * @param {string} namespace 命名空间
    * @param {ListOptions} [options] 可选配置项
@@ -368,7 +368,7 @@ export class IBPOrderer {
       { headers },
     ) as Promise<{
       response: http.IncomingMessage;
-      body: CRD.IBPOrdererList;
+      body: CRD.IBPPeerList;
     }>;
   }
 }

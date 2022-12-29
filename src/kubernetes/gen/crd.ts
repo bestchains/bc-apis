@@ -23,7 +23,7 @@ const CRD_LIST = [
   'votes.ibp.com',
   'ibpcas.ibp.com',
   'ibporderers.ibp.com',
-  'ibppeers.ibp.com'
+  'ibppeers.ibp.com',
 ];
 
 const ClusterCrdTemplate = fs

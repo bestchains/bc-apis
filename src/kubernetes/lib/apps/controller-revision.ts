@@ -1,8 +1,7 @@
 /**
-  * 由 src/kubernetes/gen/index.ts 自动生成
+ * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
-
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -31,7 +30,8 @@ export class ControllerRevision {
   kind = 'ControllerRevision';
   name = 'controllerrevisions';
   namespaced = true;
-  group = 'apps'; version = 'v1';
+  group = 'apps';
+  version = 'v1';
   logger = new Logger(this.kind);
 
   debug(message: string, ...optionalParams: [...any, string?]) {
@@ -49,7 +49,11 @@ export class ControllerRevision {
    * @param {K8s.V1ControllerRevision} body ControllerRevision 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  create(namespace: string, body: K8s.V1ControllerRevision, options?: CreateOptions) {
+  create(
+    namespace: string,
+    body: K8s.V1ControllerRevision,
+    options?: CreateOptions,
+  ) {
     this.debug('[create]', body, options);
     const { pretty, dryRun, fieldManager, fieldValidation, headers } =
       options || {};
@@ -288,7 +292,12 @@ export class ControllerRevision {
   read(name: string, namespace: string, options?: ReadOptions) {
     this.debug(`[read] ns:${namespace} => ${name}`, options);
     const { pretty, headers } = options || {};
-    return this.k8sApi.readNamespacedControllerRevision(name, namespace, pretty, { headers });
+    return this.k8sApi.readNamespacedControllerRevision(
+      name,
+      namespace,
+      pretty,
+      { headers },
+    );
   }
 
   /**
