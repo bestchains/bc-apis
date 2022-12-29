@@ -4,6 +4,8 @@ export const IS_PROD = env.NODE_ENV === 'production';
 
 export const LOG_LEVELS = env.LOG_LEVELS || 'log,error,warn';
 
+export const USER_GROUPS = ['blockchain'];
+
 /** k8s 注入到 pod 中的 service account token 路径 */
 export const K8S_SA_TOKEN_PATH =
   '/var/run/secrets/kubernetes.io/serviceaccount/token';

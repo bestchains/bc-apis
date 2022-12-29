@@ -1,4 +1,11 @@
 export { Application } from './application';
 export { Cluster } from './cluster';
 export { Federation } from './federation';
+export { IBPCA } from './ibpca';
+export { IBPOrderer } from './ibporderer';
+export { IBPPeer } from './ibppeer';
+export { Network } from './network';
+export { Organization } from './organization';
+export { Proposal } from './proposal';
 export { User } from './user';
+export { Vote } from './vote';

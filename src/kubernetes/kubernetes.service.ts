@@ -167,7 +167,14 @@ export class KubernetesService {
       application: new lib.Application(customObjectsApi),
       cluster: new lib.Cluster(customObjectsApi),
       federation: new lib.Federation(customObjectsApi),
+      ibpca: new lib.IBPCA(customObjectsApi),
+      ibporderer: new lib.IBPOrderer(customObjectsApi),
+      ibppeer: new lib.IBPPeer(customObjectsApi),
+      network: new lib.Network(customObjectsApi),
+      organization: new lib.Organization(customObjectsApi),
+      proposal: new lib.Proposal(customObjectsApi),
       user: new lib.User(customObjectsApi),
+      vote: new lib.Vote(customObjectsApi),
       // </replace type="crd">
       // ~ rbac
       // <replace type="rbac">

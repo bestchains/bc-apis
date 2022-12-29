@@ -17,6 +17,13 @@ const CRD_LIST = [
   'users.iam.tenxcloud.com',
   'clusters.cluster.karmada.io',
   'federations.ibp.com',
+  'organizations.ibp.com',
+  'networks.ibp.com',
+  'proposals.ibp.com',
+  'votes.ibp.com',
+  'ibpcas.ibp.com',
+  'ibporderers.ibp.com',
+  'ibppeers.ibp.com',
 ];
 
 const ClusterCrdTemplate = fs

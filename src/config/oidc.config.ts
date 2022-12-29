@@ -1,18 +1,15 @@
 import { registerAs } from '@nestjs/config';
-import { IS_PROD } from 'src/common/utils/constants';
 
 const { env } = process;
 
 export default registerAs('oidc', () => ({
   server: {
-    url:
-      env.DEX_SERVER_URL ||
-      (IS_PROD
-        ? 'http://oidc-server:5556/oidc' // 生产环境
-        : 'https://portal.172.22.50.142.nip.io/oidc'), // 本地调试 172.31.235.225:5556
-    rootSecretToken: ``,
+    // 这里填写 bff-server 的配置
+    url: env.OIDC_SERVER_URL || 'https://portal.172.22.50.142.nip.io/oidc',
   },
-  connector: {
-    id: env.DEX_CONNECTOR_ID || 'k8scrd',
+  client: {
+    // 这里填写 oidc client 的配置
+    client_id: env.OIDC_SERVER_CLIENT_ID || 'bc-client',
+    client_secret: env.OIDC_SERVER_CLIENT_SECRET || 'bc-secret',
   },
 }));

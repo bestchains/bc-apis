@@ -42,3 +42,21 @@ export const genUserLogString = (req: Request) => {
   }
   return `${userRoleIp} [${__reqId}] ${method} ${baseUrl} ${operationName}`;
 };
+
+/**
+ * 首字母大写
+ */
+export const initialToUpperCase = (value: string) =>
+  (value || '').replace(/^(\w)/, (_, $0) => $0.toUpperCase());
+
+/**
+ * Base64 转码 encode
+ */
+export const encodeBase64 = (value: string) =>
+  Buffer.from(value || '').toString('base64');
+
+/**
+ * Base64 转码 decode
+ */
+export const decodeBase64 = (value: string) =>
+  Buffer.from(value || '', 'base64').toString('utf-8');

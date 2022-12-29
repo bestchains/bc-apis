@@ -1,0 +1,23 @@
+# 获取提议列表
+query getProposals($type: String) {
+  proposals(type: $type) {
+    name
+    creationTimestamp
+    endAt
+    type
+    policy
+    status
+  }
+}
+
+# 获取提议详情
+query getProposal($name: String!) {
+  proposal(name: $name) {
+    name
+    creationTimestamp
+    endAt
+    type
+    policy
+    status
+  }
+}
