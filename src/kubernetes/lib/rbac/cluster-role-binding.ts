@@ -1,7 +1,8 @@
 /**
- * 由 src/kubernetes/gen/index.ts 自动生成
+  * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
+
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -30,8 +31,7 @@ export class ClusterRoleBinding {
   kind = 'ClusterRoleBinding';
   name = 'clusterrolebindings';
   namespaced = false;
-  group = 'rbac.authorization.k8s.io';
-  version = 'v1';
+  group = 'rbac.authorization.k8s.io'; version = 'v1';
   logger = new Logger(this.kind);
 
   debug(message: string, ...optionalParams: [...any, string?]) {
@@ -71,11 +71,7 @@ export class ClusterRoleBinding {
    * @param {K8s.V1ClusterRoleBinding} body ClusterRoleBinding 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  replace(
-    name: string,
-    body: K8s.V1ClusterRoleBinding,
-    options?: CreateOptions,
-  ) {
+  replace(name: string, body: K8s.V1ClusterRoleBinding, options?: CreateOptions) {
     this.debug(`[replace] ${name}`, body, options);
     const { pretty, dryRun, fieldManager, fieldValidation, headers } =
       options || {};

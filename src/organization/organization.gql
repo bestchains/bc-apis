@@ -1,0 +1,32 @@
+# 获取组织列表
+query getOrganizations($admin: String) {
+  organizations(admin: $admin) {
+    name
+    displayName
+    creationTimestamp
+    admin
+    status
+  }
+}
+
+# 组织详情
+query getOrganization($name: String!) {
+  organization(name: $name) {
+    name
+    displayName
+    creationTimestamp
+    admin
+    status
+  }
+}
+
+# 创建组织
+mutation createOrganization($organization: NewOrganizationInput!) {
+  organizationCreate(organization: $organization) {
+    name
+    displayName
+    creationTimestamp
+    admin
+    status
+  }
+}

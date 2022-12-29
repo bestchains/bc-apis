@@ -1,7 +1,8 @@
 /**
- * 由 src/kubernetes/gen/index.ts 自动生成
+  * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
+
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -30,8 +31,7 @@ export class Role {
   kind = 'Role';
   name = 'roles';
   namespaced = true;
-  group = 'rbac.authorization.k8s.io';
-  version = 'v1';
+  group = 'rbac.authorization.k8s.io'; version = 'v1';
   logger = new Logger(this.kind);
 
   debug(message: string, ...optionalParams: [...any, string?]) {

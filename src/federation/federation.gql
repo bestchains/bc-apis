@@ -1,4 +1,4 @@
-# 获取联盟
+# 联盟列表
 query getFederations {
   federations {
     name

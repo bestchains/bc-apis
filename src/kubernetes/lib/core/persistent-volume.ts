@@ -1,7 +1,8 @@
 /**
- * 由 src/kubernetes/gen/index.ts 自动生成
+  * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
+
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';

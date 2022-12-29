@@ -8,11 +8,15 @@ import { FederationModule } from './federation/federation.module';
 import { ConfigModule } from '@nestjs/config';
 import kubernetesConfig from './config/kubernetes.config';
 import oidcConfig from './config/oidc.config';
+import iamProviderConfig from './config/iam-provider.config';
 import { JwtMiddleware } from './common/middleware/jwt.middleware';
 import { KubernetesModule } from './kubernetes/kubernetes.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { LoggingPlugin } from './common/plugins/logging.plugin';
+import { UsersModule } from './users/users.module';
+import { OrganizationModule } from './organization/organization.module';
+import { ProposalModule } from './proposal/proposal.module';
 
 const GRAPHQL_PATH = '/bff';
 
@@ -44,11 +48,14 @@ const GRAPHQL_PATH = '/bff';
       },
     }),
     ConfigModule.forRoot({
-      load: [kubernetesConfig, oidcConfig],
+      load: [kubernetesConfig, oidcConfig, iamProviderConfig],
       isGlobal: true,
     }),
     KubernetesModule,
     FederationModule,
+    UsersModule,
+    OrganizationModule,
+    ProposalModule,
   ],
   controllers: [AppController],
   providers: [

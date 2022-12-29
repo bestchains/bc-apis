@@ -1,7 +1,8 @@
 /**
- * 由 src/kubernetes/gen/index.ts 自动生成
+  * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
+
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -48,11 +49,7 @@ export class ResourceQuota {
    * @param {K8s.V1ResourceQuota} body ResourceQuota 对象
    * @param {CreateOptions} [options] 可选配置项
    */
-  create(
-    namespace: string,
-    body: K8s.V1ResourceQuota,
-    options?: CreateOptions,
-  ) {
+  create(namespace: string, body: K8s.V1ResourceQuota, options?: CreateOptions) {
     this.debug('[create]', body, options);
     const { pretty, dryRun, fieldManager, fieldValidation, headers } =
       options || {};
@@ -291,9 +288,7 @@ export class ResourceQuota {
   read(name: string, namespace: string, options?: ReadOptions) {
     this.debug(`[read] ns:${namespace} => ${name}`, options);
     const { pretty, headers } = options || {};
-    return this.k8sApi.readNamespacedResourceQuota(name, namespace, pretty, {
-      headers,
-    });
+    return this.k8sApi.readNamespacedResourceQuota(name, namespace, pretty, { headers });
   }
 
   /**

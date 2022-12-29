@@ -1,7 +1,8 @@
 /**
- * 由 src/kubernetes/gen/index.ts 自动生成
+  * 由 src/kubernetes/gen/index.ts 自动生成
  * !!! 请不要修改 !!!
  */
+
 
 import { Logger } from '@nestjs/common';
 import * as K8s from '@kubernetes/client-node';
@@ -229,6 +230,8 @@ export class Service {
     );
   }
 
+  
+
   /**
    * 根据名称获取 Service 详情 (指定 namespace 下)
    *
@@ -238,9 +241,7 @@ export class Service {
   read(name: string, namespace: string, options?: ReadOptions) {
     this.debug(`[read] ns:${namespace} => ${name}`, options);
     const { pretty, headers } = options || {};
-    return this.k8sApi.readNamespacedService(name, namespace, pretty, {
-      headers,
-    });
+    return this.k8sApi.readNamespacedService(name, namespace, pretty, { headers });
   }
 
   /**

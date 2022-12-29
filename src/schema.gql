@@ -8,7 +8,131 @@ type Federation {
   name: ID!
 }
 
+type Mutation {
+  """新增组织"""
+  organizationCreate(organization: NewOrganizationInput!): Organization!
+}
+
+input NewOrganizationInput {
+  """描述"""
+  description: String
+
+  """展示名"""
+  displayName: String
+
+  """组织名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?）"""
+  name: String!
+}
+
+"""组织"""
+type Organization {
+  """管理员"""
+  admin: String
+
+  """创建时间"""
+  creationTimestamp: String!
+
+  """名称"""
+  displayName: String
+
+  """name"""
+  name: ID!
+
+  """状态"""
+  status: StatusType
+}
+
+"""提议策略"""
+enum Policy {
+  """"""
+  All
+
+  """"""
+  Majority
+
+  """"""
+  OneVoteVeto
+}
+
+type Proposal {
+  """创建时间"""
+  creationTimestamp: String!
+
+  """截止时间"""
+  endAt: String
+
+  """name"""
+  name: ID!
+
+  """提议策略"""
+  policy: Policy
+
+  """当前状态"""
+  status: StatusPhase
+
+  """提议类型"""
+  type: String
+}
+
 type Query {
   """项目列表"""
   federations: [Federation!]!
+
+  """组织详情"""
+  organization(name: String!): Organization!
+
+  """组织列表"""
+  organizations(admin: String): [Organization!]!
+
+  """提议详情"""
+  proposal(name: String): Proposal!
+
+  """提议列表"""
+  proposals(type: String): [Proposal!]!
+}
+
+"""「提议」状态"""
+enum StatusPhase {
+  """proposal has been finished"""
+  Finished
+
+  """
+  the pod has been accepted by the system, but not all vote has been created
+  """
+  Pending
+
+  """all votes has been created, waiting vote by administrator"""
+  Voting
+}
+
+"""「组织」状态"""
+enum StatusType {
+  """Created is the status when component is created successfully"""
+  Created
+
+  """
+  Deployed is the status when the component's deployment is done successfully
+  """
+  Deployed
+
+  """Deploying is the status when component is being deployed"""
+  Deploying
+
+  """
+  Error is the status when a component's deployment has failed due to an error
+  """
+  Error
+
+  """Initializing is the status when a component is initializing"""
+  Initializing
+
+  """
+  Precreated is the status of the orderers when they are waiting for config block
+  """
+  Precreated
+
+  """
+  Warning is the status when a component is running, but will fail in future
+  """
+  Warning
 }
