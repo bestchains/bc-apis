@@ -1,0 +1,8 @@
+FROM --platform=linux/amd64 node:18.2-alpine
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+COPY pnpm-lock.yaml /usr/src/app/
+RUN npm i pnpm @antfu/ni -g && ni

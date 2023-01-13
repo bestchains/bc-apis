@@ -23,7 +23,6 @@ export class AppService {
       client_id,
       redirect_uri,
       response_type: 'code',
-      scope: 'openid profile email offline_access',
     });
     return url + '/auth?' + searchParams.toString();
   }

@@ -1,0 +1,12 @@
+FROM 172.22.50.223/fabric/bc-apis:base-1.0 as builder
+
+ENV NODE_ENV production
+
+COPY . /usr/src/app/
+
+RUN nr build
+
+FROM busybox
+COPY --from=builder /usr/src/app/dist /build-files/app/dist
+COPY --from=builder /usr/src/app/public /build-files/app/public
+COPY --from=builder /usr/src/app/src/kubernetes/docs /builder-files/app/public/kubernetes/
