@@ -3,6 +3,7 @@ import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
 import { NewOrganizationInput } from './dto/new-organization.input';
+import { UpdateOrganization } from './dto/update-organization.input';
 import { Organization } from './models/organization.model';
 
 @Injectable()
@@ -14,12 +15,18 @@ export class OrganizationService {
   format(org: CRD.Organization): Organization {
     return {
       name: org.metadata.name,
-      displayName: org.metadata?.annotations?.displayName,
+      displayName: org.spec?.displayName,
+      description: org.spec?.description,
       creationTimestamp: new Date(
         org.metadata?.creationTimestamp,
       ).toISOString(),
+      lastHeartbeatTime: org.status?.lastHeartbeatTime
+        ? new Date(org.status?.lastHeartbeatTime).toISOString()
+        : null,
       admin: org.spec?.admin,
       status: org.status?.type,
+      reason: org.status?.reason,
+      clients: org.spec?.clients,
     };
   }
 
@@ -29,7 +36,7 @@ export class OrganizationService {
   ): Promise<Organization[]> {
     const labelSelector = [];
     if (admin) {
-      labelSelector.push(`organization.admin=${admin}`);
+      labelSelector.push(`bestchains.organization.admin=${admin}`);
     }
     const k8s = await this.k8sService.getClient(auth);
     const { body: orgs } = await k8s.organization.list({
@@ -48,14 +55,77 @@ export class OrganizationService {
     auth: JwtAuth,
     org: NewOrganizationInput,
   ): Promise<Organization> {
+    const { name, displayName, description } = org;
+    const { preferred_username } = auth;
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.organization.create({
       metadata: {
-        name: org.name,
-        annotations: {
-          displayName: org.displayName,
-          description: org.description,
+        name,
+      },
+      spec: {
+        admin: preferred_username,
+        displayName,
+        description,
+        license: {
+          accept: true,
         },
+        caSpec: {
+          version: '1.5.5',
+          license: {
+            accept: true,
+          },
+          images: {
+            caImage: 'hyperledgerk8s/fabric-ca',
+            caTag: '1.5.5-iam',
+            caInitImage: 'hyperledgerk8s/ubi-minimal',
+            caInitTag: 'latest',
+          },
+          resources: {
+            ca: {
+              limits: {
+                cpu: '100m',
+                memory: '200M',
+              },
+              requests: {
+                cpu: '10m',
+                memory: '10M',
+              },
+            },
+            init: {
+              limits: {
+                cpu: '100m',
+                memory: '200M',
+              },
+              requests: {
+                cpu: '10m',
+                memory: '10M',
+              },
+            },
+          },
+          storage: {
+            ca: {
+              class: 'standard',
+              size: '100M',
+            },
+          },
+        },
+      },
+    });
+    return this.format(body);
+  }
+
+  // TODO: 增加权限校验（只有组织管理员才能patch/update）
+  async updateOrganization(
+    auth: JwtAuth,
+    name: string,
+    org: UpdateOrganization,
+  ): Promise<Organization> {
+    const { users, admin } = org;
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.organization.patchMerge(name, {
+      spec: {
+        clients: users,
+        admin,
       },
     });
     return this.format(body);

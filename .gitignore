@@ -36,3 +36,7 @@ lerna-debug.log*
 
 # graphql-codegen
 static/client-sdk
+
+# build files
+/public/*
+/src/kubernetes/docs/*

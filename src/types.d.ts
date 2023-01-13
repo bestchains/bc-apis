@@ -27,10 +27,6 @@ export interface Request extends ExpressReq {
   __reqId?: string;
 }
 
-export interface Labels {
-  [k: string]: string;
-}
-
 export interface AnyObj {
   [k: string]: any;
 }

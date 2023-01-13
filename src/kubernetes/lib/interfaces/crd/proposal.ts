@@ -48,6 +48,10 @@ export interface Proposal {
     dissolveFederation?: {
       [k: string]: any;
     };
+    dissolveNetwork?: {
+      name: string;
+      [k: string]: any;
+    };
     endAt?: string;
     federation: string;
     initiator: {
@@ -104,6 +108,8 @@ export interface Proposal {
     votes?: {
       decision?: boolean;
       description: string;
+      name?: string;
+      namespace?: string;
       organization: {
         name?: string;
         namespace?: string;
@@ -113,7 +119,7 @@ export interface Proposal {
        * VotePhase is a label for the condition of a vote at the current time.
        */
       phase?: string;
-      startTime?: string;
+      voteTime?: string;
       [k: string]: any;
     }[];
     [k: string]: any;

@@ -52,6 +52,13 @@ export class UsersService {
     return res;
   }
 
+  async getUsers(auth: JwtAuth): Promise<User[]> {
+    const { data } = await this.callIamApi(`/user`, auth, {
+      method: 'GET',
+    });
+    return data;
+  }
+
   async getUserByName(auth: PickJwtAuth, name: string): Promise<User> {
     const { data } = await this.callIamApi(`/user/${name}`, auth, {
       method: 'GET',

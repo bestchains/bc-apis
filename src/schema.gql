@@ -4,13 +4,150 @@
 
 """联盟"""
 type Federation {
-  """联盟 name"""
+  """创建时间"""
+  creationTimestamp: String!
+
+  """描述"""
+  description: String
+
+  """发起者"""
+  initiator: Organization
+
+  """加入时间（当前用户所属组织加入此联盟的时间）"""
+  joinedAt: String
+
+  """name"""
   name: ID!
+
+  """网络个数"""
+  networks: [Network!]
+
+  """组织"""
+  organizations: [Organization!]
+
+  """提议策略"""
+  policy: ProposalPolicy
 }
 
 type Mutation {
+  """向联盟中添加组织（返回true：只表示这个操作触发成功，而不是添加组织成功）"""
+  federationAddOrganization(
+    """发起者（当前用户所在的组织）"""
+    initiator: String!
+    name: String!
+
+    """要添加的组织"""
+    organizations: [String!]!
+  ): Boolean!
+
+  """创建联盟"""
+  federationCreate(federation: NewFederationInput!): Federation!
+
+  """解散联盟（返回true：只表示这个操作触发成功，而不是解散联盟成功)"""
+  federationDissolve(
+    """发起者（当前用户所在的组织）"""
+    initiator: String!
+    name: String!
+  ): Boolean!
+
+  """从联盟中驱逐一个组织（返回true：只表示这个操作触发成功，而不是驱逐组织成功）"""
+  federationRemoveOrganization(
+    """发起者（当前用户所在的组织）"""
+    initiator: String!
+    name: String!
+
+    """要驱逐的组织"""
+    organization: String!
+  ): Boolean!
+
+  """创建网络"""
+  networkCreate(network: NewNetworkInput!): Network!
+
+  """释放网络（返回true：只表示这个操作触发成功，而不是释放网络成功）"""
+  networkDissolve(
+    """所属联盟"""
+    federation: String!
+
+    """网络发起者（组织）"""
+    initiator: String!
+    name: String!
+  ): Boolean!
+
   """新增组织"""
   organizationCreate(organization: NewOrganizationInput!): Organization!
+
+  """修改组织"""
+  organizationUpdate(name: String!, organization: UpdateOrganization!): Organization!
+
+  """更新投票"""
+  voteUpdate(name: String!, organization: String!, vote: UpdateVote!): Vote!
+}
+
+"""网络"""
+type Network {
+  """我的节点数"""
+  clusterSize: Float
+
+  """创建时间"""
+  creationTimestamp: String
+
+  """到期时间"""
+  expiredTime: String
+
+  """所属联盟"""
+  federation: String
+
+  """网络发起者（组织）"""
+  initiator: Organization
+
+  """name"""
+  name: ID!
+
+  """引擎类型"""
+  ordererType: String
+
+  """网络中组织"""
+  organizations: [Organization!]
+
+  """状态"""
+  status: StatusType
+}
+
+input NewFederationInput {
+  """联盟描述"""
+  description: String
+
+  """发起者（当前用户所在的组织）"""
+  initiator: String!
+
+  """联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?）"""
+  name: String!
+
+  """选择组织"""
+  organizations: [String!]!
+
+  """提议投票策略"""
+  policy: ProposalPolicy!
+}
+
+input NewNetworkInput {
+  """共识集群节点数（要求单数，默认1）"""
+  clusterSize: Float!
+
+  """所属联盟"""
+  federation: String!
+
+  """发起者（当前用户所在的组织）"""
+  initiator: String!
+
+  """共识算法"""
+  ordererType: String
+
+  """选择组织"""
+  organizations: [String!]!
+
+  """选择版本"""
+  version: OrderVersion
 }
 
 input NewOrganizationInput {
@@ -24,6 +161,18 @@ input NewOrganizationInput {
   name: String!
 }
 
+"""新建网络的版本"""
+enum OrderVersion {
+  """企业版"""
+  Enterprise
+
+  """金融安全版"""
+  Finance
+
+  """标准版"""
+  Standard
+}
+
 """组织"""
 type Organization {
   """管理员"""
@@ -32,18 +181,62 @@ type Organization {
   """创建时间"""
   creationTimestamp: String!
 
+  """描述"""
+  description: String
+
   """名称"""
   displayName: String
+
+  """加入时间（只在联盟中使用）"""
+  joinedAt: String
+
+  """更新时间"""
+  lastHeartbeatTime: String
 
   """name"""
   name: ID!
 
+  """原因（状态为非Deplyed时）"""
+  reason: String
+
   """状态"""
   status: StatusType
+
+  """成员"""
+  users: [User!]
+}
+
+type Proposal {
+  """创建时间"""
+  creationTimestamp: String!
+
+  """截止时间"""
+  endAt: String
+
+  """发起者"""
+  initiator: Organization
+
+  """name"""
+  name: ID!
+
+  """提议策略"""
+  policy: ProposalPolicy
+
+  """当前状态"""
+  status: ProposalStatus
+
+  """提议类型"""
+  type: ProposalType
+
+  """当前用户所在组织的投票状态"""
+  voted: VotePhase
+
+  """提议内的所有投票"""
+  votes: [Vote!]
 }
 
 """提议策略"""
-enum Policy {
+enum ProposalPolicy {
   """"""
   All
 
@@ -54,58 +247,78 @@ enum Policy {
   OneVoteVeto
 }
 
-type Proposal {
-  """创建时间"""
-  creationTimestamp: String!
+"""「提议」状态"""
+enum ProposalStatus {
+  """提议异常"""
+  Error
 
-  """截止时间"""
-  endAt: String
+  """提议超时"""
+  Expired
 
-  """name"""
-  name: ID!
+  """提议异常"""
+  Failed
 
-  """提议策略"""
-  policy: Policy
+  """等待中"""
+  Pending
 
-  """当前状态"""
-  status: StatusPhase
+  """提议成功"""
+  Succeeded
 
-  """提议类型"""
-  type: String
+  """投票中"""
+  Voting
+}
+
+"""「提议」类型"""
+enum ProposalType {
+  """联盟添加组织时创建的提议"""
+  AddMemberProposal
+
+  """创建联盟时创建的提议"""
+  CreateFederationProposal
+
+  """联盟驱逐组织时创建的提议"""
+  DeleteMemberProposal
+
+  """解散联盟的时候创建的提议"""
+  DissolveFederationProposal
+
+  """释放网络时创建的提议"""
+  DissolveNetworkProposal
 }
 
 type Query {
-  """项目列表"""
+  """联盟详情"""
+  federation(name: String!): Federation!
+
+  """联盟列表"""
   federations: [Federation!]!
+
+  """网络详情"""
+  network(name: String!): Network!
+
+  """网络列表"""
+  networks: [Network!]!
 
   """组织详情"""
   organization(name: String!): Organization!
 
   """组织列表"""
-  organizations(admin: String): [Organization!]!
+  organizations(
+    """根据组织管理员搜索"""
+    admin: String
+  ): [Organization!]!
 
   """提议详情"""
   proposal(name: String): Proposal!
 
   """提议列表"""
-  proposals(type: String): [Proposal!]!
+  proposals(
+    """根据类型检索"""
+    type: ProposalType
+  ): [Proposal!]!
 }
 
-"""「提议」状态"""
-enum StatusPhase {
-  """proposal has been finished"""
-  Finished
-
-  """
-  the pod has been accepted by the system, but not all vote has been created
-  """
-  Pending
-
-  """all votes has been created, waiting vote by administrator"""
-  Voting
-}
-
-"""「组织」状态"""
+"""IBPCR 状态"""
 enum StatusType {
   """Created is the status when component is created successfully"""
   Created
@@ -118,13 +331,29 @@ enum StatusType {
   """Deploying is the status when component is being deployed"""
   Deploying
 
-  """
-  Error is the status when a component's deployment has failed due to an error
-  """
+  """异常"""
   Error
+
+  """FederationActivated means `Proposal-Vote` passed"""
+  FederationActivated
+
+  """FederationDissolved means `Federation` no longer active"""
+  FederationDissolved
+
+  """FederationFailed means `Proposal-Vote` failed"""
+  FederationFailed
+
+  """FederationPending means `Proposal-Vote` not passed yet"""
+  FederationPending
 
   """Initializing is the status when a component is initializing"""
   Initializing
+
+  """运行中"""
+  NetworkCreated
+
+  """已解散"""
+  NetworkDissolved
 
   """
   Precreated is the status of the orderers when they are waiting for config block
@@ -135,4 +364,82 @@ enum StatusType {
   Warning is the status when a component is running, but will fail in future
   """
   Warning
+}
+
+input UpdateOrganization {
+  """管理员"""
+  admin: String
+
+  """组织成员"""
+  users: [String!]
+}
+
+input UpdateVote {
+  """是否通过"""
+  decision: Boolean!
+
+  """备注"""
+  description: String
+}
+
+"""用户"""
+type User {
+  """创建时间"""
+  creationTimestamp: String!
+
+  """备注"""
+  description: String
+
+  """邮箱"""
+  email: String!
+
+  """是否为组织管理员（组织列表中）"""
+  isOrganizationAdmin: Boolean
+
+  """用户名"""
+  name: ID!
+
+  """密码"""
+  password: String
+
+  """手机"""
+  phone: String!
+}
+
+type Vote {
+  """表决"""
+  decision: Boolean
+
+  """备注"""
+  description: String
+
+  """name"""
+  name: ID!
+
+  """投票人"""
+  organizationAdmin: String
+
+  """所属组织名称"""
+  organizationName: String
+
+  """所属提议名称"""
+  proposalName: String
+
+  """状态"""
+  status: VotePhase
+
+  """投票时间"""
+  voteTime: String
+}
+
+"""「Vote」状态"""
+enum VotePhase {
+  """The organization administrator has not yet participated in the voting."""
+  Created
+
+  """The proposal has been finished."""
+  Finished
+
+  """The organization administrator has vote for the proposal."""
+  Voted
 }

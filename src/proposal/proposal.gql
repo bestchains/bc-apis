@@ -1,5 +1,5 @@
 # 获取提议列表
-query getProposals($type: String) {
+query getProposals($type: ProposalType) {
   proposals(type: $type) {
     name
     creationTimestamp
@@ -7,6 +7,21 @@ query getProposals($type: String) {
     type
     policy
     status
+    voted
+    initiator {
+      name
+      admin
+    }
+    votes {
+      name
+      organizationName
+      organizationAdmin
+      proposalName
+      voteTime
+      decision
+      description
+      status
+    }
   }
 }
 
@@ -19,5 +34,20 @@ query getProposal($name: String!) {
     type
     policy
     status
+    voted
+    initiator {
+      name
+      admin
+    }
+    votes {
+      name
+      organizationName
+      organizationAdmin
+      proposalName
+      voteTime
+      decision
+      description
+      status
+    }
   }
 }
