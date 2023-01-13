@@ -2,5 +2,89 @@
 query getFederations {
   federations {
     name
+    creationTimestamp
+    description
+    policy
+    joinedAt
+    initiator {
+      name
+    	admin
+    }
+    organizations {
+      name
+      admin
+      joinedAt
+    }
+    networks {
+      name
+    }
   }
+}
+
+# 联盟详情
+query getFederation($name: String!) {
+  federation(name: $name) {
+    name
+    creationTimestamp
+    description
+    policy
+    joinedAt
+    initiator {
+      name
+    	admin
+    }
+    organizations {
+      name
+      admin
+      joinedAt
+    }
+    networks {
+      name
+      creationTimestamp
+      expiredTime
+      federation
+      clusterSize
+      ordererType
+      organizations {
+        name
+        admin
+      }
+      status
+    }
+  }
+}
+
+# 创建联盟
+mutation createFederation($federation: NewFederationInput!) {
+  federationCreate(federation: $federation) {
+    name
+    creationTimestamp
+    description
+    policy
+    joinedAt
+    initiator {
+      name
+    	admin
+    }
+    organizations {
+      name
+      admin
+      joinedAt
+    }
+  }
+}
+
+# 向联盟中添加组织
+mutation addOrganizationToFederation($name: String!, $organizations: [String!]!, $initiator: String!) {
+  federationAddOrganization(name:$name, organizations: $organizations, initiator: $initiator)
+}
+
+# 从联盟中驱逐一个组织
+mutation removeOrganizationToFederation($name: String!, $initiator: String!, $organization: String!) {
+  federationRemoveOrganization(name: $name, initiator: $initiator, organization: $organization)
+}
+
+# 解散联盟
+mutation dissolveFederation($name: String!, $initiator: String!) {
+  federationDissolve(name: $name, initiator: $initiator)
 }

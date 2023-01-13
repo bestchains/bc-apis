@@ -1,14 +1,14 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum StatusPhase {
+export enum ProposalPhase {
   Pending = 'Pending',
   Voting = 'Voting',
   Finished = 'Finished',
 }
 
-registerEnumType(StatusPhase, {
-  name: 'StatusPhase',
-  description: '「提议」状态',
+registerEnumType(ProposalPhase, {
+  name: 'ProposalPhase',
+  description: '「提议」Phase',
   valuesMap: {
     Pending: {
       description:

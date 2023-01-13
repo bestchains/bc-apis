@@ -8,11 +8,17 @@ export enum StatusType {
   Warning = 'Warning',
   Initializing = 'Initializing',
   Created = 'Created',
+  FederationPending = 'FederationPending',
+  FederationActivated = 'FederationActivated',
+  FederationFailed = 'FederationFailed',
+  FederationDissolved = 'FederationDissolved',
+  NetworkCreated = 'NetworkCreated',
+  NetworkDissolved = 'NetworkDissolved',
 }
 
 registerEnumType(StatusType, {
   name: 'StatusType',
-  description: '「组织」状态',
+  description: 'IBPCR 状态',
   valuesMap: {
     Deploying: {
       description: 'Deploying is the status when component is being deployed',
@@ -26,8 +32,7 @@ registerEnumType(StatusType, {
         'Precreated is the status of the orderers when they are waiting for config block',
     },
     Error: {
-      description:
-        "Error is the status when a component's deployment has failed due to an error",
+      description: '异常',
     },
     Warning: {
       description:
@@ -40,6 +45,24 @@ registerEnumType(StatusType, {
     Created: {
       description:
         'Created is the status when component is created successfully',
+    },
+    FederationPending: {
+      description: 'FederationPending means `Proposal-Vote` not passed yet',
+    },
+    FederationActivated: {
+      description: 'FederationActivated means `Proposal-Vote` passed',
+    },
+    FederationFailed: {
+      description: 'FederationFailed means `Proposal-Vote` failed',
+    },
+    FederationDissolved: {
+      description: 'FederationDissolved means `Federation` no longer active',
+    },
+    NetworkCreated: {
+      description: '运行中',
+    },
+    NetworkDissolved: {
+      description: '已解散',
     },
   },
 });

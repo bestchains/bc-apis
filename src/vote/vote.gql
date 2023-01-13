@@ -1,0 +1,13 @@
+# 更新投票
+mutation updateVote($name: String!, $organization: String!, $vote: UpdateVote!) {
+  voteUpdate(name: $name, organization: $organization, vote: $vote) {
+    name
+    description
+    voteTime
+    decision
+    organizationName
+    organizationAdmin
+    proposalName
+    status
+  }
+}

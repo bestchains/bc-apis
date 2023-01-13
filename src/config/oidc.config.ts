@@ -9,7 +9,8 @@ export default registerAs('oidc', () => ({
   },
   client: {
     // 这里填写 oidc client 的配置
-    client_id: env.OIDC_SERVER_CLIENT_ID || 'bc-client',
-    client_secret: env.OIDC_SERVER_CLIENT_SECRET || 'bc-secret',
+    client_id: env.OIDC_SERVER_CLIENT_ID || 'bff-client',
+    client_secret:
+      env.OIDC_SERVER_CLIENT_SECRET || '61324af0-773f-4f61-b110-ef57013267d6',
   },
 }));

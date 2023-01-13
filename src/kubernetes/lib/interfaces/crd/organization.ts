@@ -29,9 +29,10 @@ export interface Organization {
    */
   spec?: {
     /**
-     * Admin is the account with `Admin` role both in kubernets and in CA
+     * Admin is the User/ServiceAccount with `Admin` role both in kubernetes and in CA
      */
     admin: string;
+    admintoken?: string;
     /**
      * CASpec is the configurations of organization's related Certificate Authority
      */
@@ -316,6 +317,10 @@ export interface Organization {
       zone?: string;
       [k: string]: any;
     };
+    /**
+     * Clients are the Users/ServiceAccounts with `Client` role both in kubernetes and in CA
+     */
+    clients?: string[];
     /**
      * Description
      */

@@ -1,0 +1,46 @@
+# 获取网络列表
+query getNetworks{
+  networks {
+    name
+    creationTimestamp
+    expiredTime
+    federation
+    clusterSize
+    ordererType
+    organizations {
+      name
+      admin
+    }
+    initiator {
+      name
+    	admin
+    }
+    status
+  }
+}
+
+# 网络详情
+query getNetwork($name: String!) {
+  network(name: $name) {
+    name
+    creationTimestamp
+    expiredTime
+    federation
+    clusterSize
+    ordererType
+    organizations {
+      name
+      admin
+    }
+    initiator {
+      name
+    	admin
+    }
+    status
+  }
+}
+
+# 释放网络
+mutation dissolveNetwork($name: String!, $federation: String!, $initiator: String!) {
+  networkDissolve(name: $name, federation: $federation, initiator: $initiator)
+}

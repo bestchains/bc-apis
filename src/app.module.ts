@@ -11,12 +11,17 @@ import oidcConfig from './config/oidc.config';
 import iamProviderConfig from './config/iam-provider.config';
 import { JwtMiddleware } from './common/middleware/jwt.middleware';
 import { KubernetesModule } from './kubernetes/kubernetes.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { LoggingPlugin } from './common/plugins/logging.plugin';
 import { UsersModule } from './users/users.module';
 import { OrganizationModule } from './organization/organization.module';
 import { ProposalModule } from './proposal/proposal.module';
+import { VoteModule } from './vote/vote.module';
+import { NetworkModule } from './network/network.module';
+import { DataLoaderInterceptor } from './common/dataloader';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { Response } from 'express';
 
 const GRAPHQL_PATH = '/bff';
 
@@ -51,11 +56,30 @@ const GRAPHQL_PATH = '/bff';
       load: [kubernetesConfig, oidcConfig, iamProviderConfig],
       isGlobal: true,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: [GRAPHQL_PATH],
+      serveStaticOptions: {
+        setHeaders: (res: Response) => {
+          const url = res.req.url;
+          if (
+            url.includes('.') &&
+            !url.startsWith('/profile/') &&
+            !url.endsWith('.html') &&
+            url !== '/favicon.ico'
+          ) {
+            res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+          }
+        },
+      },
+    }),
     KubernetesModule,
     FederationModule,
     UsersModule,
     OrganizationModule,
     ProposalModule,
+    VoteModule,
+    NetworkModule,
   ],
   controllers: [AppController],
   providers: [
@@ -63,6 +87,10 @@ const GRAPHQL_PATH = '/bff';
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DataLoaderInterceptor,
     },
     LoggingPlugin,
   ],

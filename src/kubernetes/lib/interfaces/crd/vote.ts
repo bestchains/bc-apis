@@ -39,7 +39,7 @@ export interface Vote {
     /**
      * Timestamp of voting.
      */
-    startTime?: string;
+    voteTime?: string;
     [k: string]: any;
   };
   [k: string]: any;

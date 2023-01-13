@@ -534,6 +534,11 @@ export interface IBPPeer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -584,6 +589,11 @@ export interface IBPPeer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -634,6 +644,11 @@ export interface IBPPeer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         [k: string]: any;

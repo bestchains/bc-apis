@@ -47,6 +47,14 @@ export interface Federation {
      */
     members?: {
       initiator?: boolean;
+      /**
+       * JoinedAt is the proposal succ time
+       */
+      joinedAt?: string;
+      /**
+       * JoinedBy is the proposal name which joins this member into federation
+       */
+      joinedBy?: string;
       name?: string;
       namespace?: string;
       [k: string]: any;

@@ -144,6 +144,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -194,6 +199,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -244,6 +254,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         [k: string]: any;
@@ -659,6 +674,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -709,6 +729,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         /**
@@ -759,6 +784,11 @@ export interface IBPOrderer {
            * EnrollSecret is enrollment secret ( password )
            */
           enrollsecret?: string;
+          enrolltoken?: string;
+          /**
+           * IAM auth information. Generally speaking, it is the organization's admin
+           */
+          enrolluser?: string;
           [k: string]: any;
         };
         [k: string]: any;
@@ -887,7 +917,7 @@ export interface IBPOrderer {
     /**
      * FabricVersion (Optional) is fabric version for the orderer
      */
-    version: string;
+    version?: string;
     /**
      * Zone (Optional) is the zone of the nodes where the orderer should be deployed
      */

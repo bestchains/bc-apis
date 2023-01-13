@@ -23,13 +23,6 @@ export class AppController {
 
   @Post('/token')
   async token(@Body() tokenDto: GetTokenDto) {
-    const token = await this.appService.getOidcToken(tokenDto);
-    const { preferred_username } = this.appService.decodeToken(token.id_token);
-    await this.appService.updateUserGroup({
-      name: preferred_username,
-      token: token.id_token,
-      tokenType: token.token_type,
-    });
-    return token;
+    return this.appService.getOidcToken(tokenDto);
   }
 }

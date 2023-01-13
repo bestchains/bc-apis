@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType({ description: '用户' })
 export class User {
@@ -20,8 +20,9 @@ export class User {
   /** 创建时间 */
   creationTimestamp: string;
 
-  /** 时间 (仅作为 Date 类型数据占位用，否则会有 Error: "Date" defined in resolvers, but not in schema 的报错) */
-  _date?: Date;
-
+  @HideField()
   groups: string[];
+
+  /** 是否为组织管理员（组织列表中） */
+  isOrganizationAdmin?: boolean;
 }

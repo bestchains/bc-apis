@@ -1,5 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { Jwt } from 'jsonwebtoken';
+import { customAlphabet } from 'nanoid';
+import { numbers, lowercase } from 'nanoid-dictionary';
 import { TokenException } from './errors';
 import type { JwtAuth, Request } from '../../types';
 
@@ -50,6 +52,17 @@ export const initialToUpperCase = (value: string) =>
   (value || '').replace(/^(\w)/, (_, $0) => $0.toUpperCase());
 
 /**
+ * 将命名转换为横线命名
+ * TwoWords => two-words
+ *
+ * @param {string} name 名称
+ */
+export const camelCaseToKebabCase = (name: string) =>
+  (name || '')
+    .replace(/([A-Z])/g, '-$1')
+    .replace(/^\-/, '')
+    .toLocaleLowerCase();
+/**
  * Base64 转码 encode
  */
 export const encodeBase64 = (value: string) =>
@@ -60,3 +73,12 @@ export const encodeBase64 = (value: string) =>
  */
 export const decodeBase64 = (value: string) =>
   Buffer.from(value || '', 'base64').toString('utf-8');
+
+export const nanoid = customAlphabet(numbers + lowercase, 5);
+
+/**
+ * 生成带前缀的短 id
+ * @param {string} prefix 前缀
+ * @returns
+ */
+export const genNanoid = (prefix: string) => `${prefix}-${nanoid()}`;

@@ -1,13 +1,13 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum Policy {
+export enum ProposalPolicy {
   OneVoteVeto = 'OneVoteVeto',
   Majority = 'Majority',
   All = 'All',
 }
 
-registerEnumType(Policy, {
-  name: 'Policy',
+registerEnumType(ProposalPolicy, {
+  name: 'ProposalPolicy',
   description: '提议策略',
   valuesMap: {
     OneVoteVeto: {

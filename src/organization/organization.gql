@@ -3,9 +3,12 @@ query getOrganizations($admin: String) {
   organizations(admin: $admin) {
     name
     displayName
+    description
     creationTimestamp
+    lastHeartbeatTime
     admin
     status
+    reason
   }
 }
 
@@ -14,9 +17,16 @@ query getOrganization($name: String!) {
   organization(name: $name) {
     name
     displayName
+    description
     creationTimestamp
+    lastHeartbeatTime
     admin
     status
+    reason
+    users {
+      name
+      isOrganizationAdmin
+    }
   }
 }
 
@@ -25,8 +35,29 @@ mutation createOrganization($organization: NewOrganizationInput!) {
   organizationCreate(organization: $organization) {
     name
     displayName
+    description
     creationTimestamp
+    lastHeartbeatTime
     admin
     status
+    reason
+  }
+}
+
+# 更新组织
+mutation updateOrganization($name: String!, $organization: UpdateOrganization!) {
+  organizationUpdate(name: $name, organization: $organization) {
+    name
+    displayName
+    description
+    creationTimestamp
+    lastHeartbeatTime
+    admin
+    status
+    reason
+    users {
+      name
+      isOrganizationAdmin
+    }
   }
 }
