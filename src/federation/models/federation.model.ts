@@ -2,6 +2,7 @@ import { ObjectType, Field, ID, HideField } from '@nestjs/graphql';
 import { Network } from 'src/network/models/network.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { ProposalPolicy } from 'src/proposal/models/proposal-policy.enum';
+import { FederationStatus } from './federation-status.enum';
 
 @ObjectType({ description: '联盟' })
 export class Federation {
@@ -38,6 +39,10 @@ export class Federation {
   /** 提议策略 */
   @Field(() => ProposalPolicy, { description: '提议策略' })
   policy?: string;
+
+  /** 状态 */
+  @Field(() => FederationStatus, { description: '状态' })
+  status?: string;
 }
 
 @ObjectType({ description: '成员个数' })

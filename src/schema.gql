@@ -27,6 +27,43 @@ type Federation {
 
   """提议策略"""
   policy: ProposalPolicy
+
+  """状态"""
+  status: FederationStatus
+}
+
+"""「联盟」状态"""
+enum FederationStatus {
+  """已激活"""
+  FederationActivated
+
+  """已解散"""
+  FederationDissolved
+
+  """组建失败"""
+  FederationFailed
+
+  """组建中"""
+  FederationPending
+}
+
+"""操作状态"""
+type K8sV1Status {
+  apiVersion: String
+  code: Float
+  details: K8sV1StatusDetails
+  kind: String
+  message: String
+  reason: String
+  status: String
+}
+
+"""操作状态详情"""
+type K8sV1StatusDetails {
+  group: String
+  kind: String
+  name: String
+  uid: String
 }
 
 type Mutation {
@@ -42,6 +79,9 @@ type Mutation {
 
   """创建联盟"""
   federationCreate(federation: NewFederationInput!): Federation!
+
+  """删除联盟（FederationDissolved）"""
+  federationDelete(name: String!): K8sV1Status!
 
   """解散联盟（返回true：只表示这个操作触发成功，而不是解散联盟成功)"""
   federationDissolve(
@@ -120,7 +160,9 @@ input NewFederationInput {
   """发起者（当前用户所在的组织）"""
   initiator: String!
 
-  """联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?）"""
+  """
+  联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  """
   name: String!
 
   """选择组织"""
