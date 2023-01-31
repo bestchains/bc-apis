@@ -7,7 +7,7 @@ export class NewFederationInput {
   /** 联盟名称（metadata.name） */
   @Field(() => String, {
     description:
-      '联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?）',
+      '联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）',
   })
   @Length(3, 63)
   name: string;
