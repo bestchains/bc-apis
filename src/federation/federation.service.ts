@@ -149,7 +149,9 @@ export class FederationService {
   async deleteFederation(auth: JwtAuth, name: string): Promise<K8sV1Status> {
     const detail = await this.federation(auth, name);
     if (detail?.status !== FederationStatus.FederationDissolved) {
-      throw new InternalServerErrorException('Only dissolved federation can be deleted.')
+      throw new InternalServerErrorException(
+        'Only dissolved federation can be deleted.',
+      );
     }
 
     const k8s = await this.k8sService.getClient(auth);

@@ -99,7 +99,9 @@ export class FederationResolver {
     return this.federationService.dissolveFederation(auth, name, initiator);
   }
 
-  @Mutation(() => K8sV1Status, { description: '删除联盟（FederationDissolved）' })
+  @Mutation(() => K8sV1Status, {
+    description: '删除联盟（FederationDissolved）',
+  })
   async federationDelete(
     @Auth() auth: JwtAuth,
     @Args('name') name: string,

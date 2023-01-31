@@ -40,6 +40,19 @@ query getNetwork($name: String!) {
   }
 }
 
+# 创建网络
+mutation createNetwork($network: NewNetworkInput!) {
+  networkCreate(network: $network) {
+    name
+    creationTimestamp
+    expiredTime
+    federation
+    clusterSize
+    ordererType
+    status
+  }
+}
+
 # 释放网络
 mutation dissolveNetwork($name: String!, $federation: String!, $initiator: String!) {
   networkDissolve(name: $name, federation: $federation, initiator: $initiator)

@@ -23,5 +23,5 @@ registerEnumType(FederationStatus, {
     FederationDissolved: {
       description: '已解散',
     },
-  }
-})
+  },
+});
