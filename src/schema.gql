@@ -47,6 +47,16 @@ enum FederationStatus {
   FederationPending
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 """操作状态"""
 type K8sV1Status {
   apiVersion: String
@@ -254,6 +264,12 @@ type Proposal {
 
   """截止时间"""
   endAt: String
+
+  """相关联盟"""
+  federation: String
+
+  """相关内容"""
+  information: JSONObject
 
   """发起者"""
   initiator: Organization

@@ -44,7 +44,7 @@ export class ProposalResolver {
     const { votes } = pro;
     const { preferred_username } = auth;
 
-    const vote = votes.find((v) => v.organizationAdmin === preferred_username);
+    const vote = votes?.find((v) => v.organizationAdmin === preferred_username);
     return vote?.status;
   }
 

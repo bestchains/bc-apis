@@ -8,6 +8,7 @@ query getProposals($type: ProposalType) {
     policy
     status
     voted
+    federation
     initiator {
       name
       admin
@@ -35,6 +36,8 @@ query getProposal($name: String!) {
     policy
     status
     voted
+    federation
+    information
     initiator {
       name
       admin
