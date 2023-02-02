@@ -26,22 +26,14 @@ export interface Proposal {
   };
   spec?: {
     addMember?: {
-      members: {
-        name?: string;
-        namespace?: string;
-        [k: string]: any;
-      }[];
+      members: string[];
       [k: string]: any;
     };
     createFederation?: {
       [k: string]: any;
     };
     deleteMember?: {
-      member: {
-        name?: string;
-        namespace?: string;
-        [k: string]: any;
-      };
+      member: string;
       [k: string]: any;
     };
     deprecated?: boolean;
@@ -54,11 +46,7 @@ export interface Proposal {
     };
     endAt?: string;
     federation: string;
-    initiator: {
-      name?: string;
-      namespace?: string;
-      [k: string]: any;
-    };
+    initiatorOrganization: string;
     /**
      * Policy defines the Proposal-Vote policy  to indicate when a proposal is successful
      */

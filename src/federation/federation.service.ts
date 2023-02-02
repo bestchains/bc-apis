@@ -67,7 +67,6 @@ export class FederationService {
         },
         members: orgs.map((user) => ({
           name: user,
-          namespace: user,
           initiator: user === initiator,
         })),
       },

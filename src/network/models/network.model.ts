@@ -49,8 +49,5 @@ class Member {
   /** name */
   name?: string;
 
-  /** namespace */
-  namespace?: string;
-
   [k: string]: any;
 }

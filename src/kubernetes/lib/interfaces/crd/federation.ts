@@ -43,7 +43,7 @@ export interface Federation {
       [k: string]: any;
     };
     /**
-     * Members list all organization in this federation True for Initiator; False for normal organizaiton namespace-name
+     * Members list all organization in this federation True for Initiator; False for normal organization namespace-name
      */
     members?: {
       initiator?: boolean;
@@ -56,7 +56,6 @@ export interface Federation {
        */
       joinedBy?: string;
       name?: string;
-      namespace?: string;
       [k: string]: any;
     }[];
     /**

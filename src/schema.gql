@@ -34,6 +34,9 @@ type Federation {
 
 """「联盟」状态"""
 enum FederationStatus {
+  """失败"""
+  Error
+
   """已激活"""
   FederationActivated
 

@@ -82,7 +82,6 @@ export class NetworkService {
         federation,
         members: [...new Set([...organizations, initiator])].map((org) => ({
           name: org,
-          namespace: org,
           initiator: org === initiator,
         })),
         orderSpec: {
