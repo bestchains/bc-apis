@@ -9,6 +9,7 @@ import {
 import DataLoader from 'dataloader';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { Network } from 'src/network/models/network.model';
 import { NetworkLoader } from 'src/network/network.loader';
 import { Organization } from 'src/organization/models/organization.model';
@@ -96,6 +97,16 @@ export class FederationResolver {
     initiator: string,
   ): Promise<boolean> {
     return this.federationService.dissolveFederation(auth, name, initiator);
+  }
+
+  @Mutation(() => K8sV1Status, {
+    description: '删除联盟（FederationDissolved）',
+  })
+  async federationDelete(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+  ): Promise<K8sV1Status> {
+    return this.federationService.deleteFederation(auth, name);
   }
 
   @ResolveField(() => String, {

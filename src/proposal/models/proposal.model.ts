@@ -5,6 +5,7 @@ import { Vote } from 'src/vote/models/vote.model';
 import { VotePhase } from 'src/vote/models/vote-phase.enum';
 import { Organization } from 'src/organization/models/organization.model';
 import { ProposalStatus } from './proposal-status.enum';
+import { AnyObj } from 'src/types';
 
 @ObjectType()
 export class Proposal {
@@ -46,4 +47,11 @@ export class Proposal {
 
   /** 发起者 */
   initiator?: Organization;
+
+  /** 相关联盟 */
+  federation?: string;
+
+  /** 相关内容 */
+  @Field(() => Object, { description: '相关内容' })
+  information?: AnyObj;
 }

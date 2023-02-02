@@ -5,6 +5,7 @@ query getFederations {
     creationTimestamp
     description
     policy
+    status
     joinedAt
     initiator {
       name
@@ -28,6 +29,7 @@ query getFederation($name: String!) {
     creationTimestamp
     description
     policy
+    status
     joinedAt
     initiator {
       name
@@ -61,6 +63,7 @@ mutation createFederation($federation: NewFederationInput!) {
     creationTimestamp
     description
     policy
+    status
     joinedAt
     initiator {
       name
@@ -87,4 +90,14 @@ mutation removeOrganizationToFederation($name: String!, $initiator: String!, $or
 # 解散联盟
 mutation dissolveFederation($name: String!, $initiator: String!) {
   federationDissolve(name: $name, initiator: $initiator)
+}
+
+# 删除联盟
+mutation deleteFederation($name: String!) {
+  federationDelete(name: $name) {
+    code
+    status
+    reason
+    message
+  }
 }

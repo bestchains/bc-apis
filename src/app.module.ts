@@ -22,6 +22,7 @@ import { NetworkModule } from './network/network.module';
 import { DataLoaderInterceptor } from './common/dataloader';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { Response } from 'express';
+import { JSONObjectScalar, JSONScalar } from './common/scalars/json.scalar';
 
 const GRAPHQL_PATH = '/bff';
 
@@ -93,6 +94,8 @@ const GRAPHQL_PATH = '/bff';
       useClass: DataLoaderInterceptor,
     },
     LoggingPlugin,
+    JSONScalar,
+    JSONObjectScalar,
   ],
 })
 export class AppModule implements NestModule {

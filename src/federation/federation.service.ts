@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { Federation } from './models/federation.model';
 import { JwtAuth } from 'src/types';
@@ -6,6 +6,8 @@ import { CRD } from 'src/kubernetes/lib';
 import { NewFederationInput } from './dto/new-federation.input';
 import { ProposalService } from 'src/proposal/proposal.service';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
+import { FederationStatus } from './models/federation-status.enum';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 
 @Injectable()
 export class FederationService {
@@ -25,7 +27,8 @@ export class FederationService {
       creationTimestamp: new Date(
         fed.metadata?.creationTimestamp,
       ).toISOString(),
-      policy: fed.spec.policy,
+      policy: fed.spec?.policy,
+      status: fed.status?.type,
     };
   }
 
@@ -141,5 +144,18 @@ export class FederationService {
     // 2. 等待组织投票
     // 3. 若投票成功，则此「解散联盟」成功
     return true; // 表示这个操作触发成功，而不是解散联盟成功
+  }
+
+  async deleteFederation(auth: JwtAuth, name: string): Promise<K8sV1Status> {
+    const detail = await this.federation(auth, name);
+    if (detail?.status !== FederationStatus.FederationDissolved) {
+      throw new InternalServerErrorException(
+        'Only dissolved federation can be deleted.',
+      );
+    }
+
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.federation.delete(name);
+    return body;
   }
 }

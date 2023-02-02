@@ -14,12 +14,16 @@ export class ProposalService {
   constructor(private readonly k8sService: KubernetesService) {}
 
   format(pro: CRD.Proposal): Proposal {
+    const type = pro.metadata?.labels?.['bestchains.proposal.type'];
+    const infoKey = type
+      ?.replace(/Proposal$/, '')
+      ?.replace(/^([A-Z])/, (_: any, p1: string) => p1.toLocaleLowerCase());
     return {
       name: pro.metadata.name,
       creationTimestamp: new Date(
         pro.metadata?.creationTimestamp,
       ).toISOString(),
-      type: pro.metadata?.labels?.['bestchains.proposal.type'],
+      type,
       policy: pro.spec?.policy,
       endAt: pro.spec?.endAt,
       statusPhase: pro.status?.phase,
@@ -33,6 +37,8 @@ export class ProposalService {
         status: v.phase,
       })),
       initiatorName: pro.spec?.initiator?.name,
+      federation: pro.spec?.federation,
+      information: pro.spec?.[infoKey],
     };
   }
 
