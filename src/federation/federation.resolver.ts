@@ -121,6 +121,7 @@ export class FederationResolver {
   ): Promise<string> {
     const { members } = fed;
     const { preferred_username } = auth;
+    if (!members) return;
     const orgs = await organizationLoader.loadMany(
       members.map((member) => member.name),
     );
@@ -128,7 +129,7 @@ export class FederationResolver {
     const org = (orgs as Organization[]).find(
       (org) => org.admin === preferred_username,
     );
-    return memberMap.get(org.name);
+    return memberMap.get(org?.name);
   }
 
   @ResolveField(() => [Organization], { description: '联盟内组织' })

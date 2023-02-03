@@ -40,11 +40,22 @@ export class ProposalResolver {
     nullable: true,
     description: '当前用户所在组织的投票状态',
   })
-  voted(@Auth() auth: JwtAuth, @Parent() pro: Proposal): string {
+  async voted(
+    @Auth() auth: JwtAuth,
+    @Parent() pro: Proposal,
+    @Loader(OrganizationLoader)
+    orgLoader: DataLoader<Organization['name'], Organization>,
+  ): Promise<string> {
     const { votes } = pro;
     const { preferred_username } = auth;
-
-    const vote = votes?.find((v) => v.organizationAdmin === preferred_username);
+    if (!votes) return;
+    const orgs = await orgLoader.loadMany(votes.map((v) => v.organizationName));
+    const orgsMap = new Map(
+      (orgs as Organization[]).map((org) => [org?.name, org?.admin]),
+    );
+    const vote = votes?.find(
+      (v) => orgsMap.get(v.organizationName) === preferred_username,
+    );
     return vote?.status;
   }
 
