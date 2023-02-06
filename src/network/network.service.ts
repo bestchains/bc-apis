@@ -17,11 +17,16 @@ export class NetworkService {
   ) {}
 
   format(network: CRD.Network): Network {
+    const creationTimestamp = new Date(
+      network.metadata?.creationTimestamp,
+    ).toISOString();
+    const lastHeartbeatTime = network.status?.lastHeartbeatTime
+      ? new Date(network.status?.lastHeartbeatTime).toISOString()
+      : creationTimestamp;
     return {
       name: network.metadata.name,
-      creationTimestamp: new Date(
-        network.metadata.creationTimestamp,
-      ).toISOString(),
+      creationTimestamp,
+      lastHeartbeatTime,
       federation: network.spec?.federation,
       members: network.spec?.members,
       initiatorName: network.spec?.members?.find((m) => m.initiator)?.name,
@@ -90,12 +95,16 @@ export class NetworkService {
           },
           clusterSize,
           ordererType,
+          ingress: {
+            class: 'portal-ingress',
+          },
           resources: {
             init: resources,
             orderer: resources,
           },
           storage: {
             orderer: {
+              class: 'openebs-hostpath',
               size,
             },
           },

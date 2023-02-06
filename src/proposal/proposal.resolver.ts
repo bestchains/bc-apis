@@ -5,6 +5,7 @@ import { Auth } from 'src/common/decorators/auth.decorator';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
 import { JwtAuth } from 'src/types';
+import { VotePhase } from 'src/vote/models/vote-phase.enum';
 import { ProposalPhase } from './models/proposal-phase.enum';
 import { ProposalStatus } from './models/proposal-status.enum';
 import { ProposalType } from './models/proposal-type.enum';
@@ -56,7 +57,7 @@ export class ProposalResolver {
     const vote = votes?.find(
       (v) => orgsMap.get(v.organizationName) === preferred_username,
     );
-    return vote?.status;
+    return vote?.status || VotePhase.NotVoted;
   }
 
   @ResolveField(() => ProposalStatus, { description: '当前状态' })

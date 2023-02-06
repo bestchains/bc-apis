@@ -29,14 +29,18 @@ export class VoteResolver {
     return this.voteService.updateVote(auth, name, namespace, vote);
   }
 
-  @ResolveField(() => String, { description: '投票人（组织中）' })
+  @ResolveField(() => String, {
+    nullable: true,
+    description: '投票人（组织中）',
+  })
   async organizationAdmin(
     @Parent() vote: Vote,
     @Loader(OrganizationLoader)
     orgLoader: DataLoader<Organization['name'], Organization>,
   ): Promise<string> {
     const { organizationName } = vote;
+    if (!organizationName) return;
     const org = await orgLoader.load(organizationName);
-    return org.admin;
+    return org?.admin;
   }
 }

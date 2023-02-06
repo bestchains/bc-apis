@@ -43,8 +43,7 @@ registerEnumType(StatusType, {
         'Initializing is the status when a component is initializing',
     },
     Created: {
-      description:
-        'Created is the status when component is created successfully',
+      description: '正常',
     },
     FederationPending: {
       description: 'FederationPending means `Proposal-Vote` not passed yet',
@@ -59,7 +58,7 @@ registerEnumType(StatusType, {
       description: 'FederationDissolved means `Federation` no longer active',
     },
     NetworkCreated: {
-      description: '运行中',
+      description: '正常',
     },
     NetworkDissolved: {
       description: '已解散',

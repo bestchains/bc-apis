@@ -4,6 +4,7 @@ import { camelCaseToKebabCase, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
+import { VotePhase } from 'src/vote/models/vote-phase.enum';
 import { NewProposal } from './dto/new-proposal.input';
 import { ProposalPolicy } from './models/proposal-policy.enum';
 import { ProposalType } from './models/proposal-type.enum';
@@ -34,7 +35,7 @@ export class ProposalService {
         voteTime: v.voteTime,
         decision: v.decision,
         description: v.description,
-        status: v.phase,
+        status: v.phase || VotePhase.NotVoted,
       })),
       initiatorName: pro.spec?.initiatorOrganization,
       federation: pro.spec?.federation,
