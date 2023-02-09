@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { genNanoid, NETWORK_VERSION_RESOURCES } from 'src/common/utils';
+import {
+  DEFAULT_INGRESS_CLASS,
+  DEFAULT_STORAGE_CLASS,
+  genNanoid,
+  NETWORK_VERSION_RESOURCES,
+} from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
@@ -96,7 +101,7 @@ export class NetworkService {
           clusterSize,
           ordererType,
           ingress: {
-            class: 'portal-ingress',
+            class: DEFAULT_INGRESS_CLASS,
           },
           resources: {
             init: resources,
@@ -104,7 +109,7 @@ export class NetworkService {
           },
           storage: {
             orderer: {
-              class: 'openebs-hostpath',
+              class: DEFAULT_STORAGE_CLASS,
               size,
             },
           },

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
@@ -78,7 +79,7 @@ export class OrganizationService {
             accept: true,
           },
           ingress: {
-            class: 'portal-ingress',
+            class: DEFAULT_INGRESS_CLASS,
           },
           images: {
             caImage: 'hyperledgerk8s/fabric-ca',
@@ -110,7 +111,7 @@ export class OrganizationService {
           },
           storage: {
             ca: {
-              class: 'openebs-hostpath',
+              class: DEFAULT_STORAGE_CLASS,
               size: '100M',
             },
           },
