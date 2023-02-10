@@ -34,6 +34,9 @@ type Federation {
 
 """「联盟」状态"""
 enum FederationStatus {
+  """失败"""
+  Error
+
   """已激活"""
   FederationActivated
 
@@ -149,6 +152,9 @@ type Network {
 
   """网络发起者（组织）"""
   initiator: Organization
+
+  """更新时间"""
+  lastHeartbeatTime: String
 
   """name"""
   name: ID!
@@ -378,7 +384,7 @@ type Query {
 
 """IBPCR 状态"""
 enum StatusType {
-  """Created is the status when component is created successfully"""
+  """正常"""
   Created
 
   """
@@ -407,7 +413,7 @@ enum StatusType {
   """Initializing is the status when a component is initializing"""
   Initializing
 
-  """运行中"""
+  """正常"""
   NetworkCreated
 
   """已解散"""
@@ -497,6 +503,9 @@ enum VotePhase {
 
   """The proposal has been finished."""
   Finished
+
+  """未投票"""
+  NotVoted
 
   """The organization administrator has vote for the proposal."""
   Voted

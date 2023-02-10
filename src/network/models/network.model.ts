@@ -13,6 +13,9 @@ export class Network {
   /** 创建时间 */
   creationTimestamp?: string;
 
+  /** 更新时间 */
+  lastHeartbeatTime?: string;
+
   /** 到期时间 */
   expiredTime?: string;
 
@@ -48,9 +51,6 @@ class Member {
 
   /** name */
   name?: string;
-
-  /** namespace */
-  namespace?: string;
 
   [k: string]: any;
 }

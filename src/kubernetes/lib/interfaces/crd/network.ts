@@ -31,7 +31,7 @@ export interface Network {
     /**
      * Federation which this network belongs to
      */
-    federation?: string;
+    federation: string;
     /**
      * InitialToken is the default value of the OrderSpec.ClusterSecret.[].Enrollment.TLS/Component.EnrollToken
      */
@@ -49,7 +49,7 @@ export interface Network {
     /**
      * Members which this network contains (DO NOT EDIT)Cloned automatically from Federation.Spec.Members
      */
-    members?: {
+    members: {
       initiator?: boolean;
       /**
        * JoinedAt is the proposal succ time
@@ -60,7 +60,6 @@ export interface Network {
        */
       joinedBy?: string;
       name?: string;
-      namespace?: string;
       [k: string]: any;
     }[];
     /**
@@ -969,6 +968,10 @@ export interface Network {
    * NetworkStatus defines the observed state of Network
    */
   status?: {
+    /**
+     * Channels in this network
+     */
+    channels?: string[];
     /**
      * ErrorCode is the code of classification of errors
      */

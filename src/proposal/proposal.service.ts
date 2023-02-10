@@ -4,6 +4,7 @@ import { camelCaseToKebabCase, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
+import { VotePhase } from 'src/vote/models/vote-phase.enum';
 import { NewProposal } from './dto/new-proposal.input';
 import { ProposalPolicy } from './models/proposal-policy.enum';
 import { ProposalType } from './models/proposal-type.enum';
@@ -34,9 +35,9 @@ export class ProposalService {
         voteTime: v.voteTime,
         decision: v.decision,
         description: v.description,
-        status: v.phase,
+        status: v.phase || VotePhase.NotVoted,
       })),
-      initiatorName: pro.spec?.initiator?.name,
+      initiatorName: pro.spec?.initiatorOrganization,
       federation: pro.spec?.federation,
       information: pro.spec?.[infoKey],
     };
@@ -71,28 +72,19 @@ export class ProposalService {
     const spec: CRD.Proposal['spec'] = {
       policy: ProposalPolicy.All,
       federation,
-      initiator: {
-        name: initiator,
-        namespace: initiator,
-      },
+      initiatorOrganization: initiator,
     };
     if (type === ProposalType.CreateFederationProposal) {
       spec.createFederation = {};
     }
     if (type === ProposalType.AddMemberProposal) {
       spec.addMember = {
-        members: organizations.map((org) => ({
-          name: org,
-          namespace: org,
-        })),
+        members: organizations,
       };
     }
     if (type === ProposalType.DeleteMemberProposal) {
       spec.deleteMember = {
-        member: {
-          name: organizations[0],
-          namespace: organizations[0],
-        },
+        member: organizations[0],
       };
     }
     if (type === ProposalType.DissolveFederationProposal) {

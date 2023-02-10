@@ -20,8 +20,7 @@ export class FederationService {
     return {
       name: fed.metadata.name,
       description: fed.spec?.description,
-      // initiatorName: fed.metadata?.labels?.['bestchains.federation.initiator'],
-      initiatorName: fed.spec?.members?.find((m) => m.initiator)?.name,
+      initiatorName: fed.metadata?.labels?.['bestchains.federation.initiator'],
       members: fed.spec?.members,
       networkNames: fed.status?.networks,
       creationTimestamp: new Date(
@@ -67,7 +66,6 @@ export class FederationService {
         },
         members: orgs.map((user) => ({
           name: user,
-          namespace: user,
           initiator: user === initiator,
         })),
       },

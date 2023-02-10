@@ -3,6 +3,7 @@ query getNetworks{
   networks {
     name
     creationTimestamp
+    lastHeartbeatTime
     expiredTime
     federation
     clusterSize
@@ -24,6 +25,7 @@ query getNetwork($name: String!) {
   network(name: $name) {
     name
     creationTimestamp
+    lastHeartbeatTime
     expiredTime
     federation
     clusterSize
@@ -45,6 +47,7 @@ mutation createNetwork($network: NewNetworkInput!) {
   networkCreate(network: $network) {
     name
     creationTimestamp
+    lastHeartbeatTime
     expiredTime
     federation
     clusterSize

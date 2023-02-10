@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
@@ -13,16 +14,18 @@ export class OrganizationService {
   logger = new Logger('OrganizationService');
 
   format(org: CRD.Organization): Organization {
+    const creationTimestamp = new Date(
+      org.metadata?.creationTimestamp,
+    ).toISOString();
+    const lastHeartbeatTime = org.status?.lastHeartbeatTime
+      ? new Date(org.status?.lastHeartbeatTime).toISOString()
+      : creationTimestamp;
     return {
       name: org.metadata.name,
       displayName: org.spec?.displayName,
       description: org.spec?.description,
-      creationTimestamp: new Date(
-        org.metadata?.creationTimestamp,
-      ).toISOString(),
-      lastHeartbeatTime: org.status?.lastHeartbeatTime
-        ? new Date(org.status?.lastHeartbeatTime).toISOString()
-        : null,
+      creationTimestamp,
+      lastHeartbeatTime,
       admin: org.spec?.admin,
       status: org.status?.type,
       reason: org.status?.reason,
@@ -56,7 +59,7 @@ export class OrganizationService {
     org: NewOrganizationInput,
   ): Promise<Organization> {
     const { name, displayName, description } = org;
-    const { preferred_username } = auth;
+    const { preferred_username, token } = auth;
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.organization.create({
       metadata: {
@@ -66,6 +69,7 @@ export class OrganizationService {
         admin: preferred_username,
         displayName,
         description,
+        admintoken: token,
         license: {
           accept: true,
         },
@@ -73,6 +77,9 @@ export class OrganizationService {
           version: '1.5.5',
           license: {
             accept: true,
+          },
+          ingress: {
+            class: DEFAULT_INGRESS_CLASS,
           },
           images: {
             caImage: 'hyperledgerk8s/fabric-ca',
@@ -104,7 +111,7 @@ export class OrganizationService {
           },
           storage: {
             ca: {
-              class: 'standard',
+              class: DEFAULT_STORAGE_CLASS,
               size: '100M',
             },
           },

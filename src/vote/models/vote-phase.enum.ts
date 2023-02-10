@@ -4,6 +4,7 @@ export enum VotePhase {
   Created = 'Created',
   Voted = 'Voted',
   Finished = 'Finished',
+  NotVoted = 'NotVoted',
 }
 
 registerEnumType(VotePhase, {
@@ -19,6 +20,9 @@ registerEnumType(VotePhase, {
     },
     Finished: {
       description: 'The proposal has been finished.',
+    },
+    NotVoted: {
+      description: '未投票',
     },
   },
 });

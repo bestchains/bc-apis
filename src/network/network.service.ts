@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { genNanoid, NETWORK_VERSION_RESOURCES } from 'src/common/utils';
+import {
+  DEFAULT_INGRESS_CLASS,
+  DEFAULT_STORAGE_CLASS,
+  genNanoid,
+  NETWORK_VERSION_RESOURCES,
+} from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
@@ -17,11 +22,16 @@ export class NetworkService {
   ) {}
 
   format(network: CRD.Network): Network {
+    const creationTimestamp = new Date(
+      network.metadata?.creationTimestamp,
+    ).toISOString();
+    const lastHeartbeatTime = network.status?.lastHeartbeatTime
+      ? new Date(network.status?.lastHeartbeatTime).toISOString()
+      : creationTimestamp;
     return {
       name: network.metadata.name,
-      creationTimestamp: new Date(
-        network.metadata.creationTimestamp,
-      ).toISOString(),
+      creationTimestamp,
+      lastHeartbeatTime,
       federation: network.spec?.federation,
       members: network.spec?.members,
       initiatorName: network.spec?.members?.find((m) => m.initiator)?.name,
@@ -82,7 +92,6 @@ export class NetworkService {
         federation,
         members: [...new Set([...organizations, initiator])].map((org) => ({
           name: org,
-          namespace: org,
           initiator: org === initiator,
         })),
         orderSpec: {
@@ -91,12 +100,16 @@ export class NetworkService {
           },
           clusterSize,
           ordererType,
+          ingress: {
+            class: DEFAULT_INGRESS_CLASS,
+          },
           resources: {
             init: resources,
             orderer: resources,
           },
           storage: {
             orderer: {
+              class: DEFAULT_STORAGE_CLASS,
               size,
             },
           },

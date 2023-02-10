@@ -5,6 +5,7 @@ export enum FederationStatus {
   FederationActivated = 'FederationActivated',
   FederationFailed = 'FederationFailed',
   FederationDissolved = 'FederationDissolved',
+  Error = 'Error',
 }
 
 registerEnumType(FederationStatus, {
@@ -22,6 +23,9 @@ registerEnumType(FederationStatus, {
     },
     FederationDissolved: {
       description: '已解散',
+    },
+    Error: {
+      description: '失败',
     },
   },
 });

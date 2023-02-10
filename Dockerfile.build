@@ -1,4 +1,4 @@
-FROM 172.22.50.223/fabric/bc-apis:base-1.0 as builder
+FROM 172.22.50.223/fabric/bc-apis-base:1.0.0 as builder
 
 ENV NODE_ENV production
 

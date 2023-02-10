@@ -6,6 +6,10 @@ export const IS_PROD = env.NODE_ENV === 'production';
 
 export const LOG_LEVELS = env.LOG_LEVELS || 'log,error,warn';
 
+export const DEFAULT_STORAGE_CLASS = env.DEFAULT_STORAGE_CLASS;
+
+export const DEFAULT_INGRESS_CLASS = env.DEFAULT_INGRESS_CLASS;
+
 /** k8s 注入到 pod 中的 service account token 路径 */
 export const K8S_SA_TOKEN_PATH =
   '/var/run/secrets/kubernetes.io/serviceaccount/token';
