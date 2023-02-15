@@ -376,10 +376,7 @@ type Query {
   proposal(name: String): Proposal!
 
   """提议列表"""
-  proposals(
-    """根据类型检索"""
-    type: ProposalType
-  ): [Proposal!]!
+  proposals: [Proposal!]!
 }
 
 """IBPCR 状态"""

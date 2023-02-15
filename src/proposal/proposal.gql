@@ -1,6 +1,6 @@
 # 获取提议列表
-query getProposals($type: ProposalType) {
-  proposals(type: $type) {
+query getProposals {
+  proposals {
     name
     creationTimestamp
     endAt

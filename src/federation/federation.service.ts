@@ -8,12 +8,14 @@ import { ProposalService } from 'src/proposal/proposal.service';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
 import { FederationStatus } from './models/federation-status.enum';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
+import { OrganizationService } from 'src/organization/organization.service';
 
 @Injectable()
 export class FederationService {
   constructor(
     private readonly k8sService: KubernetesService,
     private readonly proposalService: ProposalService,
+    private readonly organizationService: OrganizationService,
   ) {}
 
   format(fed: CRD.Federation): Federation {
@@ -32,9 +34,18 @@ export class FederationService {
   }
 
   async federations(auth: JwtAuth): Promise<Federation[]> {
-    const k8s = await this.k8sService.getClient(auth);
-    const { body: fedList } = await k8s.federation.list();
-    return fedList.items.map((fed) => this.format(fed));
+    const { preferred_username } = auth;
+    const adminOrgs = await this.organizationService.getOrganizations(
+      auth,
+      preferred_username,
+    );
+    const fedNames = adminOrgs?.reduce((p, o) => {
+      const feds = o.federations
+        ?.map((f) => f?.name)
+        ?.filter((d: string) => !!d);
+      return p.concat(feds);
+    }, []);
+    return Promise.all(fedNames.map((fn) => this.federation(auth, fn)));
   }
 
   async federation(auth: JwtAuth, name: string): Promise<Federation> {

@@ -2,8 +2,10 @@ import {
   CallHandler,
   createParamDecorator,
   ExecutionContext,
+  HttpException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NestInterceptor,
   Type,
 } from '@nestjs/common';
@@ -202,7 +204,17 @@ export abstract class OrderedNestDataLoader<ID, Type>
       keys: ArrayLike<ID>,
     ): Promise<Array<Type | Error>> {
       const dataList = await loadMany(keys);
-      return dataList.filter((d) => !!d);
+      return dataList.filter((d) => {
+        if (d instanceof HttpException) {
+          Logger.error('dataloader', `loadMany`, d.getResponse());
+          return false;
+        }
+        if (d instanceof Error) {
+          Logger.error('dataloader', 'loadMany', d);
+          return false;
+        }
+        return !!d;
+      });
     }
     loader.loadMany = _loadMany;
     return loader;
