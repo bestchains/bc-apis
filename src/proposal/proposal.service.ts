@@ -3,8 +3,10 @@ import { get } from 'lodash';
 import { camelCaseToKebabCase, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
+import { OrganizationService } from 'src/organization/organization.service';
 import { JwtAuth } from 'src/types';
 import { VotePhase } from 'src/vote/models/vote-phase.enum';
+import { VoteService } from 'src/vote/vote.service';
 import { NewProposal } from './dto/new-proposal.input';
 import { ProposalPolicy } from './models/proposal-policy.enum';
 import { ProposalType } from './models/proposal-type.enum';
@@ -12,7 +14,11 @@ import { Proposal } from './models/proposal.model';
 
 @Injectable()
 export class ProposalService {
-  constructor(private readonly k8sService: KubernetesService) {}
+  constructor(
+    private readonly k8sService: KubernetesService,
+    private readonly organizationService: OrganizationService,
+    private readonly voteService: VoteService,
+  ) {}
 
   format(pro: CRD.Proposal): Proposal {
     const type = pro.metadata?.labels?.['bestchains.proposal.type'];
@@ -43,16 +49,23 @@ export class ProposalService {
     };
   }
 
-  async getProposals(auth: JwtAuth, type?: ProposalType): Promise<Proposal[]> {
-    const labelSelector = [];
-    if (type) {
-      labelSelector.push(`bestchains.proposal.type=${type}`);
-    }
-    const k8s = await this.k8sService.getClient(auth);
-    const { body: pros } = await k8s.proposal.list({
-      labelSelector: labelSelector.join(','),
-    });
-    return pros.items.map((pro) => this.format(pro));
+  async getProposals(auth: JwtAuth): Promise<Proposal[]> {
+    const { preferred_username } = auth;
+    const adminOrgs = await this.organizationService.getOrganizations(
+      auth,
+      preferred_username,
+    );
+    const nss = adminOrgs?.map((org) => org.name);
+    const votess = await Promise.all(
+      nss?.map((ns) => this.voteService.getVotes(auth, ns)),
+    );
+    const proposalNames = votess?.reduce((p, v) => {
+      const ps = v.map((d) => d?.proposalName).filter((d) => !!d);
+      return [...p, ...ps];
+    }, []);
+    return Promise.all(
+      (proposalNames as string[])?.map((p) => this.getProposal(auth, p)),
+    );
   }
 
   async getProposal(auth: JwtAuth, name: string): Promise<Proposal> {

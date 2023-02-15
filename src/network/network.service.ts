@@ -5,6 +5,7 @@ import {
   genNanoid,
   NETWORK_VERSION_RESOURCES,
 } from 'src/common/utils';
+import { FederationService } from 'src/federation/federation.service';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
@@ -19,6 +20,7 @@ export class NetworkService {
   constructor(
     private readonly k8sService: KubernetesService,
     private readonly proposalService: ProposalService,
+    private readonly fedService: FederationService,
   ) {}
 
   format(network: CRD.Network): Network {
@@ -48,9 +50,14 @@ export class NetworkService {
   }
 
   async getNetworks(auth: JwtAuth): Promise<Network[]> {
-    const k8s = await this.k8sService.getClient(auth);
-    const { body } = await k8s.network.list();
-    return body.items.map((item) => this.format(item));
+    const feds = await this.fedService.federations(auth);
+    const netNames = feds?.reduce(
+      (p, f) => (f.networkNames ? [...p, f.networkNames] : p),
+      [],
+    );
+    return await Promise.all(
+      netNames?.map((netName) => netName && this.getNetwork(auth, netName)),
+    );
   }
 
   async createNetwork(

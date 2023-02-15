@@ -30,6 +30,7 @@ export class OrganizationService {
       status: org.status?.type,
       reason: org.status?.reason,
       clients: org.spec?.clients,
+      federations: org.status?.federations,
     };
   }
 
