@@ -8,7 +8,6 @@ import { JwtAuth } from 'src/types';
 import { VotePhase } from 'src/vote/models/vote-phase.enum';
 import { ProposalPhase } from './models/proposal-phase.enum';
 import { ProposalStatus } from './models/proposal-status.enum';
-import { ProposalType } from './models/proposal-type.enum';
 import { Proposal } from './models/proposal.model';
 import { ProposalService } from './proposal.service';
 
@@ -17,16 +16,8 @@ export class ProposalResolver {
   constructor(private readonly proposalService: ProposalService) {}
 
   @Query(() => [Proposal], { description: '提议列表' })
-  async proposals(
-    @Auth() auth: JwtAuth,
-    @Args('type', {
-      type: () => ProposalType,
-      nullable: true,
-      description: '根据类型检索',
-    })
-    type: ProposalType,
-  ): Promise<Proposal[]> {
-    return this.proposalService.getProposals(auth, type);
+  async proposals(@Auth() auth: JwtAuth): Promise<Proposal[]> {
+    return this.proposalService.getProposals(auth);
   }
 
   @Query(() => Proposal, { description: '提议详情' })
