@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Post, Query, Redirect } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Redirect,
+  Res,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { GetTokenDto } from './common/models/get-token.dto';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
@@ -24,5 +33,10 @@ export class AppController {
   @Post('/token')
   async token(@Body() tokenDto: GetTokenDto) {
     return this.appService.getOidcToken(tokenDto);
+  }
+
+  @Get(['/bc', '/bc/*'])
+  oidcLogin(@Res() res: Response) {
+    res.render('bc-public/index');
   }
 }
