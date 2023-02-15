@@ -1,5 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
+import imageConfig from 'src/config/image.config';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
@@ -9,7 +11,11 @@ import { Organization } from './models/organization.model';
 
 @Injectable()
 export class OrganizationService {
-  constructor(private readonly k8sService: KubernetesService) {}
+  constructor(
+    private readonly k8sService: KubernetesService,
+    @Inject(imageConfig.KEY)
+    private imgConfig: ConfigType<typeof imageConfig>,
+  ) {}
 
   logger = new Logger('OrganizationService');
 
@@ -83,9 +89,9 @@ export class OrganizationService {
             class: DEFAULT_INGRESS_CLASS,
           },
           images: {
-            caImage: 'hyperledgerk8s/fabric-ca',
-            caTag: '1.5.5-iam',
-            caInitImage: 'hyperledgerk8s/ubi-minimal',
+            caImage: `${this.imgConfig.namespace}/fabric-ca`,
+            caTag: this.imgConfig.repositories.fabricCA.tag,
+            caInitImage: `${this.imgConfig.namespace}/ubi-minimal`,
             caInitTag: 'latest',
           },
           resources: {

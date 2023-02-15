@@ -8,5 +8,4 @@ RUN nr build
 
 FROM busybox
 COPY --from=builder /usr/src/app/dist /build-files/app/dist
-COPY --from=builder /usr/src/app/public /build-files/app/public
 COPY --from=builder /usr/src/app/src/kubernetes/docs /builder-files/app/public/kubernetes/
