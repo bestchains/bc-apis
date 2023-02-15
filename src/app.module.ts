@@ -23,6 +23,7 @@ import { DataLoaderInterceptor } from './common/dataloader';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { Response } from 'express';
 import { JSONObjectScalar, JSONScalar } from './common/scalars/json.scalar';
+import imageConfig from './config/image.config';
 
 const GRAPHQL_PATH = '/bff';
 
@@ -54,7 +55,7 @@ const GRAPHQL_PATH = '/bff';
       },
     }),
     ConfigModule.forRoot({
-      load: [kubernetesConfig, oidcConfig, iamProviderConfig],
+      load: [kubernetesConfig, oidcConfig, iamProviderConfig, imageConfig],
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
