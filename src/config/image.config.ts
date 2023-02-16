@@ -8,5 +8,11 @@ export default registerAs('image', () => ({
     fabricCA: {
       tag: env.IMAGE_FABRIC_CA_TAG || '1.5.5-iam',
     },
+    fabricOrderer: {
+      tag: env.IMAGE_FABRIC_ORDERER || '2.4.7',
+    },
+    fabricPeer: {
+      tag: env.IMAGE_FABRIC_PEER || '2.4.7',
+    },
   },
 }));
