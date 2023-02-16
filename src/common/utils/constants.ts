@@ -24,7 +24,7 @@ export const SECRET_CLUSTER_CONFIGS_NAMESPACE =
 export const SECRET_CLUSTER_CONFIGS_NAME = 'cluster-configs';
 
 export const NETWORK_VERSION_RESOURCES = {
-  [OrderVersion.Standard]: ['4', '8Gi', '100m', '200Mi', '200GB'],
-  [OrderVersion.Enterprise]: ['8', '16Gi', '100m', '200Mi', '500GB'],
-  [OrderVersion.Finance]: ['16', '32Gi', '16', '32Gi', '1000GB'],
+  [OrderVersion.Standard]: ['4', '8Gi', '100m', '200Mi', '200Gi'],
+  [OrderVersion.Enterprise]: ['8', '16Gi', '100m', '200Mi', '500Gi'],
+  [OrderVersion.Finance]: ['16', '32Gi', '16', '32Gi', '1000Gi'],
 };
