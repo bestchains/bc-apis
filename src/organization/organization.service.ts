@@ -137,10 +137,11 @@ export class OrganizationService {
     org: UpdateOrganization,
   ): Promise<Organization> {
     const { users, admin } = org;
+    const { admin: orgAdmin } = await this.getOrganization(auth, name);
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.organization.patchMerge(name, {
       spec: {
-        clients: users,
+        clients: users?.filter((u) => u !== orgAdmin),
         admin,
       },
     });
