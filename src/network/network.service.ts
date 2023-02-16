@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import {
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
   genNanoid,
   NETWORK_VERSION_RESOURCES,
 } from 'src/common/utils';
+import imageConfig from 'src/config/image.config';
 import { FederationService } from 'src/federation/federation.service';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
@@ -21,6 +23,8 @@ export class NetworkService {
     private readonly k8sService: KubernetesService,
     private readonly proposalService: ProposalService,
     private readonly fedService: FederationService,
+    @Inject(imageConfig.KEY)
+    private imgConfig: ConfigType<typeof imageConfig>,
   ) {}
 
   format(network: CRD.Network): Network {
@@ -119,6 +123,14 @@ export class NetworkService {
               class: DEFAULT_STORAGE_CLASS,
               size,
             },
+          },
+          images: {
+            ordererInitImage: `${this.imgConfig.namespace}/ubi-minimal`,
+            ordererInitTag: 'latest',
+            grpcwebImage: `${this.imgConfig.namespace}/grpc-web`,
+            grpcwebTag: 'latest',
+            ordererImage: `${this.imgConfig.namespace}/fabric-orderer`,
+            ordererTag: this.imgConfig.repositories.fabricOrderer.tag,
           },
         },
       },
