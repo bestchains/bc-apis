@@ -9,6 +9,8 @@ query getOrganizations($admin: String) {
     admin
     status
     reason
+    networks
+    federations
   }
 }
 
@@ -23,6 +25,8 @@ query getOrganization($name: String!) {
     admin
     status
     reason
+    networks
+    federations
     users {
       name
       isOrganizationAdmin

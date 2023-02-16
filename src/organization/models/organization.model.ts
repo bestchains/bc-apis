@@ -1,5 +1,4 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
-import { AnyObj } from 'src/types';
 import { User } from 'src/users/models/user.model';
 import { StatusType } from './status-type.enum';
 
@@ -40,6 +39,9 @@ export class Organization {
   /** 加入时间（只在联盟中使用） */
   joinedAt?: string;
 
-  @HideField()
-  federations?: AnyObj;
+  /** 所在联盟 */
+  federations?: string[];
+
+  /** 所在网络 */
+  networks?: string[];
 }

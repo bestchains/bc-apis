@@ -9,6 +9,10 @@ import {
 import DataLoader from 'dataloader';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { FederationLoader } from 'src/federation/federation.loader';
+import { Federation } from 'src/federation/models/federation.model';
+import { Network } from 'src/network/models/network.model';
+import { NetworkLoader } from 'src/network/network.loader';
 import { JwtAuth } from 'src/types';
 import { User } from 'src/users/models/user.model';
 import { UsersLoader } from 'src/users/users.loader';
@@ -67,5 +71,33 @@ export class OrganizationResolver {
       ...u,
       isOrganizationAdmin: admin === u.name,
     }));
+  }
+
+  @ResolveField(() => [Network], {
+    nullable: true,
+    description: '组织所在的网络',
+  })
+  async networks(
+    @Auth() auth: JwtAuth,
+    @Parent() org: Organization,
+    @Loader(FederationLoader)
+    fedLoader: DataLoader<Federation['name'], Federation>,
+    @Loader(NetworkLoader) networkLoader: DataLoader<Network['name'], Network>,
+  ): Promise<Network[]> {
+    const { preferred_username } = auth;
+    const { federations, admin, name } = org;
+    // TODO: 当前用户不在此组织中，没有get/federation get/network权限
+    if (admin !== preferred_username) return;
+    if (!federations) return;
+    const feds = await fedLoader.loadMany(federations);
+    const netNames = (feds as Federation[])
+      ?.map((f) => f?.networkNames)
+      ?.filter((d) => !!d);
+    if (!netNames || netNames.length === 0) return;
+    const nets = await networkLoader.loadMany([...new Set(netNames.flat())]);
+    return (nets as Network[])?.filter((net) => {
+      const members = net?.members?.map((m) => m.name);
+      return members?.includes(name);
+    });
   }
 }
