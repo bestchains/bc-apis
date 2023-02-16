@@ -1,3 +1,4 @@
+import { HttpError } from '@kubernetes/client-node';
 import {
   CallHandler,
   createParamDecorator,
@@ -203,14 +204,19 @@ export abstract class OrderedNestDataLoader<ID, Type>
     async function _loadMany(
       keys: ArrayLike<ID>,
     ): Promise<Array<Type | Error>> {
+      const loaderFunName = `${options.typeName || defaultTypeName}LoadMany`;
       const dataList = await loadMany(keys);
       return dataList.filter((d) => {
         if (d instanceof HttpException) {
-          Logger.error('dataloader', `loadMany`, d.getResponse());
+          Logger.error('dataloader', loaderFunName, d.getResponse());
+          return false;
+        }
+        if (d instanceof HttpError) {
+          Logger.error('dataloader', loaderFunName, d.body);
           return false;
         }
         if (d instanceof Error) {
-          Logger.error('dataloader', 'loadMany', d);
+          Logger.error('dataloader', loaderFunName, d);
           return false;
         }
         return !!d;
