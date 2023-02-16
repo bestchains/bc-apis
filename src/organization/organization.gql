@@ -65,3 +65,13 @@ mutation updateOrganization($name: String!, $organization: UpdateOrganization!) 
     }
   }
 }
+
+# 删除组织
+mutation deleteOrganization($name: String!) {
+  organizationDelete(name: $name) {
+    code
+    status
+    reason
+    message
+  }
+}

@@ -9,6 +9,7 @@ import {
 import DataLoader from 'dataloader';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { FederationLoader } from 'src/federation/federation.loader';
 import { Federation } from 'src/federation/models/federation.model';
 import { Network } from 'src/network/models/network.model';
@@ -57,6 +58,14 @@ export class OrganizationResolver {
     @Args('organization') organization: UpdateOrganization,
   ): Promise<Organization> {
     return this.orgService.updateOrganization(auth, name, organization);
+  }
+
+  @Mutation(() => K8sV1Status, { description: '删除组织' })
+  async organizationDelete(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+  ): Promise<K8sV1Status> {
+    return this.orgService.deleteOrganization(auth, name);
   }
 
   @ResolveField(() => [User], { description: '组织内用户' })
