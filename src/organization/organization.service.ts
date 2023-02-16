@@ -1,5 +1,6 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
@@ -146,5 +147,17 @@ export class OrganizationService {
       },
     });
     return this.format(body);
+  }
+
+  async deleteOrganization(auth: JwtAuth, name: string): Promise<K8sV1Status> {
+    const { federations } = await this.getOrganization(auth, name);
+    if (federations && federations.length > 0) {
+      throw new ForbiddenException(
+        'the organization is initiator of one federation',
+      );
+    }
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.organization.delete(name);
+    return body;
   }
 }

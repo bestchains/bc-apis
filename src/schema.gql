@@ -129,6 +129,9 @@ type Mutation {
   """新增组织"""
   organizationCreate(organization: NewOrganizationInput!): Organization!
 
+  """删除组织"""
+  organizationDelete(name: String!): K8sV1Status!
+
   """修改组织"""
   organizationUpdate(name: String!, organization: UpdateOrganization!): Organization!
 
