@@ -245,6 +245,9 @@ type Organization {
   """名称"""
   displayName: String
 
+  """所在联盟"""
+  federations: [String!]
+
   """加入时间（只在联盟中使用）"""
   joinedAt: String
 
@@ -253,6 +256,9 @@ type Organization {
 
   """name"""
   name: ID!
+
+  """所在网络"""
+  networks: [String!]
 
   """原因（状态为非Deplyed时）"""
   reason: String

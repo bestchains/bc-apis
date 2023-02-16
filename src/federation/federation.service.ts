@@ -40,9 +40,7 @@ export class FederationService {
       preferred_username,
     );
     const fedNames = adminOrgs?.reduce((p, o) => {
-      const feds = o.federations
-        ?.map((f) => f?.name)
-        ?.filter((d: string) => !!d);
+      const feds = o.federations || [];
       return p.concat(feds);
     }, []);
     return Promise.all(fedNames.map((fn) => this.federation(auth, fn)));
