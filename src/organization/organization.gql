@@ -9,7 +9,9 @@ query getOrganizations($admin: String) {
     admin
     status
     reason
-    networks
+    networks {
+      name
+    }
     federations
   }
 }
@@ -25,7 +27,16 @@ query getOrganization($name: String!) {
     admin
     status
     reason
-    networks
+    networks {
+      name
+      creationTimestamp
+      lastHeartbeatTime
+      expiredTime
+      clusterSize
+      organizations {
+        name
+      }
+    }
     federations
     users {
       name

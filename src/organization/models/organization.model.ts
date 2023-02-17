@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Network } from 'src/network/models/network.model';
 import { User } from 'src/users/models/user.model';
 import { StatusType } from './status-type.enum';
 
@@ -43,5 +44,5 @@ export class Organization {
   federations?: string[];
 
   /** 所在网络 */
-  networks?: string[];
+  networks?: Network[];
 }
