@@ -10,7 +10,6 @@ FROM hyperledgerk8s/bc-console:dev-branch as bc-console
 FROM hyperledgerk8s/bc-apis-base-pro:1.0.0
 
 COPY --from=builder /usr/src/app/dist /usr/src/app/dist
-COPY --from=builder /usr/src/app/src/kubernetes/docs /usr/src/app/public/kubernetes/
 COPY --from=bc-console /build-files/dist /usr/src/app/public
 
 EXPOSE 8024
