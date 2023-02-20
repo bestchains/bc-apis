@@ -352,11 +352,7 @@ export interface Organization {
     /**
      * Federations which this organization has been added
      */
-    federations?: {
-      name?: string;
-      namespace?: string;
-      [k: string]: any;
-    }[];
+    federations?: string[];
     /**
      * LastHeartbeatTime is when the controller reconciled this component
      */

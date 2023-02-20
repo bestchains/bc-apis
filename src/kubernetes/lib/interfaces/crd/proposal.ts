@@ -29,6 +29,11 @@ export interface Proposal {
       members: string[];
       [k: string]: any;
     };
+    archiveChannel?: {
+      channel: string;
+      description?: string;
+      [k: string]: any;
+    };
     createFederation?: {
       [k: string]: any;
     };
@@ -52,6 +57,11 @@ export interface Proposal {
      */
     policy: string;
     startAt?: string;
+    unarchiveChannel?: {
+      channel: string;
+      description?: string;
+      [k: string]: any;
+    };
     [k: string]: any;
   };
   status?: {
