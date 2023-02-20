@@ -82,8 +82,6 @@ type K8sV1StatusDetails {
 type Mutation {
   """向联盟中添加组织（返回true：只表示这个操作触发成功，而不是添加组织成功）"""
   federationAddOrganization(
-    """发起者（当前用户所在的组织）"""
-    initiator: String!
     name: String!
 
     """要添加的组织"""
@@ -97,16 +95,10 @@ type Mutation {
   federationDelete(name: String!): K8sV1Status!
 
   """解散联盟（返回true：只表示这个操作触发成功，而不是解散联盟成功)"""
-  federationDissolve(
-    """发起者（当前用户所在的组织）"""
-    initiator: String!
-    name: String!
-  ): Boolean!
+  federationDissolve(name: String!): Boolean!
 
   """从联盟中驱逐一个组织（返回true：只表示这个操作触发成功，而不是驱逐组织成功）"""
   federationRemoveOrganization(
-    """发起者（当前用户所在的组织）"""
-    initiator: String!
     name: String!
 
     """要驱逐的组织"""

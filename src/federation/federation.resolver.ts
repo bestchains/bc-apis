@@ -51,8 +51,6 @@ export class FederationResolver {
   async federationAddOrganization(
     @Auth() auth: JwtAuth,
     @Args('name') name: string,
-    @Args('initiator', { description: '发起者（当前用户所在的组织）' })
-    initiator: string,
     @Args('organizations', {
       type: () => [String],
       description: '要添加的组织',
@@ -62,7 +60,6 @@ export class FederationResolver {
     return this.federationService.addOrganizationToFederation(
       auth,
       name,
-      initiator,
       organizations,
     );
   }
@@ -74,14 +71,11 @@ export class FederationResolver {
   async federationRemoveOrganization(
     @Auth() auth: JwtAuth,
     @Args('name') name: string,
-    @Args('initiator', { description: '发起者（当前用户所在的组织）' })
-    initiator: string,
     @Args('organization', { description: '要驱逐的组织' }) organization: string,
   ): Promise<boolean> {
     return this.federationService.removeOrganizationFromFederation(
       auth,
       name,
-      initiator,
       organization,
     );
   }
@@ -93,10 +87,8 @@ export class FederationResolver {
   async federationDissolve(
     @Auth() auth: JwtAuth,
     @Args('name') name: string,
-    @Args('initiator', { description: '发起者（当前用户所在的组织）' })
-    initiator: string,
   ): Promise<boolean> {
-    return this.federationService.dissolveFederation(auth, name, initiator);
+    return this.federationService.dissolveFederation(auth, name);
   }
 
   @Mutation(() => K8sV1Status, {
