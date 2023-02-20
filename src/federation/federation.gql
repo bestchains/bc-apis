@@ -78,18 +78,18 @@ mutation createFederation($federation: NewFederationInput!) {
 }
 
 # 向联盟中添加组织
-mutation addOrganizationToFederation($name: String!, $organizations: [String!]!, $initiator: String!) {
-  federationAddOrganization(name:$name, organizations: $organizations, initiator: $initiator)
+mutation addOrganizationToFederation($name: String!, $organizations: [String!]!) {
+  federationAddOrganization(name:$name, organizations: $organizations)
 }
 
 # 从联盟中驱逐一个组织
-mutation removeOrganizationToFederation($name: String!, $initiator: String!, $organization: String!) {
-  federationRemoveOrganization(name: $name, initiator: $initiator, organization: $organization)
+mutation removeOrganizationToFederation($name: String!, $organization: String!) {
+  federationRemoveOrganization(name: $name, organization: $organization)
 }
 
 # 解散联盟
-mutation dissolveFederation($name: String!, $initiator: String!) {
-  federationDissolve(name: $name, initiator: $initiator)
+mutation dissolveFederation($name: String!) {
+  federationDissolve(name: $name)
 }
 
 # 删除联盟

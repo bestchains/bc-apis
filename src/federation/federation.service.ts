@@ -93,12 +93,28 @@ export class FederationService {
     return this.format(body);
   }
 
+  async confirmedInitiator(auth: JwtAuth, name: string): Promise<string> {
+    // 确认发起者：当前用户为admin的组织，（优先在此联盟中的），多个则默认第一个
+    const { preferred_username } = auth;
+    const orgs = await this.organizationService.getOrganizations(
+      auth,
+      preferred_username,
+    );
+    const orgNames = orgs.map((o) => o.name);
+    const { members } = await this.federation(auth, name);
+    const initiator =
+      orgNames.find((o) => members?.some((m) => m.name === o)) || orgNames[0];
+    return initiator;
+  }
+
   async addOrganizationToFederation(
     auth: JwtAuth,
     name: string,
-    initiator: string,
     organizations: string[],
   ) {
+    // 0. 确认发起者
+    const initiator = await this.confirmedInitiator(auth, name);
+
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,
@@ -118,9 +134,11 @@ export class FederationService {
   async removeOrganizationFromFederation(
     auth: JwtAuth,
     name: string,
-    initiator: string,
     organization: string,
   ) {
+    // 0. 确认发起者
+    const initiator = await this.confirmedInitiator(auth, name);
+
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,
@@ -137,7 +155,10 @@ export class FederationService {
     return true; // 表示这个操作触发成功，而不是驱逐组织成功
   }
 
-  async dissolveFederation(auth: JwtAuth, name: string, initiator: string) {
+  async dissolveFederation(auth: JwtAuth, name: string) {
+    // 0. 确认发起者
+    const initiator = await this.confirmedInitiator(auth, name);
+
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,
