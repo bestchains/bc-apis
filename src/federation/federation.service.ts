@@ -56,7 +56,13 @@ export class FederationService {
     auth: JwtAuth,
     federation: NewFederationInput,
   ): Promise<Federation> {
-    const { name, policy, organizations, description, initiator } = federation;
+    const {
+      name,
+      policy,
+      organizations = [],
+      description,
+      initiator,
+    } = federation;
     const orgs = [...new Set([...organizations, initiator])];
     const k8s = await this.k8sService.getClient(auth);
     // 1. 创建联盟

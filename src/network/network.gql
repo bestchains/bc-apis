@@ -17,6 +17,9 @@ query getNetworks{
     	admin
     }
     status
+    channels {
+      name
+    }
   }
 }
 
@@ -39,6 +42,18 @@ query getNetwork($name: String!) {
     	admin
     }
     status
+    channels {
+      name
+      members{
+        name
+      }
+      peers {
+        name
+        namespace
+      }
+      creationTimestamp
+      status
+    }
   }
 }
 

@@ -16,7 +16,7 @@ export class NewFederationInput {
   @Field(() => [String], {
     description: '选择组织',
   })
-  organizations: string[];
+  organizations?: string[];
 
   /** 发起者（当前用户所在的组织） */
   initiator: string;

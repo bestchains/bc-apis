@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { uniq } from 'lodash';
 import {
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
@@ -27,6 +28,8 @@ export class NetworkService {
     private imgConfig: ConfigType<typeof imageConfig>,
   ) {}
 
+  private logger = new Logger('NetworkService');
+
   format(network: CRD.Network): Network {
     const creationTimestamp = new Date(
       network.metadata?.creationTimestamp,
@@ -44,6 +47,7 @@ export class NetworkService {
       clusterSize: network.spec?.orderSpec?.clusterSize,
       status: network.status?.type,
       ordererType: network.spec?.orderSpec?.ordererType,
+      channelNames: network.status?.channels,
     };
   }
 
@@ -55,13 +59,26 @@ export class NetworkService {
 
   async getNetworks(auth: JwtAuth): Promise<Network[]> {
     const feds = await this.fedService.federations(auth);
-    const netNames = feds?.reduce(
-      (p, f) => (f.networkNames ? [...p, f.networkNames] : p),
-      [],
+    let netNames = [];
+    feds?.forEach((fed) => {
+      if (fed.networkNames) {
+        netNames = netNames.concat(fed.networkNames);
+      }
+    });
+    const res = await Promise.allSettled(
+      uniq(netNames)?.map(
+        (netName) => netName && this.getNetwork(auth, netName),
+      ),
     );
-    return await Promise.all(
-      netNames?.map((netName) => netName && this.getNetwork(auth, netName)),
-    );
+    const nets = [];
+    res?.forEach((r) => {
+      if (r.status === 'fulfilled') {
+        nets.push(r.value);
+      } else {
+        this.logger.error('Failure', r.reason?.body);
+      }
+    });
+    return nets;
   }
 
   async createNetwork(

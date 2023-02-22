@@ -23,6 +23,9 @@ import { DataLoaderInterceptor } from './common/dataloader';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { Response } from 'express';
 import { JSONObjectScalar, JSONScalar } from './common/scalars/json.scalar';
+import { ChannelModule } from './channel/channel.module';
+import { IbppeerModule } from './ibppeer/ibppeer.module';
+import { ConfigmapModule } from './configmap/configmap.module';
 import imageConfig from './config/image.config';
 
 const GRAPHQL_PATH = '/bff';
@@ -82,6 +85,9 @@ const GRAPHQL_PATH = '/bff';
     ProposalModule,
     VoteModule,
     NetworkModule,
+    ChannelModule,
+    IbppeerModule,
+    ConfigmapModule,
   ],
   controllers: [AppController],
   providers: [

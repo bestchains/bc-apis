@@ -158,4 +158,13 @@ export class OrganizationService {
     const { body } = await k8s.organization.delete(name);
     return body;
   }
+
+  async getIbppeersForCreateChannel(
+    auth: JwtAuth,
+    member: string[],
+  ): Promise<Organization[]> {
+    const { preferred_username } = auth;
+    const orgs = await this.getOrganizations(auth, preferred_username);
+    return orgs.filter((org) => member?.includes(org.name));
+  }
 }

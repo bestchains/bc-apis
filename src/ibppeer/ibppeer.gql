@@ -1,0 +1,12 @@
+# 创建节点
+mutation createIbppeer($organization: String!) {
+  ibppeerCreate(organization: $organization) {
+    name
+    creationTimestamp
+    status
+    limits {
+      cpu
+      memory
+    }
+  }
+}

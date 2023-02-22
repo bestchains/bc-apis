@@ -1,0 +1,31 @@
+# 创建通道
+mutation createChannel($network: String!, $channel: NewChannel!) {
+  channelCreate(network: $network, channel: $channel) {
+    name
+    members{
+      name
+    }
+    peers {
+      name
+      namespace
+    }
+    creationTimestamp
+    status
+  }
+}
+
+# 更新通道
+mutation updateChannel($channel: UpdateChannel!, $name: String!) {
+  channelUpdate(channel: $channel, name: $name) {
+    name
+    members{
+      name
+    }
+    peers {
+      name
+      namespace
+    }
+    creationTimestamp
+    status
+  }
+}

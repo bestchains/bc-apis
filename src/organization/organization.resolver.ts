@@ -12,6 +12,8 @@ import { Auth } from 'src/common/decorators/auth.decorator';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { FederationLoader } from 'src/federation/federation.loader';
 import { Federation } from 'src/federation/models/federation.model';
+import { IbppeerService } from 'src/ibppeer/ibppeer.service';
+import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Network } from 'src/network/models/network.model';
 import { NetworkLoader } from 'src/network/network.loader';
 import { JwtAuth } from 'src/types';
@@ -24,7 +26,10 @@ import { OrganizationService } from './organization.service';
 
 @Resolver(() => Organization)
 export class OrganizationResolver {
-  constructor(private readonly orgService: OrganizationService) {}
+  constructor(
+    private readonly orgService: OrganizationService,
+    private readonly ibppeerService: IbppeerService,
+  ) {}
 
   @Query(() => [Organization], { description: '组织列表' })
   async organizations(
@@ -68,6 +73,20 @@ export class OrganizationResolver {
     return this.orgService.deleteOrganization(auth, name);
   }
 
+  @Query(() => [Organization], {
+    description: '获取「创建/更新通道」时的可选节点列表',
+  })
+  async ibppeersForCreateChannel(
+    @Auth() auth: JwtAuth,
+    @Args('members', {
+      type: () => [String],
+      description: '此通道的组织（包括发起者和配置成员）',
+    })
+    members: string[],
+  ): Promise<Organization[]> {
+    return this.orgService.getIbppeersForCreateChannel(auth, members);
+  }
+
   @ResolveField(() => [User], { description: '组织内用户' })
   async users(
     @Parent() org: Organization,
@@ -95,7 +114,7 @@ export class OrganizationResolver {
   ): Promise<Network[]> {
     const { preferred_username } = auth;
     const { federations, admin, name } = org;
-    // TODO: 当前用户不在此组织中，没有get/federation get/network权限
+    // TODO: 当前用户不在此组织中，没有get/federation get/network权限；其他的组织需要怎么显示？
     if (admin !== preferred_username) return;
     if (!federations) return;
     const feds = await fedLoader.loadMany(federations);
@@ -108,5 +127,22 @@ export class OrganizationResolver {
       const members = net?.members?.map((m) => m.name);
       return members?.includes(name);
     });
+  }
+
+  @ResolveField(() => [Ibppeer], {
+    nullable: true,
+    description: '组织的节点列表',
+  })
+  async ibppeers(
+    @Auth() auth: JwtAuth,
+    @Parent() org: Organization,
+  ): Promise<Ibppeer[]> {
+    const { preferred_username } = auth;
+    const { name, admin } = org;
+    // TODO: 当前用户不在此组织中，没有list/ibppeer权限；其他的组织需要怎么显示？
+    if (admin !== preferred_username) return;
+    // TODO: Dataloader 以name为key，但这里以namespace为key
+    const ibppeers = await this.ibppeerService.getIbppeers(auth, name);
+    return ibppeers;
   }
 }

@@ -10,6 +10,8 @@ export const DEFAULT_STORAGE_CLASS = env.DEFAULT_STORAGE_CLASS;
 
 export const DEFAULT_INGRESS_CLASS = env.DEFAULT_INGRESS_CLASS;
 
+export const OPERATOR_INGRESS_DOMAIN = env.OPERATOR_INGRESS_DOMAIN;
+
 /** k8s 注入到 pod 中的 service account token 路径 */
 export const K8S_SA_TOKEN_PATH =
   '/var/run/secrets/kubernetes.io/serviceaccount/token';

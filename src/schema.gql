@@ -2,6 +2,43 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Channel {
+  """合约数量"""
+  creationTimestamp: String
+
+  """组织数量"""
+  members: [SpecMember!]
+
+  """name"""
+  name: ID!
+
+  """我的节点"""
+  peers: [SpecPeer!]
+
+  """状态"""
+  status: ChannelStatus
+}
+
+input ChannelPeer {
+  """名称"""
+  name: String!
+
+  """命名空间（所属组织）"""
+  namespace: String!
+}
+
+"""「通道」状态"""
+enum ChannelStatus {
+  """Deployed"""
+  Deployed
+
+  """Deploying"""
+  Deploying
+
+  """失败"""
+  Error
+}
+
 """联盟"""
 type Federation {
   """创建时间"""
@@ -50,6 +87,32 @@ enum FederationStatus {
   FederationPending
 }
 
+type Ibppeer {
+  """创建时间"""
+  creationTimestamp: String!
+
+  """节点配置"""
+  limits: SpecResource
+
+  """name"""
+  name: ID!
+
+  """运行状态"""
+  status: IbppeerStatus
+}
+
+"""「Peer节点」状态"""
+enum IbppeerStatus {
+  """Deployed"""
+  Deployed
+
+  """Deploying"""
+  Deploying
+
+  """失败"""
+  Error
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -80,6 +143,12 @@ type K8sV1StatusDetails {
 }
 
 type Mutation {
+  """创建通道"""
+  channelCreate(channel: NewChannel!, network: String!): Channel!
+
+  """加入/去除Peer节点"""
+  channelUpdate(channel: UpdateChannel!, name: String!): Channel!
+
   """向联盟中添加组织（返回true：只表示这个操作触发成功，而不是添加组织成功）"""
   federationAddOrganization(
     name: String!
@@ -104,6 +173,12 @@ type Mutation {
     """要驱逐的组织"""
     organization: String!
   ): Boolean!
+
+  """创建IBPPeer节点"""
+  ibppeerCreate(
+    """所在组织"""
+    organization: String!
+  ): Ibppeer!
 
   """创建网络"""
   networkCreate(network: NewNetworkInput!): Network!
@@ -133,6 +208,9 @@ type Mutation {
 
 """网络"""
 type Network {
+  """通道列表"""
+  channels: [Channel!]
+
   """我的节点数"""
   clusterSize: Float
 
@@ -164,6 +242,26 @@ type Network {
   status: StatusType
 }
 
+input NewChannel {
+  """描述"""
+  description: String
+
+  """发起者（组织）"""
+  initiator: String!
+
+  """通道名称（channel name）"""
+  name: String!
+
+  """配置成员（组织）"""
+  organizations: [String!]
+
+  """Peer节点，仅能选Deployed的（通过「getIbppeersForCreateChannel」API获取）"""
+  peers: [ChannelPeer!]!
+
+  """准入门槛"""
+  policy: String
+}
+
 input NewFederationInput {
   """联盟描述"""
   description: String
@@ -177,7 +275,7 @@ input NewFederationInput {
   name: String!
 
   """选择组织"""
-  organizations: [String!]!
+  organizations: [String!]
 
   """提议投票策略"""
   policy: ProposalPolicy!
@@ -214,6 +312,15 @@ input NewOrganizationInput {
   name: String!
 }
 
+"""操作"""
+enum Operator {
+  """加入节点"""
+  add
+
+  """移除节点"""
+  remove
+}
+
 """新建网络的版本"""
 enum OrderVersion {
   """企业版"""
@@ -242,6 +349,9 @@ type Organization {
 
   """所在联盟"""
   federations: [String!]
+
+  """所有节点"""
+  ibppeers: [Ibppeer!]
 
   """加入时间（只在联盟中使用）"""
   joinedAt: String
@@ -358,6 +468,12 @@ type Query {
   """联盟列表"""
   federations: [Federation!]!
 
+  """获取「创建/更新通道」时的可选节点列表"""
+  ibppeersForCreateChannel(
+    """此通道的组织（包括发起者和配置成员）"""
+    members: [String!]!
+  ): [Organization!]!
+
   """网络详情"""
   network(name: String!): Network!
 
@@ -378,6 +494,36 @@ type Query {
 
   """提议列表"""
   proposals: [Proposal!]!
+}
+
+"""成员个数"""
+type SpecMember {
+  """是否为发起者"""
+  initiator: Boolean
+
+  """加入时间"""
+  joinedAt: String
+  joinedBy: String
+
+  """组织名称"""
+  name: String
+  namespace: String
+}
+
+type SpecPeer {
+  """名称"""
+  name: String
+
+  """命名空间（所属组织）"""
+  namespace: String
+}
+
+type SpecResource {
+  """CPU"""
+  cpu: String!
+
+  """Memory"""
+  memory: String!
 }
 
 """IBPCR 状态"""
@@ -426,6 +572,16 @@ enum StatusType {
   Warning is the status when a component is running, but will fail in future
   """
   Warning
+}
+
+input UpdateChannel {
+  """操作类型"""
+  operate: Operator!
+
+  """
+  被操作的节点，若是添加节点，则Peer节点仅能选Deployed的（通过「getIbppeersForCreateChannel」API获取）
+  """
+  peers: [ChannelPeer!]!
 }
 
 input UpdateOrganization {

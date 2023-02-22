@@ -1,5 +1,7 @@
 export { Application } from './application';
 export { ApplicationList } from './application-list';
+export { Channel } from './channel';
+export { ChannelList } from './channel-list';
 export { Cluster } from './cluster';
 export { ClusterList } from './cluster-list';
 export { Federation } from './federation';

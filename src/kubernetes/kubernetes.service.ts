@@ -165,6 +165,7 @@ export class KubernetesService {
       // ~ crd
       // <replace type="crd">
       application: new lib.Application(customObjectsApi),
+      channel: new lib.Channel(customObjectsApi),
       cluster: new lib.Cluster(customObjectsApi),
       federation: new lib.Federation(customObjectsApi),
       ibpca: new lib.IBPCA(customObjectsApi),
