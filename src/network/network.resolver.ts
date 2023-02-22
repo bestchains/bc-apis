@@ -7,6 +7,9 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
+// import { ChannelLoader } from 'src/channel/channel.loader';
+import { ChannelService } from 'src/channel/channel.service';
+import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { Organization } from 'src/organization/models/organization.model';
@@ -18,7 +21,10 @@ import { NetworkService } from './network.service';
 
 @Resolver(() => Network)
 export class NetworkResolver {
-  constructor(private readonly networkService: NetworkService) {}
+  constructor(
+    private readonly networkService: NetworkService,
+    private readonly channelService: ChannelService,
+  ) {}
 
   @Query(() => [Network], { description: '网络列表' })
   async networks(@Auth() auth: JwtAuth): Promise<Network[]> {
@@ -86,5 +92,21 @@ export class NetworkResolver {
     if (!initiatorName) return;
     const org = await organizationLoader.load(initiatorName);
     return org;
+  }
+
+  @ResolveField(() => [Channel], { nullable: true, description: '通道列表' })
+  async channels(
+    @Auth() auth: JwtAuth,
+    @Parent() network: Network,
+    // @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
+  ): Promise<Channel[]> {
+    const { channelNames } = network;
+    if (!channelNames || channelNames.length === 0) return;
+    return Promise.all(
+      channelNames.map((c) => this.channelService.getChannel(auth, c)),
+    );
+    // TODO: list/channel 权限问题
+    // const cs = await channelLoader.loadMany(channelNames);
+    // return cs;
   }
 }

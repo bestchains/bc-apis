@@ -42,6 +42,15 @@ query getOrganization($name: String!) {
       name
       isOrganizationAdmin
     }
+    ibppeers {
+      name
+      creationTimestamp
+		  status
+      limits {
+        cpu
+        memory
+      }
+    }
   }
 }
 
@@ -84,5 +93,16 @@ mutation deleteOrganization($name: String!) {
     status
     reason
     message
+  }
+}
+
+# 获取「创建/更新通道」时的可选节点列表
+query getIbppeersForCreateChannel($members: [String!]!) {
+  ibppeersForCreateChannel(members: $members) {
+    name
+    ibppeers {
+      name
+      status
+    }
   }
 }

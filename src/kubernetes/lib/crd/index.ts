@@ -1,4 +1,5 @@
 export { Application } from './application';
+export { Channel } from './channel';
 export { Cluster } from './cluster';
 export { Federation } from './federation';
 export { IBPCA } from './ibpca';

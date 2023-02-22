@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID, HideField } from '@nestjs/graphql';
+import { SpecMember } from 'src/common/models/spec-member.model';
 import { Network } from 'src/network/models/network.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { ProposalPolicy } from 'src/proposal/models/proposal-policy.enum';
@@ -16,7 +17,7 @@ export class Federation {
   initiator?: Organization;
 
   @HideField()
-  members?: Member[];
+  members?: SpecMember[];
 
   /** 组织 */
   organizations?: Organization[];
@@ -43,22 +44,4 @@ export class Federation {
   /** 状态 */
   @Field(() => FederationStatus, { description: '状态' })
   status?: string;
-}
-
-@ObjectType({ description: '成员个数' })
-class Member {
-  /** 是否为发起者 */
-  initiator?: boolean;
-
-  /** name */
-  name?: string;
-
-  /** namespace */
-  namespace?: string;
-
-  joinedAt?: string;
-
-  joinedBy?: string;
-
-  [k: string]: any;
 }

@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Network } from 'src/network/models/network.model';
 import { User } from 'src/users/models/user.model';
 import { StatusType } from './status-type.enum';
@@ -45,4 +46,7 @@ export class Organization {
 
   /** 所在网络 */
   networks?: Network[];
+
+  /** 所有节点 */
+  ibppeers?: Ibppeer[];
 }

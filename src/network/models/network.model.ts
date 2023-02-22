@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Channel } from 'src/channel/models/channel.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { StatusType } from 'src/organization/models/status-type.enum';
 
@@ -42,6 +43,12 @@ export class Network {
   /** 发起者 */
   @Field(() => Organization, { description: '网络发起者（组织）' })
   initiator?: Organization;
+
+  @HideField()
+  channelNames?: string[];
+
+  /** 通道列表 */
+  channels?: Channel[];
 }
 
 @ObjectType({ description: '成员' })
