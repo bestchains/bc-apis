@@ -1,10 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { uniq } from 'lodash';
 import {
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
-  genNanoid,
   NETWORK_VERSION_RESOURCES,
 } from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
@@ -48,6 +47,9 @@ export class NetworkService {
       status: network.status?.type,
       ordererType: network.spec?.orderSpec?.ordererType,
       channelNames: network.status?.channels,
+      description: network.spec?.description,
+      limits: network.spec?.orderSpec?.resources?.init?.limits,
+      storage: network.spec?.orderSpec?.storage?.orderer?.size,
     };
   }
 
@@ -88,11 +90,12 @@ export class NetworkService {
     const { token } = auth;
     const {
       federation,
-      organizations,
       initiator,
       clusterSize,
       ordererType,
       version,
+      name,
+      description,
     } = network;
     const resource = NETWORK_VERSION_RESOURCES[OrderVersion[version]];
     const resources = {
@@ -107,10 +110,13 @@ export class NetworkService {
     };
     const size = resource[4];
 
+    const { members } = await this.fedService.federation(auth, federation);
+    const organizations = members?.map((m) => m.name);
+
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.create({
       metadata: {
-        name: genNanoid('network'),
+        name,
       },
       spec: {
         initialToken: token,
@@ -118,6 +124,7 @@ export class NetworkService {
           accept: true,
         },
         federation,
+        description,
         members: [...new Set([...organizations, initiator])].map((org) => ({
           name: org,
           initiator: org === initiator,
@@ -161,6 +168,11 @@ export class NetworkService {
     federation: string,
     initiator: string,
   ): Promise<boolean> {
+    // 0. 检查是否可以解散网络
+    const { channelNames } = await this.getNetwork(auth, name);
+    if (channelNames && channelNames.length > 0) {
+      throw new ForbiddenException('channel also exist in the network');
+    }
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,

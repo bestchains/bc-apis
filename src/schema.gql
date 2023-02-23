@@ -217,6 +217,9 @@ type Network {
   """创建时间"""
   creationTimestamp: String
 
+  """描述"""
+  description: String
+
   """到期时间"""
   expiredTime: String
 
@@ -229,6 +232,9 @@ type Network {
   """更新时间"""
   lastHeartbeatTime: String
 
+  """节点配置"""
+  limits: SpecResource
+
   """name"""
   name: ID!
 
@@ -240,6 +246,12 @@ type Network {
 
   """状态"""
   status: StatusType
+
+  """节点存储"""
+  storage: String
+
+  """配置版本"""
+  version: OrderVersion
 }
 
 input NewChannel {
@@ -285,17 +297,22 @@ input NewNetworkInput {
   """共识集群节点数（要求单数，默认1）"""
   clusterSize: Float!
 
+  """描述"""
+  description: String
+
   """所属联盟"""
   federation: String!
 
   """发起者（当前用户所在的组织）"""
   initiator: String!
 
+  """
+  网络名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  """
+  name: String!
+
   """共识算法"""
   ordererType: String
-
-  """选择组织"""
-  organizations: [String!]!
 
   """选择版本"""
   version: OrderVersion
@@ -308,7 +325,9 @@ input NewOrganizationInput {
   """展示名"""
   displayName: String
 
-  """组织名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?）"""
+  """
+  组织名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  """
   name: String!
 }
 

@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { SpecResource } from 'src/common/models/spec-resource.model';
 import { AnyObj } from 'src/types';
 import { IbppeerStatus } from './ibppeer-status.enum';
 
@@ -24,13 +25,4 @@ export class Ibppeer {
   /** 运行状态 */
   @Field(() => IbppeerStatus, { description: '运行状态' })
   status?: string;
-}
-
-@ObjectType()
-class SpecResource {
-  /** CPU */
-  cpu: string;
-
-  /** Memory */
-  memory: string;
 }
