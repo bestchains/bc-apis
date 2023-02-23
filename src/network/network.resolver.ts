@@ -12,10 +12,12 @@ import { ChannelService } from 'src/channel/channel.service';
 import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { NETWORK_VERSION_RESOURCES } from 'src/common/utils';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
 import { JwtAuth } from 'src/types';
 import { NewNetworkInput } from './dto/new-network.input';
+import { OrderVersion } from './dto/order-version.enum';
 import { Network } from './models/network.model';
 import { NetworkService } from './network.service';
 
@@ -63,6 +65,21 @@ export class NetworkResolver {
       federation,
       initiator,
     );
+  }
+
+  @ResolveField(() => OrderVersion, { nullable: true, description: '配置版本' })
+  version(@Parent() network: Network): OrderVersion {
+    const { storage } = network;
+    if (NETWORK_VERSION_RESOURCES[OrderVersion.Enterprise][4] === storage) {
+      return OrderVersion.Enterprise;
+    }
+    if (NETWORK_VERSION_RESOURCES[OrderVersion.Finance][4] === storage) {
+      return OrderVersion.Finance;
+    }
+    if (NETWORK_VERSION_RESOURCES[OrderVersion.Standard][4] === storage) {
+      return OrderVersion.Standard;
+    }
+    return null;
   }
 
   @ResolveField(() => [Organization], { description: '组织' })

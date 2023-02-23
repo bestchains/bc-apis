@@ -1,7 +1,9 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Channel } from 'src/channel/models/channel.model';
+import { SpecResource } from 'src/common/models/spec-resource.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { StatusType } from 'src/organization/models/status-type.enum';
+import { AnyObj } from 'src/types';
 
 @ObjectType({ description: '网络' })
 export class Network {
@@ -49,6 +51,16 @@ export class Network {
 
   /** 通道列表 */
   channels?: Channel[];
+
+  /** 描述 */
+  description?: string;
+
+  /** 节点配置 */
+  @Field(() => SpecResource, { description: '节点配置' })
+  limits?: AnyObj;
+
+  /** 节点存储 */
+  storage?: string;
 }
 
 @ObjectType({ description: '成员' })

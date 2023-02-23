@@ -27,12 +27,19 @@ query getNetworks{
 query getNetwork($name: String!) {
   network(name: $name) {
     name
+    description
     creationTimestamp
     lastHeartbeatTime
     expiredTime
     federation
     clusterSize
     ordererType
+    version
+    storage
+    limits {
+      cpu
+      memory
+    }
     organizations {
       name
       admin
