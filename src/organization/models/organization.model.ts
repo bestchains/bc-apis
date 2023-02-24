@@ -49,4 +49,7 @@ export class Organization {
 
   /** 所有节点 */
   ibppeers?: Ibppeer[];
+
+  /** 加入的通道 */
+  channels?: string[];
 }

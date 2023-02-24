@@ -29,22 +29,16 @@ query getOrganization($name: String!) {
     reason
     networks {
       name
-      creationTimestamp
-      lastHeartbeatTime
-      expiredTime
-      clusterSize
-      organizations {
-        name
-      }
     }
     federations
+    channels
     users {
       name
       isOrganizationAdmin
     }
     ibppeers {
       name
-      creationTimestamp
+      creationTimestamp # TODO：去除，查询太多数据，分两个接口
 		  status
       limits {
         cpu
@@ -79,10 +73,6 @@ mutation updateOrganization($name: String!, $organization: UpdateOrganization!) 
     admin
     status
     reason
-    users {
-      name
-      isOrganizationAdmin
-    }
   }
 }
 

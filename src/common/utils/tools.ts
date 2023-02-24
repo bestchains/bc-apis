@@ -4,6 +4,7 @@ import { customAlphabet } from 'nanoid';
 import { numbers, lowercase } from 'nanoid-dictionary';
 import { TokenException } from './errors';
 import type { JwtAuth, Request } from '../../types';
+import { compact, uniq } from 'lodash';
 
 /**
  * 从 token 中解析用户认证信息
@@ -82,3 +83,9 @@ export const nanoid = customAlphabet(numbers + lowercase, 5);
  * @returns
  */
 export const genNanoid = (prefix: string) => `${prefix}-${nanoid()}`;
+
+/**
+ * 多层级数组平铺去重
+ * @param {string[][]} arr
+ */
+export const flattenArr = (arr: string[][]) => uniq(compact(arr.flat()));

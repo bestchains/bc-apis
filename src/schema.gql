@@ -88,6 +88,9 @@ enum FederationStatus {
 }
 
 type Ibppeer {
+  """加入的通道"""
+  channels: [String!]
+
   """创建时间"""
   creationTimestamp: String!
 
@@ -96,6 +99,9 @@ type Ibppeer {
 
   """name"""
   name: ID!
+
+  """加入的网络"""
+  networks: [String!]
 
   """运行状态"""
   status: IbppeerStatus
@@ -357,6 +363,9 @@ type Organization {
   """管理员"""
   admin: String
 
+  """加入的通道"""
+  channels: [String!]
+
   """创建时间"""
   creationTimestamp: String!
 
@@ -486,6 +495,12 @@ type Query {
 
   """联盟列表"""
   federations: [Federation!]!
+
+  """获取组织下的节点列表"""
+  ibppeers(
+    """所在组织"""
+    organization: String!
+  ): [Ibppeer!]!
 
   """获取「创建/更新通道」时的可选节点列表"""
   ibppeersForCreateChannel(

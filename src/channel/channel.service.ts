@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { filter, find, isEqual, uniqWith } from 'lodash';
+import { Injectable, Logger } from '@nestjs/common';
+import { filter, find, isEqual, uniq, uniqWith } from 'lodash';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
@@ -11,6 +11,8 @@ import { Channel } from './models/channel.model';
 @Injectable()
 export class ChannelService {
   constructor(private readonly k8sService: KubernetesService) {}
+
+  private logger = new Logger('ChannelService');
 
   format(channel: CRD.Channel): Channel {
     return {
@@ -37,19 +39,28 @@ export class ChannelService {
     return this.format(body);
   }
 
+  async getChannelsByNames(auth: JwtAuth, names: string[]): Promise<Channel[]> {
+    const res = await Promise.allSettled(
+      uniq(names).map((n) => n && this.getChannel(auth, n)),
+    );
+    const chans = [];
+    res?.forEach((r) => {
+      if (r.status === 'fulfilled') {
+        chans.push(r.value);
+      } else {
+        this.logger.error('Failure', r.reason?.body);
+      }
+    });
+    return chans;
+  }
+
   async createChannel(
     auth: JwtAuth,
     network: string,
     channel: NewChannel,
   ): Promise<Channel> {
-    const {
-      name,
-      description,
-      initiator,
-      organizations,
-      peers, // TODO：必须是用户管理的组织（在members中）下的节点（提供接口）
-      policy,
-    } = channel;
+    const { name, description, initiator, organizations, peers, policy } =
+      channel;
     const members = (organizations || [])
       .concat(initiator)
       .map((d) => ({ name: d }));

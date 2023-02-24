@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { SpecResource } from 'src/common/models/spec-resource.model';
 import { AnyObj } from 'src/types';
 import { IbppeerStatus } from './ibppeer-status.enum';
@@ -11,12 +11,14 @@ export class Ibppeer {
   /** 创建时间 */
   creationTimestamp: string;
 
+  @HideField()
+  namespace?: string;
+
   /** 加入的网络 */
-  // TODO
+  networks?: string[];
 
   /** 加入的通道 */
-  // TODO
-  // org -> fed -> net -> chan  -> peers
+  channels?: string[];
 
   /** 节点配置 */
   @Field(() => SpecResource, { description: '节点配置' })
