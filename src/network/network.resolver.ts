@@ -119,9 +119,7 @@ export class NetworkResolver {
   ): Promise<Channel[]> {
     const { channelNames } = network;
     if (!channelNames || channelNames.length === 0) return;
-    return Promise.all(
-      channelNames.map((c) => this.channelService.getChannel(auth, c)),
-    );
+    return this.channelService.getChannelsByNames(auth, channelNames);
     // TODO: list/channel 权限问题
     // const cs = await channelLoader.loadMany(channelNames);
     // return cs;

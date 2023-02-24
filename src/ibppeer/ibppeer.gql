@@ -1,3 +1,18 @@
+# 获取节点列表
+query getIbppeers($organization: String!) {
+  ibppeers(organization: $organization) {
+    name
+    creationTimestamp
+    status
+    limits {
+      cpu
+      memory
+    }
+    channels
+    networks
+  }
+}
+
 # 创建节点
 mutation createIbppeer($organization: String!) {
   ibppeerCreate(organization: $organization) {

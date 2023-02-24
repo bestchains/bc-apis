@@ -35,6 +35,7 @@ export class IbppeerService {
       ).toISOString(),
       limits: ibppeer.spec?.resources?.peer?.limits,
       status: ibppeer.status?.type,
+      namespace: ibppeer.metadata?.namespace,
     };
   }
 

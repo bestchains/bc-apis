@@ -10,6 +10,7 @@ import DataLoader from 'dataloader';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
+import { flattenArr } from 'src/common/utils';
 import { FederationLoader } from 'src/federation/federation.loader';
 import { Federation } from 'src/federation/models/federation.model';
 import { IbppeerService } from 'src/ibppeer/ibppeer.service';
@@ -144,5 +145,26 @@ export class OrganizationResolver {
     // TODO: Dataloader 以name为key，但这里以namespace为key
     const ibppeers = await this.ibppeerService.getIbppeers(auth, name);
     return ibppeers;
+  }
+
+  @ResolveField(() => [String], {
+    nullable: true,
+    description: '组织加入的通道',
+  })
+  async channels(
+    @Parent() org: Organization,
+    @Loader(FederationLoader)
+    fedLoader: DataLoader<Federation['name'], Federation>,
+    @Loader(NetworkLoader)
+    networkLoader: DataLoader<Network['name'], Network>,
+  ): Promise<string[]> {
+    const { federations } = org;
+    if (!federations || federations.length === 0) return;
+    const feds = await fedLoader.loadMany(federations);
+    const networkNames = (feds as Federation[]).map((fed) => fed?.networkNames);
+    if (!networkNames || networkNames.length === 0) return;
+    const nets = await networkLoader.loadMany(flattenArr(networkNames));
+    const channelNames = (nets as Network[]).map((net) => net.channelNames);
+    return flattenArr(channelNames);
   }
 }
