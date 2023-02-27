@@ -23,4 +23,10 @@ export class Channel {
   /** 状态 */
   @Field(() => ChannelStatus, { description: '状态' })
   status?: string;
+
+  /** 我创建的 */
+  createdByMe?: boolean;
+
+  /** 我参与的 */
+  iamInvolved?: boolean;
 }

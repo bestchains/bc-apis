@@ -7,12 +7,15 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
+import { isEqual, uniqWith } from 'lodash';
 // import { ChannelLoader } from 'src/channel/channel.loader';
 import { ChannelService } from 'src/channel/channel.service';
 import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { NETWORK_VERSION_RESOURCES } from 'src/common/utils';
+import { IbppeerService } from 'src/ibppeer/ibppeer.service';
+import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
 import { JwtAuth } from 'src/types';
@@ -26,6 +29,7 @@ export class NetworkResolver {
   constructor(
     private readonly networkService: NetworkService,
     private readonly channelService: ChannelService,
+    private readonly peerService: IbppeerService,
   ) {}
 
   @Query(() => [Network], { description: '网络列表' })
@@ -123,5 +127,32 @@ export class NetworkResolver {
     // TODO: list/channel 权限问题
     // const cs = await channelLoader.loadMany(channelNames);
     // return cs;
+  }
+
+  @ResolveField(() => [Ibppeer], {
+    nullable: true,
+    description: '网络中的所有节点',
+  })
+  async peers(
+    @Auth() auth: JwtAuth,
+    @Parent() network: Network,
+  ): Promise<Ibppeer[]> {
+    const { channelNames } = network;
+    if (!channelNames || channelNames.length === 0) return;
+    // TODO: channelLoader
+    const channels = await this.channelService.getChannelsByNames(
+      auth,
+      channelNames,
+    );
+    const peerses = channels?.map((channel) => channel.peers);
+    const peers = uniqWith(peerses.flat(), isEqual);
+    // TODO: IbppeerLoader, 以namespace/name为key
+    return Promise.all(
+      peers?.map((peer) =>
+        this.peerService
+          .getIbppeer(auth, peer.namespace, peer.name)
+          .catch(() => peer),
+      ),
+    );
   }
 }

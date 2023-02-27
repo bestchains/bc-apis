@@ -63,7 +63,7 @@ export class ChannelService {
       channel;
     const members = (organizations || [])
       .concat(initiator)
-      .map((d) => ({ name: d }));
+      .map((d) => ({ name: d, initiator: d === initiator }));
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.channel.create({
       metadata: {

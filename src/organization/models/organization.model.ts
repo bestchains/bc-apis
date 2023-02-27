@@ -35,7 +35,7 @@ export class Organization {
   @Field(() => StatusType)
   status?: string;
 
-  /** 原因（状态为非Deplyed时） */
+  /** 原因 */
   reason?: string;
 
   /** 加入时间（只在联盟中使用） */
