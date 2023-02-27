@@ -19,6 +19,12 @@ query getNetworks{
     status
     channels {
       name
+      createdByMe
+      iamInvolved
+    }
+    peers {
+      name
+      createdByMe
     }
   }
 }
@@ -42,13 +48,25 @@ query getNetwork($name: String!) {
     }
     organizations {
       name
+      displayName
       admin
+      creationTimestamp
+      lastHeartbeatTime
+      status
+      reason
+      ibppeers {
+        name
+      }
     }
     initiator {
       name
     	admin
     }
     status
+    peers {
+      name
+      createdByMe
+    }
     channels {
       name
       members{
@@ -60,6 +78,8 @@ query getNetwork($name: String!) {
       }
       creationTimestamp
       status
+      createdByMe
+      iamInvolved
     }
   }
 }

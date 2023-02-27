@@ -1,9 +1,11 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Channel } from 'src/channel/models/channel.model';
 import { SpecResource } from 'src/common/models/spec-resource.model';
+import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { StatusType } from 'src/organization/models/status-type.enum';
 import { AnyObj } from 'src/types';
+import { OrderVersion } from '../dto/order-version.enum';
 
 @ObjectType({ description: '网络' })
 export class Network {
@@ -61,6 +63,13 @@ export class Network {
 
   /** 节点存储 */
   storage?: string;
+
+  /** 节点版本 */
+  @Field(() => OrderVersion, { description: '节点版本' })
+  version?: string;
+
+  /** 网络中的所有节点 */
+  peers?: Ibppeer[];
 }
 
 @ObjectType({ description: '成员' })

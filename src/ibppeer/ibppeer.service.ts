@@ -36,6 +36,7 @@ export class IbppeerService {
       limits: ibppeer.spec?.resources?.peer?.limits,
       status: ibppeer.status?.type,
       namespace: ibppeer.metadata?.namespace,
+      enrolluser: ibppeer.spec?.secret?.enrollment?.component?.enrolluser,
     };
   }
 
@@ -43,6 +44,12 @@ export class IbppeerService {
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.ibppeer.list(org);
     return body.items.map((item) => this.format(item));
+  }
+
+  async getIbppeer(auth: JwtAuth, org: string, name: string): Promise<Ibppeer> {
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.ibppeer.read(name, org);
+    return this.format(body);
   }
 
   async createIbppeer(auth: JwtAuth, org: string): Promise<Ibppeer> {

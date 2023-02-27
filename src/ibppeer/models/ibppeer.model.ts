@@ -27,4 +27,10 @@ export class Ibppeer {
   /** 运行状态 */
   @Field(() => IbppeerStatus, { description: '运行状态' })
   status?: string;
+
+  @HideField()
+  enrolluser?: string;
+
+  /** 我创建的 */
+  createdByMe?: boolean;
 }

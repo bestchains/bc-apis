@@ -3,8 +3,14 @@
 # ------------------------------------------------------
 
 type Channel {
+  """我创建的"""
+  createdByMe: Boolean
+
   """合约数量"""
   creationTimestamp: String
+
+  """我参与的"""
+  iamInvolved: Boolean
 
   """组织数量"""
   members: [SpecMember!]
@@ -90,6 +96,9 @@ enum FederationStatus {
 type Ibppeer {
   """加入的通道"""
   channels: [String!]
+
+  """我创建的"""
+  createdByMe: Boolean
 
   """创建时间"""
   creationTimestamp: String!
@@ -250,13 +259,16 @@ type Network {
   """网络中组织"""
   organizations: [Organization!]
 
+  """网络中的所有节点"""
+  peers: [Ibppeer!]
+
   """状态"""
   status: StatusType
 
   """节点存储"""
   storage: String
 
-  """配置版本"""
+  """节点版本"""
   version: OrderVersion
 }
 
@@ -393,7 +405,7 @@ type Organization {
   """所在网络"""
   networks: [Network!]
 
-  """原因（状态为非Deplyed时）"""
+  """原因"""
   reason: String
 
   """状态"""

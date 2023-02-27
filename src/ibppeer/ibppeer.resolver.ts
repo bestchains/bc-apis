@@ -118,4 +118,16 @@ export class IbppeerResolver {
       ?.filter((net) => find(net.channelNames, (o) => joinedChans.includes(o)))
       ?.map((net) => net.name);
   }
+
+  @ResolveField(() => Boolean, {
+    description: '是否为我创建的',
+  })
+  async createdByMe(
+    @Auth() auth: JwtAuth,
+    @Parent() ibppeer: Ibppeer,
+  ): Promise<boolean> {
+    const { preferred_username } = auth;
+    const { enrolluser } = ibppeer;
+    return enrolluser === preferred_username;
+  }
 }
