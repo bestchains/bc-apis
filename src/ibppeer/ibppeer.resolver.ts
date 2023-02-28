@@ -8,7 +8,8 @@ import {
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
 import { find } from 'lodash';
-import { ChannelService } from 'src/channel/channel.service';
+import { ChannelLoader } from 'src/channel/channel.loader';
+import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { flattenArr } from 'src/common/utils';
@@ -24,10 +25,7 @@ import { Ibppeer } from './models/ibppeer.model';
 
 @Resolver(() => Ibppeer)
 export class IbppeerResolver {
-  constructor(
-    private readonly ibppeerService: IbppeerService,
-    private readonly channelService: ChannelService,
-  ) {}
+  constructor(private readonly ibppeerService: IbppeerService) {}
 
   @Query(() => [Ibppeer], { description: '获取组织下的节点列表' })
   async ibppeers(
@@ -50,7 +48,6 @@ export class IbppeerResolver {
     description: '节点加入的通道',
   })
   async channels(
-    @Auth() auth: JwtAuth,
     @Parent() ibppeer: Ibppeer,
     @Loader(OrganizationLoader)
     organizationLoader: DataLoader<Organization['name'], Organization>,
@@ -58,6 +55,7 @@ export class IbppeerResolver {
     fedLoader: DataLoader<Federation['name'], Federation>,
     @Loader(NetworkLoader)
     networkLoader: DataLoader<Network['name'], Network>,
+    @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
   ): Promise<string[]> {
     // org -> fed -> net -> chan -> peers => chan
     const { namespace, name } = ibppeer;
@@ -68,12 +66,8 @@ export class IbppeerResolver {
     if (!networkNames || networkNames.length === 0) return;
     const nets = await networkLoader.loadMany(flattenArr(networkNames));
     const channelNames = (nets as Network[]).map((net) => net.channelNames);
-    // TODO: channelLoader
-    const chans = await this.channelService.getChannelsByNames(
-      auth,
-      flattenArr(channelNames),
-    );
-    return chans
+    const chans = await channelLoader.loadMany(flattenArr(channelNames));
+    return (chans as Channel[])
       ?.filter((chan) =>
         chan?.peers?.find((p) => p.name === name && p.namespace === namespace),
       )
@@ -86,7 +80,6 @@ export class IbppeerResolver {
     description: '节点加入的网络',
   })
   async networks(
-    @Auth() auth: JwtAuth,
     @Parent() ibppeer: Ibppeer,
     @Loader(OrganizationLoader)
     organizationLoader: DataLoader<Organization['name'], Organization>,
@@ -94,6 +87,7 @@ export class IbppeerResolver {
     fedLoader: DataLoader<Federation['name'], Federation>,
     @Loader(NetworkLoader)
     networkLoader: DataLoader<Network['name'], Network>,
+    @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
   ): Promise<string[]> {
     // org -> fed -> net -> chan -> peers => chan => net
     const { namespace, name } = ibppeer;
@@ -104,12 +98,8 @@ export class IbppeerResolver {
     if (!networkNames || networkNames.length === 0) return;
     const nets = await networkLoader.loadMany(flattenArr(networkNames));
     const channelNames = (nets as Network[]).map((net) => net.channelNames);
-    // TODO: channelLoader
-    const chans = await this.channelService.getChannelsByNames(
-      auth,
-      flattenArr(channelNames),
-    );
-    const joinedChans = chans
+    const chans = await channelLoader.loadMany(flattenArr(channelNames));
+    const joinedChans = (chans as Channel[])
       ?.filter((chan) =>
         chan?.peers?.find((p) => p.name === name && p.namespace === namespace),
       )

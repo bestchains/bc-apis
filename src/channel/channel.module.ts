@@ -5,6 +5,6 @@ import { ChannelLoader } from './channel.loader';
 
 @Module({
   providers: [ChannelService, ChannelResolver, ChannelLoader],
-  exports: [ChannelLoader, ChannelService], // TODO: 使用 ChannelLoader后去除CHannelService
+  exports: [ChannelLoader],
 })
 export class ChannelModule {}

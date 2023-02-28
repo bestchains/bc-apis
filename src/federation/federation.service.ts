@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { Federation } from './models/federation.model';
 import { JwtAuth } from 'src/types';
@@ -9,6 +13,7 @@ import { ProposalType } from 'src/proposal/models/proposal-type.enum';
 import { FederationStatus } from './models/federation-status.enum';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { OrganizationService } from 'src/organization/organization.service';
+import { uniq } from 'lodash';
 
 @Injectable()
 export class FederationService {
@@ -17,6 +22,8 @@ export class FederationService {
     private readonly proposalService: ProposalService,
     private readonly organizationService: OrganizationService,
   ) {}
+
+  private logger = new Logger('FederationService');
 
   format(fed: CRD.Federation): Federation {
     return {
@@ -43,7 +50,18 @@ export class FederationService {
       const feds = o.federations || [];
       return p.concat(feds);
     }, []);
-    return Promise.all(fedNames.map((fn) => this.federation(auth, fn)));
+    const res = await Promise.allSettled(
+      uniq(fedNames)?.map((fed) => this.federation(auth, fed)),
+    );
+    const feds = [];
+    res?.forEach((r) => {
+      if (r.status === 'fulfilled') {
+        feds.push(r.value);
+      } else {
+        this.logger.error('Failure', r.reason?.body);
+      }
+    });
+    return feds;
   }
 
   async federation(auth: JwtAuth, name: string): Promise<Federation> {

@@ -15,7 +15,7 @@ export class ChannelLoader extends OrderedNestDataLoader<
 
   protected getOptions = (auth: JwtAuth) => ({
     propertyKey: 'name',
-    // TODO：list/channel 有权限问题，期望用read代替list，再次read的时候能缓存
-    query: () => this.channelService.getChannels(auth),
+    query: (keys: string[]) =>
+      keys?.map((key) => this.channelService.getChannel(auth, key)),
   });
 }

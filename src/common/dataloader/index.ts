@@ -156,9 +156,10 @@ export const LoaderContext = createParamDecorator(
 );
 
 export const ensureOrder = (options: any) => {
-  const { docs, keys, prop } = options;
+  const { docs, keys, prop, oLoader } = options;
   const docsMap = new Map();
   docs.forEach((doc: any) => {
+    oLoader.clear(doc[prop]).prime(doc[prop], doc);
     docsMap.set(doc[prop], doc);
   });
   return keys.map((key: string) => {
@@ -168,7 +169,7 @@ export const ensureOrder = (options: any) => {
 
 interface IOrderedNestDataLoaderOptions<ID, Type> {
   propertyKey?: string;
-  query: (keys: readonly ID[]) => Promise<Type[]>;
+  query: (keys: readonly ID[]) => Promise<Type[]> | Promise<Type>[];
   typeName?: string;
   dataloaderConfig?: DataLoader.Options<ID, Type>;
 }
@@ -189,9 +190,24 @@ export abstract class OrderedNestDataLoader<ID, Type>
   ): DataLoader<ID, Type> {
     const defaultTypeName = this.constructor.name.replace('Loader', '');
     const loader = new DataLoader<ID, Type>(async (keys) => {
+      const query = options.query(keys);
+      let docs = [];
+      if (Array.isArray(query)) {
+        const items = await Promise.allSettled(query);
+        items?.forEach((item) => {
+          if (item.status === 'fulfilled') {
+            docs.push(item.value);
+          } else {
+            logRejected(item.reason, `${defaultTypeName}Load`);
+          }
+        });
+      } else {
+        docs = await query;
+      }
       loader.clearAll();
       return ensureOrder({
-        docs: await options.query(keys),
+        docs,
+        oLoader: loader,
         keys,
         prop: options.propertyKey || 'id',
         error: (keyValue: string) =>
@@ -207,16 +223,7 @@ export abstract class OrderedNestDataLoader<ID, Type>
       const loaderFunName = `${options.typeName || defaultTypeName}LoadMany`;
       const dataList = await loadMany(keys);
       return dataList.filter((d) => {
-        if (d instanceof HttpException) {
-          Logger.error('dataloader', loaderFunName, d.getResponse());
-          return false;
-        }
-        if (d instanceof HttpError) {
-          Logger.error('dataloader', loaderFunName, d.body);
-          return false;
-        }
-        if (d instanceof Error) {
-          Logger.error('dataloader', loaderFunName, d);
+        if (!logRejected(d, loaderFunName)) {
           return false;
         }
         return !!d;
@@ -226,3 +233,19 @@ export abstract class OrderedNestDataLoader<ID, Type>
     return loader;
   }
 }
+
+const logRejected = (err: any, funName: string) => {
+  if (err instanceof HttpException) {
+    Logger.error('dataloader', funName, err.getResponse());
+    return false;
+  }
+  if (err instanceof HttpError) {
+    Logger.error('dataloader', funName, err.body);
+    return false;
+  }
+  if (err instanceof Error) {
+    Logger.error('dataloader', funName, err);
+    return false;
+  }
+  return true;
+};
