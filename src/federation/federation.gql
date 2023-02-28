@@ -52,6 +52,13 @@ query getFederation($name: String!) {
         admin
       }
       status
+      initiator {
+        name
+        admin
+      }
+      channels {
+        name
+      }
     }
   }
 }

@@ -15,6 +15,7 @@ export class NetworkLoader extends OrderedNestDataLoader<
 
   protected getOptions = (auth: JwtAuth) => ({
     propertyKey: 'name',
-    query: () => this.networkService.getNetworks(auth),
+    query: (keys: string[]) =>
+      keys?.map((key) => this.networkService.getNetwork(auth, key)),
   });
 }

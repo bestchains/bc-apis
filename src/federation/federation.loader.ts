@@ -15,6 +15,7 @@ export class FederationLoader extends OrderedNestDataLoader<
 
   protected getOptions = (auth: JwtAuth) => ({
     propertyKey: 'name',
-    query: () => this.federationService.federations(auth), // 注意：这里仅是当前用户的联盟
+    query: (keys: string[]) =>
+      keys?.map((key) => this.federationService.federation(auth, key)),
   });
 }
