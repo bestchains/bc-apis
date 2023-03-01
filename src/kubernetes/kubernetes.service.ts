@@ -167,6 +167,7 @@ export class KubernetesService {
       application: new lib.Application(customObjectsApi),
       channel: new lib.Channel(customObjectsApi),
       cluster: new lib.Cluster(customObjectsApi),
+      endorsePolicy: new lib.EndorsePolicy(customObjectsApi),
       federation: new lib.Federation(customObjectsApi),
       ibpca: new lib.IBPCA(customObjectsApi),
       ibporderer: new lib.IBPOrderer(customObjectsApi),

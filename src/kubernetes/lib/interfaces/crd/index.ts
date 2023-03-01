@@ -4,6 +4,8 @@ export { Channel } from './channel';
 export { ChannelList } from './channel-list';
 export { Cluster } from './cluster';
 export { ClusterList } from './cluster-list';
+export { EndorsePolicy } from './endorse-policy';
+export { EndorsePolicyList } from './endorse-policy-list';
 export { Federation } from './federation';
 export { FederationList } from './federation-list';
 export { IBPCA } from './ibpca';

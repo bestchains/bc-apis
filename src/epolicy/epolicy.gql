@@ -1,0 +1,38 @@
+# 获取策略列表
+query getEpolicies($network: String) {
+  epolicies(network: $network) {
+    name
+    description
+    channel
+    value
+  }
+}
+
+# 创建策略
+mutation createEpolicy($epolicy: NewEpolicyInput!) {
+  epolicyCreate(epolicy: $epolicy) {
+    name
+    value
+    description
+    channel
+  }
+}
+
+# 删除策略
+mutation deleteEpolicy($name: String!) {
+  epolicyDelete(name: $name) {
+    status
+    code
+    message
+  }
+}
+
+# 创建策略时，可选择的通道
+query getChannelsForCreateEpolicy($network: String!) {
+  channelsForCreateEpolicy(network: $network) {
+    name
+    members {
+      name
+    }
+  }
+}

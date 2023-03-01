@@ -26,6 +26,7 @@ import { JSONObjectScalar, JSONScalar } from './common/scalars/json.scalar';
 import { ChannelModule } from './channel/channel.module';
 import { IbppeerModule } from './ibppeer/ibppeer.module';
 import { ConfigmapModule } from './configmap/configmap.module';
+import { EpolicyModule } from './epolicy/epolicy.module';
 import imageConfig from './config/image.config';
 
 const GRAPHQL_PATH = '/bff';
@@ -88,6 +89,7 @@ const GRAPHQL_PATH = '/bff';
     ChannelModule,
     IbppeerModule,
     ConfigmapModule,
+    EpolicyModule,
   ],
   controllers: [AppController],
   providers: [
