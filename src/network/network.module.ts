@@ -8,7 +8,7 @@ import { IbppeerModule } from 'src/ibppeer/ibppeer.module';
 
 @Module({
   providers: [NetworkService, NetworkResolver, NetworkLoader],
-  exports: [NetworkLoader],
+  exports: [NetworkLoader, NetworkService],
   imports: [ProposalModule, FederationModule, IbppeerModule], // TODO: 使用ChannelLoader后，去掉ChannelModule, IbppeerModule
 })
 export class NetworkModule {}

@@ -1,6 +1,7 @@
 export { Application } from './application';
 export { Channel } from './channel';
 export { Cluster } from './cluster';
+export { EndorsePolicy } from './endorse-policy';
 export { Federation } from './federation';
 export { IBPCA } from './ibpca';
 export { IBPOrderer } from './ibporderer';

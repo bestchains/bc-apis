@@ -25,6 +25,7 @@ const CRD_LIST = [
   'ibporderers.ibp.com',
   'ibppeers.ibp.com',
   'channels.ibp.com',
+  'endorsepolicies.ibp.com',
 ];
 
 const ClusterCrdTemplate = fs

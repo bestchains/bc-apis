@@ -45,6 +45,20 @@ enum ChannelStatus {
   Error
 }
 
+type Epolicy {
+  """所在通道"""
+  channel: String!
+
+  """描述"""
+  description: String
+
+  """name"""
+  name: ID!
+
+  """策略内容"""
+  value: String!
+}
+
 """联盟"""
 type Federation {
   """创建时间"""
@@ -163,6 +177,12 @@ type Mutation {
 
   """加入/去除Peer节点"""
   channelUpdate(channel: UpdateChannel!, name: String!): Channel!
+
+  """创建策略"""
+  epolicyCreate(epolicy: NewEpolicyInput!): Epolicy!
+
+  """删除策略"""
+  epolicyDelete(name: String!): K8sV1Status!
 
   """向联盟中添加组织（返回true：只表示这个操作触发成功，而不是添加组织成功）"""
   federationAddOrganization(
@@ -290,6 +310,24 @@ input NewChannel {
 
   """准入门槛"""
   policy: String
+}
+
+input NewEpolicyInput {
+  """通道（当前用户组织参与的channel，使用接口：getChannelsForCreateEpolicy）"""
+  channel: String
+
+  """策略描述"""
+  description: String
+
+  """
+  策略名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  """
+  name: String!
+
+  """
+  策略内容：可选组织为已选通道内的成员，语法参考（https://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies.html#endorsement-policy-syntax）
+  """
+  value: String
 }
 
 input NewFederationInput {
@@ -502,6 +540,12 @@ enum ProposalType {
 }
 
 type Query {
+  """创建策略时，可选的通道"""
+  channelsForCreateEpolicy(network: String!): [Channel!]!
+
+  """策略列表"""
+  epolicies(network: String): [Epolicy!]!
+
   """联盟详情"""
   federation(name: String!): Federation!
 
