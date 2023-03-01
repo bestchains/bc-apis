@@ -2,12 +2,15 @@ import {
   Args,
   Mutation,
   Parent,
+  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { EpolicyService } from 'src/epolicy/epolicy.service';
+import { Epolicy } from 'src/epolicy/models/epolicy.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
 import { JwtAuth } from 'src/types';
@@ -18,7 +21,18 @@ import { Channel } from './models/channel.model';
 
 @Resolver(() => Channel)
 export class ChannelResolver {
-  constructor(private readonly channelService: ChannelService) {}
+  constructor(
+    private readonly channelService: ChannelService,
+    private readonly epolicyService: EpolicyService,
+  ) {}
+
+  @Query(() => Channel, { description: '通道详情' })
+  async channel(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+  ): Promise<Channel> {
+    return this.channelService.getChannel(auth, name);
+  }
 
   @Mutation(() => Channel, { description: '创建通道' })
   async channelCreate(
@@ -92,5 +106,18 @@ export class ChannelResolver {
       }
     });
     return involved;
+  }
+
+  @ResolveField(() => [Epolicy], {
+    nullable: true,
+    description: '背书策略',
+  })
+  async epolicy(
+    @Auth() auth: JwtAuth,
+    @Parent() channel: Channel,
+  ): Promise<Epolicy[]> {
+    const { name } = channel;
+    const epolicies = await this.epolicyService.getEpolicies(auth);
+    return epolicies?.filter((epolicy) => epolicy.channel === name);
   }
 }

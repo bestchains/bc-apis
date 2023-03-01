@@ -4,6 +4,8 @@ ENV NODE_ENV production
 
 COPY . /usr/src/app/
 
+WORKDIR /usr/src/app
+
 RUN nr build
 
 FROM hyperledgerk8s/bc-console:dev-branch as bc-console

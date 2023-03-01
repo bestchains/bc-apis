@@ -23,14 +23,8 @@ export class ChannelService {
       members: channel.spec?.members,
       status: channel.status?.type,
       peers: channel.spec?.peers,
+      description: channel.spec?.description,
     };
-  }
-
-  // 权限问题，普通用户没有 list/channel
-  async getChannels(auth: JwtAuth): Promise<Channel[]> {
-    const k8s = await this.k8sService.getClient(auth);
-    const { body } = await k8s.channel.list();
-    return body.items.map((item) => this.format(item));
   }
 
   async getChannel(auth: JwtAuth, name: string): Promise<Channel> {

@@ -1,3 +1,24 @@
+# 通道详情
+query getChannel($name: String!) {
+  channel(name: $name) {
+    name
+    description
+    creationTimestamp
+    epolicy {
+      name
+      description
+      creationTimestamp
+    }
+    members {
+      name
+    }
+    peers {
+      name
+      namespace
+    }
+  }
+}
+
 # 创建通道
 mutation createChannel($network: String!, $channel: NewChannel!) {
   channelCreate(network: $network, channel: $channel) {

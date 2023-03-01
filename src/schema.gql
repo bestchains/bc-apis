@@ -9,6 +9,12 @@ type Channel {
   """合约数量"""
   creationTimestamp: String
 
+  """描述"""
+  description: String
+
+  """背书策略"""
+  epolicy: [Epolicy!]
+
   """我参与的"""
   iamInvolved: Boolean
 
@@ -45,9 +51,13 @@ enum ChannelStatus {
   Error
 }
 
+"""背书策略"""
 type Epolicy {
   """所在通道"""
   channel: String!
+
+  """创建时间"""
+  creationTimestamp: String
 
   """描述"""
   description: String
@@ -217,6 +227,9 @@ type Mutation {
 
   """创建网络"""
   networkCreate(network: NewNetworkInput!): Network!
+
+  """删除网络"""
+  networkDelete(name: String!): K8sV1Status!
 
   """释放网络（返回true：只表示这个操作触发成功，而不是释放网络成功）"""
   networkDissolve(
@@ -540,6 +553,9 @@ enum ProposalType {
 }
 
 type Query {
+  """通道详情"""
+  channel(name: String!): Channel!
+
   """创建策略时，可选的通道"""
   channelsForCreateEpolicy(network: String!): [Channel!]!
 

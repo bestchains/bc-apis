@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@ObjectType({ description: '背书策略' })
 export class Epolicy {
   @Field(() => ID, { description: 'name' })
   name: string;
@@ -13,4 +13,7 @@ export class Epolicy {
 
   /** 策略内容 */
   value: string;
+
+  /** 创建时间 */
+  creationTimestamp?: string;
 }

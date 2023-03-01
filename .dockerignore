@@ -1,0 +1,7 @@
+dist
+node_modules
+logs
+*.log
+.git
+static/client-sdk
+public
