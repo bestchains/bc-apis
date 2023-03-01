@@ -7,7 +7,7 @@ import { NewEpolicyInput } from './dto/new-epolicy.input';
 import { EpolicyService } from './epolicy.service';
 import { Epolicy } from './models/epolicy.model';
 
-@Resolver()
+@Resolver(() => Epolicy)
 export class EpolicyResolver {
   constructor(private readonly epolicyService: EpolicyService) {}
 

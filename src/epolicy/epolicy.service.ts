@@ -22,6 +22,9 @@ export class EpolicyService {
   format(epolicy: CRD.EndorsePolicy): Epolicy {
     return {
       name: epolicy.metadata?.name,
+      creationTimestamp: new Date(
+        epolicy.metadata?.creationTimestamp,
+      ).toISOString(),
       channel: epolicy.spec?.channel,
       description: epolicy.spec?.description,
       value: epolicy.spec?.value,

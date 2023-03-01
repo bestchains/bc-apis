@@ -12,6 +12,7 @@ import { ChannelLoader } from 'src/channel/channel.loader';
 import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { NETWORK_VERSION_RESOURCES } from 'src/common/utils';
 import { IbppeerService } from 'src/ibppeer/ibppeer.service';
 import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
@@ -67,6 +68,14 @@ export class NetworkResolver {
       federation,
       initiator,
     );
+  }
+
+  @Mutation(() => K8sV1Status, { description: '删除网络' })
+  async networkDelete(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+  ): Promise<K8sV1Status> {
+    return this.networkService.deleteNetwork(auth, name);
   }
 
   @ResolveField(() => OrderVersion, { nullable: true, description: '配置版本' })

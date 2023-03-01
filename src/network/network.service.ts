@@ -1,6 +1,7 @@
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { uniq } from 'lodash';
+import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import {
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
@@ -187,5 +188,16 @@ export class NetworkService {
     // 2. 等待组织投票
     // 3. 若投票成功，则此「释放网络」成功
     return true; // 表示这个操作触发成功，而不是释放网络成功
+  }
+
+  async deleteNetwork(auth: JwtAuth, name: string): Promise<K8sV1Status> {
+    // 0. 检查是否可以删除网络
+    const { channelNames } = await this.getNetwork(auth, name);
+    if (channelNames && channelNames.length > 0) {
+      throw new ForbiddenException('channel also exist in the network');
+    }
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.network.delete(name);
+    return body;
   }
 }

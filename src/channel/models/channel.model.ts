@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { SpecMember } from 'src/common/models/spec-member.model';
+import { Epolicy } from 'src/epolicy/models/epolicy.model';
 import { ChannelStatus } from './channel-status.enum';
 import { SpecPeer } from './spec-peer.model';
 
@@ -7,6 +8,9 @@ import { SpecPeer } from './spec-peer.model';
 export class Channel {
   @Field(() => ID, { description: 'name' })
   name: string;
+
+  /** 描述 */
+  description?: string;
 
   /** 组织数量 */
   members?: SpecMember[];
@@ -29,4 +33,7 @@ export class Channel {
 
   /** 我参与的 */
   iamInvolved?: boolean;
+
+  /** 背书策略 */
+  epolicy?: Epolicy[];
 }
