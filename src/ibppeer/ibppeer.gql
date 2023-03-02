@@ -14,8 +14,8 @@ query getIbppeers($organization: String!) {
 }
 
 # 创建节点
-mutation createIbppeer($organization: String!) {
-  ibppeerCreate(organization: $organization) {
+mutation createIbppeer($org: String!, $count: Float) {
+  ibppeerCreate(organization: $org, count: $count) {
     name
     creationTimestamp
     status
