@@ -35,15 +35,10 @@ query getOrganization($name: String!) {
     users {
       name
       isOrganizationAdmin
+      joinedAt
     }
     ibppeers {
       name
-      creationTimestamp # TODO：去除，查询太多数据，分两个接口
-		  status
-      limits {
-        cpu
-        memory
-      }
     }
   }
 }

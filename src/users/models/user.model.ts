@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { AnyObj } from 'src/types';
 
 @ObjectType({ description: '用户' })
 export class User {
@@ -25,4 +26,10 @@ export class User {
 
   /** 是否为组织管理员（组织列表中） */
   isOrganizationAdmin?: boolean;
+
+  /** 加入组织时间（组织列表中） */
+  joinedAt?: string;
+
+  @HideField()
+  annotations?: AnyObj;
 }

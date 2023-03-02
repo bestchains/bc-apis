@@ -20,11 +20,16 @@ export class EpolicyService {
   ) {}
 
   format(epolicy: CRD.EndorsePolicy): Epolicy {
+    const creationTimestamp = new Date(
+      epolicy.metadata?.creationTimestamp,
+    ).toISOString();
+    const lastHeartbeatTime = epolicy.status?.lastHeartbeatTime
+      ? new Date(epolicy.status?.lastHeartbeatTime).toISOString()
+      : creationTimestamp;
     return {
       name: epolicy.metadata?.name,
-      creationTimestamp: new Date(
-        epolicy.metadata?.creationTimestamp,
-      ).toISOString(),
+      creationTimestamp,
+      lastHeartbeatTime,
       channel: epolicy.spec?.channel,
       description: epolicy.spec?.description,
       value: epolicy.spec?.value,

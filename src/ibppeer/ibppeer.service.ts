@@ -52,6 +52,16 @@ export class IbppeerService {
     return this.format(body);
   }
 
+  async createIbppeers(
+    auth: JwtAuth,
+    org: string,
+    count = 1,
+  ): Promise<Ibppeer[]> {
+    return Promise.all(
+      Array.from({ length: count }).map(() => this.createIbppeer(auth, org)),
+    );
+  }
+
   async createIbppeer(auth: JwtAuth, org: string): Promise<Ibppeer> {
     const { token, preferred_username } = auth;
     const { binaryData } = await this.cmService.getConfigmap(

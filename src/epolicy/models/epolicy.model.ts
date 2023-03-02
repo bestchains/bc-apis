@@ -16,4 +16,7 @@ export class Epolicy {
 
   /** 创建时间 */
   creationTimestamp?: string;
+
+  /** 更新时间 */
+  lastHeartbeatTime?: string;
 }

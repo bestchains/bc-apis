@@ -93,13 +93,21 @@ export class OrganizationResolver {
     @Parent() org: Organization,
     @Loader(UsersLoader) usersLoader: DataLoader<User['name'], User>,
   ): Promise<User[]> {
-    const { clients, admin } = org;
+    const { clients, admin, name } = org;
     const names = [...new Set([...(clients || []), ...(admin ? [admin] : [])])];
     const users = await usersLoader.loadMany(names);
-    return (users as User[]).map((u) => ({
-      ...u,
-      isOrganizationAdmin: admin === u.name,
-    }));
+    return (users as User[]).map((u) => {
+      let joinedAt = null;
+      try {
+        const bestchains = JSON.parse(u?.annotations?.bestchains);
+        joinedAt = bestchains?.list[name]?.creationTimestamp;
+      } catch (e) {}
+      return {
+        ...u,
+        isOrganizationAdmin: admin === u.name,
+        joinedAt,
+      };
+    });
   }
 
   @ResolveField(() => [Network], {

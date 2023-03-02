@@ -35,12 +35,13 @@ export class IbppeerResolver {
     return this.ibppeerService.getIbppeers(auth, org);
   }
 
-  @Mutation(() => Ibppeer, { description: '创建IBPPeer节点' })
+  @Mutation(() => [Ibppeer], { description: '创建IBPPeer节点' })
   async ibppeerCreate(
     @Auth() auth: JwtAuth,
     @Args('organization', { description: '所在组织' }) org: string,
-  ): Promise<Ibppeer> {
-    return this.ibppeerService.createIbppeer(auth, org);
+    @Args('count', { description: '新增节点数', nullable: true }) count: number,
+  ): Promise<Ibppeer[]> {
+    return this.ibppeerService.createIbppeers(auth, org, count);
   }
 
   @ResolveField(() => [String], {

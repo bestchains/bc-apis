@@ -5,6 +5,8 @@ query getEpolicies($network: String) {
     description
     channel
     value
+    creationTimestamp
+    lastHeartbeatTime
   }
 }
 

@@ -62,6 +62,9 @@ type Epolicy {
   """描述"""
   description: String
 
+  """更新时间"""
+  lastHeartbeatTime: String
+
   """name"""
   name: ID!
 
@@ -221,9 +224,12 @@ type Mutation {
 
   """创建IBPPeer节点"""
   ibppeerCreate(
+    """新增节点数"""
+    count: Float
+
     """所在组织"""
     organization: String!
-  ): Ibppeer!
+  ): [Ibppeer!]!
 
   """创建网络"""
   networkCreate(network: NewNetworkInput!): Network!
@@ -719,6 +725,9 @@ type User {
 
   """是否为组织管理员（组织列表中）"""
   isOrganizationAdmin: Boolean
+
+  """加入组织时间（组织列表中）"""
+  joinedAt: String
 
   """用户名"""
   name: ID!
