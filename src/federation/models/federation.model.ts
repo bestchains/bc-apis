@@ -1,9 +1,9 @@
 import { ObjectType, Field, ID, HideField } from '@nestjs/graphql';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { Network } from 'src/network/models/network.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { ProposalPolicy } from 'src/proposal/models/proposal-policy.enum';
-import { FederationStatus } from './federation-status.enum';
 
 @ObjectType({ description: '联盟' })
 export class Federation {
@@ -42,6 +42,6 @@ export class Federation {
   policy?: string;
 
   /** 状态 */
-  @Field(() => FederationStatus, { description: '状态' })
+  @Field(() => CrdStatusType, { description: '状态' })
   status?: string;
 }

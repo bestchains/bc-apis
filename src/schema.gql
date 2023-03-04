@@ -28,7 +28,7 @@ type Channel {
   peers: [SpecPeer!]
 
   """状态"""
-  status: ChannelStatus
+  status: CrdStatusType
 }
 
 input ChannelPeer {
@@ -39,16 +39,58 @@ input ChannelPeer {
   namespace: String!
 }
 
-"""「通道」状态"""
-enum ChannelStatus {
-  """Deployed"""
+"""IBPCR 状态"""
+enum CrdStatusType {
+  """ChannelArchived"""
+  ChannelArchived
+
+  """ChannelCreated"""
+  ChannelCreated
+
+  """正常"""
+  Created
+
+  """
+  Deployed is the status when the component's deployment is done successfully
+  """
   Deployed
 
-  """Deploying"""
+  """Deploying is the status when component is being deployed"""
   Deploying
 
-  """失败"""
+  """异常"""
   Error
+
+  """已激活"""
+  FederationActivated
+
+  """已解散"""
+  FederationDissolved
+
+  """组建失败"""
+  FederationFailed
+
+  """组建中"""
+  FederationPending
+
+  """Initializing is the status when a component is initializing"""
+  Initializing
+
+  """正常"""
+  NetworkCreated
+
+  """已解散"""
+  NetworkDissolved
+
+  """
+  Precreated is the status of the orderers when they are waiting for config block
+  """
+  Precreated
+
+  """
+  Warning is the status when a component is running, but will fail in future
+  """
+  Warning
 }
 
 """背书策略"""
@@ -99,25 +141,7 @@ type Federation {
   policy: ProposalPolicy
 
   """状态"""
-  status: FederationStatus
-}
-
-"""「联盟」状态"""
-enum FederationStatus {
-  """失败"""
-  Error
-
-  """已激活"""
-  FederationActivated
-
-  """已解散"""
-  FederationDissolved
-
-  """组建失败"""
-  FederationFailed
-
-  """组建中"""
-  FederationPending
+  status: CrdStatusType
 }
 
 type Ibppeer {
@@ -140,19 +164,7 @@ type Ibppeer {
   networks: [String!]
 
   """运行状态"""
-  status: IbppeerStatus
-}
-
-"""「Peer节点」状态"""
-enum IbppeerStatus {
-  """Deployed"""
-  Deployed
-
-  """Deploying"""
-  Deploying
-
-  """失败"""
-  Error
+  status: CrdStatusType
 }
 
 """
@@ -302,7 +314,7 @@ type Network {
   peers: [Ibppeer!]
 
   """状态"""
-  status: StatusType
+  status: CrdStatusType
 
   """节点存储"""
   storage: String
@@ -466,7 +478,7 @@ type Organization {
   reason: String
 
   """状态"""
-  status: StatusType
+  status: CrdStatusType
 
   """成员"""
   users: [User!]
@@ -636,54 +648,6 @@ type SpecResource {
 
   """Memory"""
   memory: String!
-}
-
-"""IBPCR 状态"""
-enum StatusType {
-  """正常"""
-  Created
-
-  """
-  Deployed is the status when the component's deployment is done successfully
-  """
-  Deployed
-
-  """Deploying is the status when component is being deployed"""
-  Deploying
-
-  """异常"""
-  Error
-
-  """FederationActivated means `Proposal-Vote` passed"""
-  FederationActivated
-
-  """FederationDissolved means `Federation` no longer active"""
-  FederationDissolved
-
-  """FederationFailed means `Proposal-Vote` failed"""
-  FederationFailed
-
-  """FederationPending means `Proposal-Vote` not passed yet"""
-  FederationPending
-
-  """Initializing is the status when a component is initializing"""
-  Initializing
-
-  """正常"""
-  NetworkCreated
-
-  """已解散"""
-  NetworkDissolved
-
-  """
-  Precreated is the status of the orderers when they are waiting for config block
-  """
-  Precreated
-
-  """
-  Warning is the status when a component is running, but will fail in future
-  """
-  Warning
 }
 
 input UpdateChannel {

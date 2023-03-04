@@ -10,10 +10,10 @@ import { CRD } from 'src/kubernetes/lib';
 import { NewFederationInput } from './dto/new-federation.input';
 import { ProposalService } from 'src/proposal/proposal.service';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
-import { FederationStatus } from './models/federation-status.enum';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { OrganizationService } from 'src/organization/organization.service';
 import { uniq } from 'lodash';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 
 @Injectable()
 export class FederationService {
@@ -200,7 +200,7 @@ export class FederationService {
 
   async deleteFederation(auth: JwtAuth, name: string): Promise<K8sV1Status> {
     const detail = await this.federation(auth, name);
-    if (detail?.status !== FederationStatus.FederationDissolved) {
+    if (detail?.status !== CrdStatusType.FederationDissolved) {
       throw new InternalServerErrorException(
         'Only dissolved federation can be deleted.',
       );

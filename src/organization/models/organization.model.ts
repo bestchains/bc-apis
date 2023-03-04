@@ -1,8 +1,8 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Network } from 'src/network/models/network.model';
 import { User } from 'src/users/models/user.model';
-import { StatusType } from './status-type.enum';
 
 @ObjectType({ description: '组织' })
 export class Organization {
@@ -32,7 +32,7 @@ export class Organization {
   clients?: string[];
 
   /** 状态 */
-  @Field(() => StatusType)
+  @Field(() => CrdStatusType)
   status?: string;
 
   /** 原因 */
