@@ -1,9 +1,9 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { Channel } from 'src/channel/models/channel.model';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecResource } from 'src/common/models/spec-resource.model';
 import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Organization } from 'src/organization/models/organization.model';
-import { StatusType } from 'src/organization/models/status-type.enum';
 import { AnyObj } from 'src/types';
 import { OrderVersion } from '../dto/order-version.enum';
 
@@ -25,7 +25,7 @@ export class Network {
   expiredTime?: string;
 
   /** 状态 */
-  @Field(() => StatusType, { description: '状态' })
+  @Field(() => CrdStatusType, { description: '状态' })
   status?: string;
 
   /** 引擎类型 */

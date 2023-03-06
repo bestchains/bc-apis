@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
-import { ChannelStatus } from './channel-status.enum';
 import { SpecPeer } from './spec-peer.model';
 
 @ObjectType()
@@ -25,7 +25,7 @@ export class Channel {
   creationTimestamp?: string;
 
   /** 状态 */
-  @Field(() => ChannelStatus, { description: '状态' })
+  @Field(() => CrdStatusType, { description: '状态' })
   status?: string;
 
   /** 我创建的 */

@@ -1,7 +1,7 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecResource } from 'src/common/models/spec-resource.model';
 import { AnyObj } from 'src/types';
-import { IbppeerStatus } from './ibppeer-status.enum';
 
 @ObjectType()
 export class Ibppeer {
@@ -25,7 +25,7 @@ export class Ibppeer {
   limits?: AnyObj;
 
   /** 运行状态 */
-  @Field(() => IbppeerStatus, { description: '运行状态' })
+  @Field(() => CrdStatusType, { description: '运行状态' })
   status?: string;
 
   @HideField()

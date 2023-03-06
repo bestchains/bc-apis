@@ -1,6 +1,6 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum StatusType {
+export enum CrdStatusType {
   Deploying = 'Deploying',
   Deployed = 'Deployed',
   Precreated = 'Precreated',
@@ -14,10 +14,12 @@ export enum StatusType {
   FederationDissolved = 'FederationDissolved',
   NetworkCreated = 'NetworkCreated',
   NetworkDissolved = 'NetworkDissolved',
+  ChannelCreated = 'ChannelCreated',
+  ChannelArchived = 'ChannelArchived',
 }
 
-registerEnumType(StatusType, {
-  name: 'StatusType',
+registerEnumType(CrdStatusType, {
+  name: 'CrdStatusType',
   description: 'IBPCR 状态',
   valuesMap: {
     Deploying: {
@@ -46,22 +48,28 @@ registerEnumType(StatusType, {
       description: '正常',
     },
     FederationPending: {
-      description: 'FederationPending means `Proposal-Vote` not passed yet',
+      description: '组建中',
     },
     FederationActivated: {
-      description: 'FederationActivated means `Proposal-Vote` passed',
+      description: '已激活',
     },
     FederationFailed: {
-      description: 'FederationFailed means `Proposal-Vote` failed',
+      description: '组建失败',
     },
     FederationDissolved: {
-      description: 'FederationDissolved means `Federation` no longer active',
+      description: '已解散',
     },
     NetworkCreated: {
       description: '正常',
     },
     NetworkDissolved: {
       description: '已解散',
+    },
+    ChannelCreated: {
+      description: 'ChannelCreated',
+    },
+    ChannelArchived: {
+      description: 'ChannelArchived',
     },
   },
 });
