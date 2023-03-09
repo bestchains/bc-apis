@@ -48,7 +48,7 @@ export interface Chaincode {
       [k: string]: any;
     };
     initRequired: boolean;
-    label: string;
+    label?: string;
     /**
      * License should be accepted to install custom resources
      */

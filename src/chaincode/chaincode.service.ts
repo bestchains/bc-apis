@@ -97,7 +97,6 @@ export class ChaincodeService {
           accept: true,
         },
         channel,
-        label: '', // TODO：去掉
         initRequired: true,
         endorsePolicyRef: {
           name: epolicy,
