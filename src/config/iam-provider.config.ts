@@ -7,6 +7,8 @@ export default registerAs('iamProvider', () => ({
   server: {
     url:
       env.IAM_PROVIDER_URL ||
-      (IS_PROD ? 'https://oidc-server' : 'http://iam.172.22.96.209.nip.io'),
+      (IS_PROD
+        ? 'https://oidc-server.u4a-system'
+        : 'http://iam.172.22.96.209.nip.io'),
   },
 }));

@@ -30,3 +30,5 @@ export const NETWORK_VERSION_RESOURCES = {
   [OrderVersion.Enterprise]: ['8', '16Gi', '100m', '200Mi', '500Gi'],
   [OrderVersion.Finance]: ['16', '32Gi', '16', '32Gi', '1000Gi'],
 };
+
+export const MINIO_BUCKET_NAME = 'bestchains';

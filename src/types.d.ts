@@ -1,5 +1,6 @@
 import { Request as ExpressReq } from 'express';
-export { Response, NextFunction } from 'express';
+import { Readable } from 'stream';
+export { Request as ExpressReq, Response, NextFunction } from 'express';
 
 export * as K8s from '@kubernetes/client-node';
 
@@ -29,4 +30,11 @@ export interface Request extends ExpressReq {
 
 export interface AnyObj {
   [k: string]: any;
+}
+
+export interface FileUpload {
+  filename: string;
+  mimetype: string;
+  encoding: string;
+  createReadStream: () => Readable;
 }

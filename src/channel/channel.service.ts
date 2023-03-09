@@ -23,6 +23,7 @@ export class ChannelService {
       members: channel.spec?.members,
       status: channel.status?.type,
       peers: channel.spec?.peers,
+      network: channel.spec?.network,
       description: channel.spec?.description,
     };
   }

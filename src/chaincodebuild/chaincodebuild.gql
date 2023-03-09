@@ -1,0 +1,41 @@
+# 创建合约
+mutation createChaincodebuild($displayName: String!, $description: String, $language: String, $network: String!, $version: String! $file: Upload!) {
+  chaincodebuildCreate(chaincodebuild: { displayName: $displayName, description: $description, language: $language, network: $network, version: $version, file: $file }) {
+    name
+    displayName
+    creationTimestamp
+    version
+    status
+  }
+}
+
+# 合约列表
+query getChaincodebuilds($network: String!) {
+  chaincodebuilds(network: $network) {
+    name
+    displayName
+    creationTimestamp
+    version
+    status
+  }
+}
+
+# 删除合约
+mutation deleteChaincodebuild($displayName: String!, $network: String!) {
+  chaincodebuildDelete(displayName: $displayName, network: $network) {
+    code
+    status
+    reason
+  }
+}
+
+# 升级合约
+mutation upgradeChaincodebuild($displayName: String!, $file: Upload!, $language: String, $network: String!, $newVersion: String!) {
+  chaincodebuildUpgrade(chaincodebuild: {displayName: $displayName, file: $file, language: $language, network: $network, newVersion: $newVersion}) {
+    name
+    displayName
+    creationTimestamp
+    version
+    status
+  }
+}

@@ -26,6 +26,9 @@ const CRD_LIST = [
   'ibppeers.ibp.com',
   'channels.ibp.com',
   'endorsepolicies.ibp.com',
+  'chaincodes.ibp.com',
+  'chaincodebuilds.ibp.com',
+  'pipelineruns.tekton.dev',
 ];
 
 const ClusterCrdTemplate = fs
