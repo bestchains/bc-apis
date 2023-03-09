@@ -27,7 +27,11 @@ import { ChannelModule } from './channel/channel.module';
 import { IbppeerModule } from './ibppeer/ibppeer.module';
 import { ConfigmapModule } from './configmap/configmap.module';
 import { EpolicyModule } from './epolicy/epolicy.module';
+import { MinioModule } from './minio/minio.module';
+import { ChaincodeModule } from './chaincode/chaincode.module';
+import { ChaincodebuildModule } from './chaincodebuild/chaincodebuild.module';
 import imageConfig from './config/image.config';
+import minioConfig from './config/minio.config';
 
 const GRAPHQL_PATH = '/bff';
 
@@ -59,7 +63,13 @@ const GRAPHQL_PATH = '/bff';
       },
     }),
     ConfigModule.forRoot({
-      load: [kubernetesConfig, oidcConfig, iamProviderConfig, imageConfig],
+      load: [
+        kubernetesConfig,
+        oidcConfig,
+        iamProviderConfig,
+        imageConfig,
+        minioConfig,
+      ],
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
@@ -90,6 +100,9 @@ const GRAPHQL_PATH = '/bff';
     IbppeerModule,
     ConfigmapModule,
     EpolicyModule,
+    MinioModule,
+    ChaincodeModule,
+    ChaincodebuildModule,
   ],
   controllers: [AppController],
   providers: [

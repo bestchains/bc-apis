@@ -1,5 +1,9 @@
 export { Application } from './application';
 export { ApplicationList } from './application-list';
+export { ChaincodeBuild } from './chaincode-build';
+export { ChaincodeBuildList } from './chaincode-build-list';
+export { Chaincode } from './chaincode';
+export { ChaincodeList } from './chaincode-list';
 export { Channel } from './channel';
 export { ChannelList } from './channel-list';
 export { Cluster } from './cluster';
@@ -18,6 +22,8 @@ export { Network } from './network';
 export { NetworkList } from './network-list';
 export { Organization } from './organization';
 export { OrganizationList } from './organization-list';
+export { PipelineRun } from './pipeline-run';
+export { PipelineRunList } from './pipeline-run-list';
 export { Proposal } from './proposal';
 export { ProposalList } from './proposal-list';
 export { User } from './user';

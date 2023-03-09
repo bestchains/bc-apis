@@ -6,6 +6,10 @@ export enum ProposalType {
   DeleteMemberProposal = 'DeleteMemberProposal',
   DissolveFederationProposal = 'DissolveFederationProposal',
   DissolveNetworkProposal = 'DissolveNetworkProposal',
+  ArchiveChannelProposal = 'ArchiveChannelProposal',
+  UnarchiveChannelProposal = 'UnarchiveChannelProposal',
+  DeployChaincodeProposal = 'DeployChaincodeProposal',
+  UpgradeChaincodeProposal = 'UpgradeChaincodeProposal',
 }
 
 registerEnumType(ProposalType, {
@@ -26,6 +30,18 @@ registerEnumType(ProposalType, {
     },
     DissolveNetworkProposal: {
       description: '释放网络时创建的提议',
+    },
+    ArchiveChannelProposal: {
+      description: 'ArchiveChannelProposal',
+    },
+    UnarchiveChannelProposal: {
+      description: 'UnarchiveChannelProposal',
+    },
+    DeployChaincodeProposal: {
+      description: '创建合约时创建的提议',
+    },
+    UpgradeChaincodeProposal: {
+      description: '更新合约时创建的提议',
     },
   },
 });

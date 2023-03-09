@@ -2,6 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Chaincodebuild {
+  """创建时间"""
+  creationTimestamp: String
+
+  """名称"""
+  displayName: String!
+
+  """metadata.name"""
+  name: ID!
+
+  """状态（Created时，才能部署升级）"""
+  status: CrdStatusType
+
+  """版本"""
+  version: String
+}
+
 type Channel {
   """我创建的"""
   createdByMe: Boolean
@@ -197,6 +214,24 @@ type K8sV1StatusDetails {
 }
 
 type Mutation {
+  """部署合约（返回true，只表示这个操作触发成功，而不是部署合约成功）"""
+  chaincodeDeploy(chaincode: NewChaincode!): Boolean!
+
+  """创建合约"""
+  chaincodebuildCreate(chaincodebuild: NewChaincodebuild!): Chaincodebuild!
+
+  """删除合约"""
+  chaincodebuildDelete(
+    """合约名称（displayName, 非name）"""
+    displayName: String!
+
+    """此合约所在网络"""
+    network: String!
+  ): [K8sV1Status!]!
+
+  """升级合约"""
+  chaincodebuildUpgrade(chaincodebuild: UpgradeChaincodebuild!): Chaincodebuild!
+
   """创建通道"""
   channelCreate(channel: NewChannel!, network: String!): Channel!
 
@@ -321,6 +356,43 @@ type Network {
 
   """节点版本"""
   version: OrderVersion
+}
+
+input NewChaincode {
+  """通道"""
+  channel: String!
+
+  """背书策略"""
+  epolicy: String!
+
+  """安装节点（暂不支持）"""
+  ibppeer: String
+
+  """合约name"""
+  name: String!
+
+  """合约版本号"""
+  version: String!
+}
+
+input NewChaincodebuild {
+  """描述"""
+  description: String
+
+  """合约名称（规则：^[a-z][a-z0-9]{7,63}$）"""
+  displayName: String!
+
+  """合约文件"""
+  file: Upload
+
+  """选择语言"""
+  language: String
+
+  """此合约构建所在网络"""
+  network: String!
+
+  """合约版本号"""
+  version: String!
 }
 
 input NewChannel {
@@ -557,20 +629,38 @@ enum ProposalType {
   """联盟添加组织时创建的提议"""
   AddMemberProposal
 
+  """ArchiveChannelProposal"""
+  ArchiveChannelProposal
+
   """创建联盟时创建的提议"""
   CreateFederationProposal
 
   """联盟驱逐组织时创建的提议"""
   DeleteMemberProposal
 
+  """创建合约时创建的提议"""
+  DeployChaincodeProposal
+
   """解散联盟的时候创建的提议"""
   DissolveFederationProposal
 
   """释放网络时创建的提议"""
   DissolveNetworkProposal
+
+  """UnarchiveChannelProposal"""
+  UnarchiveChannelProposal
+
+  """更新合约时创建的提议"""
+  UpgradeChaincodeProposal
 }
 
 type Query {
+  """合约列表"""
+  chaincodebuilds(
+    """此合约所在网络"""
+    network: String!
+  ): [Chaincodebuild!]!
+
   """通道详情"""
   channel(name: String!): Channel!
 
@@ -675,6 +765,26 @@ input UpdateVote {
   """备注"""
   description: String
 }
+
+input UpgradeChaincodebuild {
+  """合约名称"""
+  displayName: String!
+
+  """合约文件"""
+  file: Upload
+
+  """选择语言"""
+  language: String
+
+  """此合约构建所在网络"""
+  network: String!
+
+  """升级后版本号"""
+  newVersion: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 """用户"""
 type User {

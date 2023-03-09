@@ -165,6 +165,8 @@ export class KubernetesService {
       // ~ crd
       // <replace type="crd">
       application: new lib.Application(customObjectsApi),
+      chaincodeBuild: new lib.ChaincodeBuild(customObjectsApi),
+      chaincode: new lib.Chaincode(customObjectsApi),
       channel: new lib.Channel(customObjectsApi),
       cluster: new lib.Cluster(customObjectsApi),
       endorsePolicy: new lib.EndorsePolicy(customObjectsApi),
@@ -174,6 +176,7 @@ export class KubernetesService {
       ibppeer: new lib.IBPPeer(customObjectsApi),
       network: new lib.Network(customObjectsApi),
       organization: new lib.Organization(customObjectsApi),
+      pipelineRun: new lib.PipelineRun(customObjectsApi),
       proposal: new lib.Proposal(customObjectsApi),
       user: new lib.User(customObjectsApi),
       vote: new lib.Vote(customObjectsApi),

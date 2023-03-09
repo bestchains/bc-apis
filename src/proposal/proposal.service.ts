@@ -79,7 +79,14 @@ export class ProposalService {
     type: ProposalType,
     pro: NewProposal,
   ): Promise<Proposal> {
-    const { federation, initiator, organizations, network } = pro;
+    const {
+      federation,
+      initiator,
+      organizations,
+      network,
+      chaincode,
+      chaincodebuild,
+    } = pro;
     const k8s = await this.k8sService.getClient(auth);
 
     const spec: CRD.Proposal['spec'] = {
@@ -106,6 +113,20 @@ export class ProposalService {
     if (type === ProposalType.DissolveNetworkProposal) {
       spec.dissolveNetwork = {
         name: network,
+      };
+    }
+    if (type === ProposalType.DeployChaincodeProposal) {
+      spec.deployChaincode = {
+        chaincode,
+        externalBuilder: chaincodebuild,
+        members: [{ name: initiator, initiator: true }],
+      };
+    }
+    if (type === ProposalType.UpgradeChaincodeProposal) {
+      spec.upgradeChaincode = {
+        chaincode,
+        externalBuilder: chaincodebuild,
+        members: [{ name: initiator, initiator: true }],
       };
     }
 

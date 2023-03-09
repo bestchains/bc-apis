@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
@@ -36,4 +36,7 @@ export class Channel {
 
   /** 背书策略 */
   epolicy?: Epolicy[];
+
+  @HideField()
+  network?: string;
 }

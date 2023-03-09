@@ -13,4 +13,9 @@ export class NewProposal {
 
   /** 网络 */
   network?: string;
+
+  /** 合约 */
+  chaincode?: string;
+
+  chaincodebuild?: string;
 }

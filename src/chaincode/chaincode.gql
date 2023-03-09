@@ -1,0 +1,4 @@
+# 部署合约
+mutation deployChaincode($chaincode: NewChaincode!) {
+  chaincodeDeploy(chaincode: $chaincode)
+}

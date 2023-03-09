@@ -1,4 +1,6 @@
 export { Application } from './application';
+export { ChaincodeBuild } from './chaincode-build';
+export { Chaincode } from './chaincode';
 export { Channel } from './channel';
 export { Cluster } from './cluster';
 export { EndorsePolicy } from './endorse-policy';
@@ -8,6 +10,7 @@ export { IBPOrderer } from './ibporderer';
 export { IBPPeer } from './ibppeer';
 export { Network } from './network';
 export { Organization } from './organization';
+export { PipelineRun } from './pipeline-run';
 export { Proposal } from './proposal';
 export { User } from './user';
 export { Vote } from './vote';
