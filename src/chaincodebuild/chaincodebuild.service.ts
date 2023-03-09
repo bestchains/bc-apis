@@ -1,6 +1,5 @@
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { values } from 'lodash';
 import { ChaincodeService } from 'src/chaincode/chaincode.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
