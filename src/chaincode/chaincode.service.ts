@@ -28,6 +28,8 @@ export class ChaincodeService {
     return {
       name: chaincode.metadata?.name,
       phase: chaincode.status?.phase,
+      channel: chaincode.spec?.channel,
+      epolicy: chaincode.spec?.endorsePolicyRef?.name,
     };
   }
 

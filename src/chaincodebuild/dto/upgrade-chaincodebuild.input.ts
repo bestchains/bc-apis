@@ -17,6 +17,10 @@ export class UpgradeChaincodebuild {
   @Field(() => GraphQLUpload)
   file?: Promise<FileUpload>;
 
+  /** 合约文件夹 */
+  @Field(() => [GraphQLUpload])
+  files?: Promise<FileUpload[]>;
+
   /** 选择语言 */
   language?: string;
 }

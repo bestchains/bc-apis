@@ -30,7 +30,7 @@ export class MinioService {
     return this.minioClient.bucketExists(bucket);
   }
 
-  async makeBacket(name: string): Promise<void> {
+  async makeBucket(name: string): Promise<void> {
     return this.minioClient.makeBucket(name);
   }
 

@@ -1,6 +1,6 @@
 # 创建合约
-mutation createChaincodebuild($displayName: String!, $description: String, $language: String, $network: String!, $version: String! $file: Upload!) {
-  chaincodebuildCreate(chaincodebuild: { displayName: $displayName, description: $description, language: $language, network: $network, version: $version, file: $file }) {
+mutation createChaincodebuild($displayName: String!, $description: String, $language: String, $network: String!, $version: String!, $file: Upload, $files: [Upload!]) {
+  chaincodebuildCreate(chaincodebuild: { displayName: $displayName, description: $description, language: $language, network: $network, version: $version, file: $file, files: $files }) {
     name
     displayName
     creationTimestamp
@@ -17,6 +17,41 @@ query getChaincodebuilds($network: String!) {
     creationTimestamp
     version
     status
+    network
+    initiator
+    ibppeers {
+      name
+    }
+    channels {
+      name
+    }
+  }
+}
+
+# 合约详情
+query getChaincodebuild($name: String!) {
+  chaincodebuild(name: $name) {
+    name
+    displayName
+    creationTimestamp
+    version
+    status
+    network
+    initiator
+    organizations {
+      name
+    }
+    ibppeers {
+      name
+      namespace
+    }
+    channels {
+      name
+      epolicy {
+        name
+        value
+      }
+    }
   }
 }
 
@@ -30,8 +65,8 @@ mutation deleteChaincodebuild($displayName: String!, $network: String!) {
 }
 
 # 升级合约
-mutation upgradeChaincodebuild($displayName: String!, $file: Upload!, $language: String, $network: String!, $newVersion: String!) {
-  chaincodebuildUpgrade(chaincodebuild: {displayName: $displayName, file: $file, language: $language, network: $network, newVersion: $newVersion}) {
+mutation upgradeChaincodebuild($displayName: String!, $file: Upload, $files: [Upload!], $language: String, $network: String!, $newVersion: String!) {
+  chaincodebuildUpgrade(chaincodebuild: {displayName: $displayName, file: $file, files: $files, language: $language, network: $network, newVersion: $newVersion}) {
     name
     displayName
     creationTimestamp
