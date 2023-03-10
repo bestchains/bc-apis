@@ -3,14 +3,29 @@
 # ------------------------------------------------------
 
 type Chaincodebuild {
+  """通道"""
+  channels: [Channel!]
+
   """创建时间"""
   creationTimestamp: String
 
   """名称"""
   displayName: String!
 
+  """节点"""
+  ibppeers: [SpecPeer!]
+
+  """发起者（组织）"""
+  initiator: String
+
   """metadata.name"""
   name: ID!
+
+  """所在网络"""
+  network: String
+
+  """组织"""
+  organizations: [Organization!]
 
   """状态（Created时，才能部署升级）"""
   status: CrdStatusType
@@ -385,6 +400,9 @@ input NewChaincodebuild {
   """合约文件"""
   file: Upload
 
+  """合约文件夹"""
+  files: [Upload!]
+
   """选择语言"""
   language: String
 
@@ -655,6 +673,9 @@ enum ProposalType {
 }
 
 type Query {
+  """合约详情"""
+  chaincodebuild(name: String!): Chaincodebuild!
+
   """合约列表"""
   chaincodebuilds(
     """此合约所在网络"""
@@ -772,6 +793,9 @@ input UpgradeChaincodebuild {
 
   """合约文件"""
   file: Upload
+
+  """合约文件夹"""
+  files: [Upload!]
 
   """选择语言"""
   language: String

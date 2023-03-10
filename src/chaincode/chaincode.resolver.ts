@@ -1,10 +1,11 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { Chaincode } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
 import { ChaincodeService } from './chaincode.service';
 import { NewChaincode } from './dto/new-chaincode.input';
 
-@Resolver()
+@Resolver(() => Chaincode)
 export class ChaincodeResolver {
   constructor(private readonly ccService: ChaincodeService) {}
 

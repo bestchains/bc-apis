@@ -8,4 +8,10 @@ export class Chaincode {
 
   @Field(() => ChaincodePhase, { description: '状态' })
   phase?: string;
+
+  /** 通道 */
+  channel?: string;
+
+  /** 策略 */
+  epolicy?: string;
 }

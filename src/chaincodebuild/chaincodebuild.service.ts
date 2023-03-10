@@ -38,7 +38,18 @@ export class ChaincodebuildService {
         ccb.metadata?.creationTimestamp,
       ).toISOString(),
       version: ccb.spec?.version,
+      network: ccb.spec?.network,
+      initiator: ccb.spec?.initiator,
     };
+  }
+
+  async getChaincodebuild(
+    auth: JwtAuth,
+    name: string,
+  ): Promise<Chaincodebuild> {
+    const k8s = await this.k8sService.getClient(auth);
+    const { body } = await k8s.chaincodeBuild.read(name);
+    return this.format(body);
   }
 
   async getChaincodebuilds(
@@ -76,21 +87,39 @@ export class ChaincodebuildService {
     auth: JwtAuth,
     chaincodebuild: NewChaincodebuild,
   ): Promise<Chaincodebuild> {
-    const { displayName, version, file, description, network } = chaincodebuild;
+    const { displayName, version, file, files, description, network } =
+      chaincodebuild;
     const { name: initiator } = await this.selectInitiator(auth, network);
 
     // 1. 上传文件到MinIO
     const exist = await this.minioService.bucketExists(MINIO_BUCKET_NAME);
     if (!exist) {
-      await this.minioService.makeBacket(MINIO_BUCKET_NAME);
+      await this.minioService.makeBucket(MINIO_BUCKET_NAME);
     }
     // TODO: 测试是否兼容 文件夹
-    const { createReadStream, filename } = await file;
-    await this.minioService.putObject(
-      MINIO_BUCKET_NAME,
-      filename,
-      createReadStream(),
-    );
+    let objectName: string;
+    if (file) {
+      const { createReadStream, filename } = await file;
+      objectName = filename;
+      await this.minioService.putObject(
+        MINIO_BUCKET_NAME,
+        filename,
+        createReadStream(),
+      );
+    }
+
+    if (files) {
+      objectName = 'test-directory';
+      const filestreams = await files;
+      for (const filestream of filestreams) {
+        const { createReadStream, filename } = await filestream;
+        await this.minioService.putObject(
+          MINIO_BUCKET_NAME,
+          filename,
+          createReadStream(),
+        );
+      }
+    }
 
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.chaincodeBuild.create({
@@ -109,12 +138,12 @@ export class ChaincodebuildService {
         pipelineRunSpec: {
           minio: {
             bucket: MINIO_BUCKET_NAME,
-            object: filename,
+            object: objectName,
           },
           dockerBuild: {
             appImage: `${this.imgConfig.namespace}/${displayName}:${version}`,
-            context: `${MINIO_BUCKET_NAME}/${filename}`,
-            dockerfile: `${MINIO_BUCKET_NAME}/${filename}/Dockerfile`,
+            context: `${MINIO_BUCKET_NAME}/${objectName}`,
+            dockerfile: `${MINIO_BUCKET_NAME}/${objectName}/Dockerfile`,
             pushSecret: 'dockerhub-secret',
           },
         },
@@ -127,11 +156,12 @@ export class ChaincodebuildService {
     auth: JwtAuth,
     chaincodebuild: UpgradeChaincodebuild,
   ): Promise<Chaincodebuild> {
-    const { displayName, newVersion, file, network } = chaincodebuild;
+    const { displayName, newVersion, file, files, network } = chaincodebuild;
     const ccd = await this.createChaincodebuild(auth, {
       displayName,
       version: newVersion,
       file,
+      files,
       network,
     });
     return ccd;
