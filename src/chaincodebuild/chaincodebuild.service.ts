@@ -100,10 +100,17 @@ export class ChaincodebuildService {
     let objectName: string;
     if (file) {
       const { createReadStream, filename } = await file;
-      objectName = filename;
+      const lastN = filename.lastIndexOf('.');
+      const hashFilename =
+        lastN > 0
+          ? `${filename.slice(0, lastN)}-${Date.now()}${filename.substring(
+              lastN,
+            )}`
+          : `${filename}-${Date.now()}`;
+      objectName = hashFilename;
       await this.minioService.putObject(
         MINIO_BUCKET_NAME,
-        filename,
+        hashFilename,
         createReadStream(),
       );
     }
@@ -114,12 +121,16 @@ export class ChaincodebuildService {
       for (const filestream of filestreams) {
         const { createReadStream, filename } = await filestream;
         if (!isFirst) {
-          objectName = filename?.split('/')[0];
+          objectName = `${filename?.split('/')[0]}-${Date.now()}`;
           isFirst = true;
         }
+        const hashFilename = filename.replace(
+          /^([^/]+)(\/.*)$/,
+          `${objectName}$2`,
+        );
         await this.minioService.putObject(
           MINIO_BUCKET_NAME,
-          filename,
+          hashFilename,
           createReadStream(),
         );
       }

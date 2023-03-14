@@ -7,13 +7,12 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
-import { isEqual, uniqWith } from 'lodash';
 import { ChannelLoader } from 'src/channel/channel.loader';
 import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
-import { NETWORK_VERSION_RESOURCES } from 'src/common/utils';
+import { flattenArr, NETWORK_VERSION_RESOURCES } from 'src/common/utils';
 import { IbppeerService } from 'src/ibppeer/ibppeer.service';
 import { Ibppeer } from 'src/ibppeer/models/ibppeer.model';
 import { Organization } from 'src/organization/models/organization.model';
@@ -146,7 +145,7 @@ export class NetworkResolver {
     if (!channelNames || channelNames.length === 0) return;
     const channels = await channelLoader.loadMany(channelNames);
     const peerses = (channels as Channel[])?.map((channel) => channel.peers);
-    const peers = uniqWith(peerses.flat(), isEqual);
+    const peers = flattenArr(peerses);
     // TODO: IbppeerLoader, 以namespace/name为key
     return Promise.all(
       peers?.map((peer) =>
