@@ -21,6 +21,9 @@ export class UpgradeChaincodebuild {
   @Field(() => [GraphQLUpload])
   files?: Promise<FileUpload[]>;
 
+  /** 文件夹内文件的相对路径 */
+  fileRelativePaths?: string[];
+
   /** 选择语言 */
   language?: string;
 }

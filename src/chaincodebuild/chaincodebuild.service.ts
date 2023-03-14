@@ -87,8 +87,15 @@ export class ChaincodebuildService {
     auth: JwtAuth,
     chaincodebuild: NewChaincodebuild,
   ): Promise<Chaincodebuild> {
-    const { displayName, version, file, files, description, network } =
-      chaincodebuild;
+    const {
+      displayName,
+      version,
+      file,
+      files,
+      description,
+      network,
+      fileRelativePaths,
+    } = chaincodebuild;
     const { name: initiator } = await this.selectInitiator(auth, network);
 
     // 1. 上传文件到MinIO
@@ -100,10 +107,17 @@ export class ChaincodebuildService {
     let objectName: string;
     if (file) {
       const { createReadStream, filename } = await file;
-      objectName = filename;
+      const lastN = filename.lastIndexOf('.');
+      const hashFilename =
+        lastN > 0
+          ? `${filename.slice(0, lastN)}-${Date.now()}${filename.substring(
+              lastN,
+            )}`
+          : `${filename}-${Date.now()}`;
+      objectName = hashFilename;
       await this.minioService.putObject(
         MINIO_BUCKET_NAME,
-        filename,
+        hashFilename,
         createReadStream(),
       );
     }
@@ -111,15 +125,20 @@ export class ChaincodebuildService {
     if (files) {
       const filestreams = await files;
       let isFirst = false;
-      for (const filestream of filestreams) {
-        const { createReadStream, filename } = await filestream;
+      for (const [index, filestream] of filestreams.entries()) {
+        const filename = fileRelativePaths[index];
+        const { createReadStream } = await filestream;
         if (!isFirst) {
-          objectName = filename?.split('/')[0];
+          objectName = `${filename?.split('/')[0]}-${Date.now()}`;
           isFirst = true;
         }
+        const hashFilename = filename.replace(
+          /^([^/]+)(\/.*)$/,
+          `${objectName}$2`,
+        );
         await this.minioService.putObject(
           MINIO_BUCKET_NAME,
-          filename,
+          hashFilename,
           createReadStream(),
         );
       }
@@ -160,13 +179,15 @@ export class ChaincodebuildService {
     auth: JwtAuth,
     chaincodebuild: UpgradeChaincodebuild,
   ): Promise<Chaincodebuild> {
-    const { displayName, newVersion, file, files, network } = chaincodebuild;
+    const { displayName, newVersion, file, files, network, fileRelativePaths } =
+      chaincodebuild;
     const ccd = await this.createChaincodebuild(auth, {
       displayName,
       version: newVersion,
       file,
       files,
       network,
+      fileRelativePaths,
     });
     return ccd;
   }
