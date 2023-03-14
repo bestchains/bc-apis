@@ -1,6 +1,6 @@
 # 创建合约
-mutation createChaincodebuild($displayName: String!, $description: String, $language: String, $network: String!, $version: String!, $file: Upload, $files: [Upload!]) {
-  chaincodebuildCreate(chaincodebuild: { displayName: $displayName, description: $description, language: $language, network: $network, version: $version, file: $file, files: $files }) {
+mutation createChaincodebuild($displayName: String!, $description: String, $language: String, $network: String!, $version: String!, $file: Upload, $files: [Upload!], $fileRelativePaths: [String!]) {
+  chaincodebuildCreate(chaincodebuild: { displayName: $displayName, description: $description, language: $language, network: $network, version: $version, file: $file, files: $files, fileRelativePaths: $fileRelativePaths }) {
     name
     displayName
     creationTimestamp
@@ -65,8 +65,8 @@ mutation deleteChaincodebuild($displayName: String!, $network: String!) {
 }
 
 # 升级合约
-mutation upgradeChaincodebuild($displayName: String!, $file: Upload, $files: [Upload!], $language: String, $network: String!, $newVersion: String!) {
-  chaincodebuildUpgrade(chaincodebuild: {displayName: $displayName, file: $file, files: $files, language: $language, network: $network, newVersion: $newVersion}) {
+mutation upgradeChaincodebuild($displayName: String!, $file: Upload, $files: [Upload!], $language: String, $network: String!, $newVersion: String!, $fileRelativePaths: [String!]) {
+  chaincodebuildUpgrade(chaincodebuild: {displayName: $displayName, file: $file, files: $files, language: $language, network: $network, newVersion: $newVersion, fileRelativePaths: $fileRelativePaths}) {
     name
     displayName
     creationTimestamp
