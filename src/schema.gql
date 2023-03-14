@@ -400,6 +400,9 @@ input NewChaincodebuild {
   """合约文件"""
   file: Upload
 
+  """文件夹内文件的相对路径"""
+  fileRelativePaths: [String!]
+
   """合约文件夹"""
   files: [Upload!]
 
@@ -793,6 +796,9 @@ input UpgradeChaincodebuild {
 
   """合约文件"""
   file: Upload
+
+  """文件夹内文件的相对路径"""
+  fileRelativePaths: [String!]
 
   """合约文件夹"""
   files: [Upload!]
