@@ -26,7 +26,7 @@ async function bootstrap() {
       crossOriginEmbedderPolicy: false,
     }),
   );
-  app.use(graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 30 }));
+  app.use(graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 100 }));
 
   await app.listen(8024);
   console.log(`bc-apis is running on: ${await app.getUrl()}`);

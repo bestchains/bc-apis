@@ -109,10 +109,14 @@ export class ChaincodebuildService {
     }
 
     if (files) {
-      objectName = 'test-directory';
       const filestreams = await files;
+      let isFirst = false;
       for (const filestream of filestreams) {
         const { createReadStream, filename } = await filestream;
+        if (!isFirst) {
+          objectName = filename?.split('/')[0];
+          isFirst = true;
+        }
         await this.minioService.putObject(
           MINIO_BUCKET_NAME,
           filename,
