@@ -144,10 +144,11 @@ export class ChaincodebuildService {
       }
     }
 
+    const metadataName = genNanoid('chaincodebuild');
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.chaincodeBuild.create({
       metadata: {
-        name: genNanoid('chaincodebuild'),
+        name: metadataName,
       },
       spec: {
         license: {
@@ -164,7 +165,7 @@ export class ChaincodebuildService {
             object: objectName,
           },
           dockerBuild: {
-            appImage: `${this.imgConfig.namespace}/${displayName}:${version}`,
+            appImage: `${this.imgConfig.namespace}/${metadataName}:${version}`,
             context: `${MINIO_BUCKET_NAME}/${objectName}`,
             dockerfile: `${MINIO_BUCKET_NAME}/${objectName}/Dockerfile`,
             pushSecret: 'dockerhub-secret',
