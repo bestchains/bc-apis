@@ -2,6 +2,7 @@
 query getEpolicies($network: String) {
   epolicies(network: $network) {
     name
+    displayName
     description
     channel
     value
@@ -14,6 +15,7 @@ query getEpolicies($network: String) {
 mutation createEpolicy($epolicy: NewEpolicyInput!) {
   epolicyCreate(epolicy: $epolicy) {
     name
+    displayName
     value
     description
     channel

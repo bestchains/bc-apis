@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { Channel } from 'src/channel/models/channel.model';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
+import { genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -28,6 +29,7 @@ export class EpolicyService {
       : creationTimestamp;
     return {
       name: epolicy.metadata?.name,
+      displayName: epolicy.spec?.displayName,
       creationTimestamp,
       lastHeartbeatTime,
       channel: epolicy.spec?.channel,
@@ -60,13 +62,14 @@ export class EpolicyService {
     auth: JwtAuth,
     epolicy: NewEpolicyInput,
   ): Promise<Epolicy> {
-    const { name, description, channel, value } = epolicy;
+    const { displayName, description, channel, value } = epolicy;
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.endorsePolicy.create({
       metadata: {
-        name,
+        name: genNanoid('epolicy'),
       },
       spec: {
+        displayName,
         description,
         channel,
         value,
