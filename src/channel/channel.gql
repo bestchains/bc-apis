@@ -55,3 +55,11 @@ mutation updateChannel($channel: UpdateChannel!, $name: String!) {
     status
   }
 }
+
+# 通道连接文件
+query getChannelProfile($name: String!) {
+  channel(name: $name) {
+    name
+    profileJson
+  }
+}

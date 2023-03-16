@@ -40,4 +40,7 @@ export class Channel {
 
   @HideField()
   network?: string;
+
+  /** 通道连接文件（profile.json）*/
+  profileJson?: string;
 }

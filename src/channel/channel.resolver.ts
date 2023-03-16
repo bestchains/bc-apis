@@ -11,6 +11,8 @@ import { ChaincodeService } from 'src/chaincode/chaincode.service';
 import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { decodeBase64 } from 'src/common/utils';
+import { ConfigmapService } from 'src/configmap/configmap.service';
 import { EpolicyService } from 'src/epolicy/epolicy.service';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
 import { Organization } from 'src/organization/models/organization.model';
@@ -27,6 +29,7 @@ export class ChannelResolver {
     private readonly channelService: ChannelService,
     private readonly epolicyService: EpolicyService,
     private readonly chaincodeService: ChaincodeService,
+    private readonly configMapService: ConfigmapService,
   ) {}
 
   @Query(() => Channel, { description: '通道详情' })
@@ -120,6 +123,7 @@ export class ChannelResolver {
     @Parent() channel: Channel,
   ): Promise<Epolicy[]> {
     const { name } = channel;
+    // TODO: dataloader loadAll()
     const epolicies = await this.epolicyService.getEpolicies(auth);
     return epolicies?.filter((epolicy) => epolicy.channel === name);
   }
@@ -137,5 +141,30 @@ export class ChannelResolver {
     return await this.chaincodeService.getChaincodes(auth, {
       channel: name,
     });
+  }
+
+  @ResolveField(() => String, {
+    nullable: true,
+    description: '通道连接文件',
+  })
+  async profileJson(
+    @Auth() auth: JwtAuth,
+    @Parent() channel: Channel,
+    @Loader(OrganizationLoader)
+    orgLoader: DataLoader<Organization['name'], Organization>,
+  ): Promise<string> {
+    const { name, members } = channel;
+    const { preferred_username } = auth;
+    const orgs = await orgLoader.loadMany(members?.map((m) => m.name));
+    const adminMembers = (orgs as Organization[])
+      ?.filter((m) => m.admin === preferred_username)
+      ?.map((m) => m.name);
+    if (!adminMembers || adminMembers.length === 0) return;
+    const { binaryData } = await this.configMapService.getConfigmap(
+      auth,
+      `chan-${name}-connection-profile`,
+      adminMembers[0],
+    );
+    return decodeBase64(binaryData['profile.json']);
   }
 }
