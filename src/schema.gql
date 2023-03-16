@@ -59,6 +59,9 @@ type Channel {
   """我的节点"""
   peers: [SpecPeer!]
 
+  """通道连接文件（profile.json）"""
+  profileJson: String
+
   """状态"""
   status: CrdStatusType
 }
