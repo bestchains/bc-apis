@@ -30,6 +30,8 @@ export class ChaincodeService {
       phase: chaincode.status?.phase,
       channel: chaincode.spec?.channel,
       epolicy: chaincode.spec?.endorsePolicyRef?.name,
+      id: chaincode.spec?.id,
+      version: chaincode.spec?.version,
     };
   }
 

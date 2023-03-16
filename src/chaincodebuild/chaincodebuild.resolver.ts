@@ -98,7 +98,7 @@ export class ChaincodebuildResolver {
     });
     const channelNames = (ccs as Chaincode[])?.map((cc) => cc.channel);
     const channels = await channelLoader.loadMany(channelNames);
-    return channels;
+    return channels as Channel[];
   }
 
   @ResolveField(() => [SpecPeer], { description: '节点' })
