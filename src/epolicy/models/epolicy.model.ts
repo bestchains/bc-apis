@@ -5,6 +5,9 @@ export class Epolicy {
   @Field(() => ID, { description: 'name' })
   name: string;
 
+  /** 策略名称 */
+  displayName?: string;
+
   /** 所在通道 */
   channel: string;
 

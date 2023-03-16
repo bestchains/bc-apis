@@ -136,6 +136,9 @@ type Epolicy {
   """描述"""
   description: String
 
+  """策略名称"""
+  displayName: String
+
   """更新时间"""
   lastHeartbeatTime: String
 
@@ -443,10 +446,8 @@ input NewEpolicyInput {
   """策略描述"""
   description: String
 
-  """
-  策略名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
-  """
-  name: String!
+  """策略名称"""
+  displayName: String!
 
   """
   策略内容：可选组织为已选通道内的成员，语法参考（https://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies.html#endorsement-policy-syntax）

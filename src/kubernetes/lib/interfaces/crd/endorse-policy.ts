@@ -24,6 +24,7 @@ export interface EndorsePolicy {
   spec?: {
     channel: string;
     description?: string;
+    displayName: string;
     value: string;
     [k: string]: any;
   };

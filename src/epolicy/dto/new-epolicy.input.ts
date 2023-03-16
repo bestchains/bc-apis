@@ -1,15 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Length } from 'class-validator';
 
 @InputType()
 export class NewEpolicyInput {
-  /** 策略名称（metadata.name） */
+  /** 策略名称 */
   @Field(() => String, {
-    description:
-      '策略名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）',
+    description: '策略名称',
   })
-  @Length(3, 63)
-  name: string;
+  displayName: string;
 
   /** 策略描述 */
   description?: string;
