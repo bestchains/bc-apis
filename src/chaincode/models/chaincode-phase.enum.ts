@@ -12,16 +12,16 @@ registerEnumType(ChaincodePhase, {
   description: '「通道」状态',
   valuesMap: {
     ChaincodeUnapproved: {
-      description: 'ChaincodeUnapproved',
+      description: '投票不通过',
     },
     ChaincodePending: {
-      description: 'ChaincodePending',
+      description: '等待投票',
     },
     ChaincodeApproved: {
-      description: 'ChaincodeApproved',
+      description: '投票通过',
     },
     ChaincodeRunning: {
-      description: 'ChaincodeRunning',
+      description: '已经安装，Pod正常运行',
     },
   },
 });

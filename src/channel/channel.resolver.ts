@@ -7,6 +7,8 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
+import { ChaincodeService } from 'src/chaincode/chaincode.service';
+import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { EpolicyService } from 'src/epolicy/epolicy.service';
@@ -24,6 +26,7 @@ export class ChannelResolver {
   constructor(
     private readonly channelService: ChannelService,
     private readonly epolicyService: EpolicyService,
+    private readonly chaincodeService: ChaincodeService,
   ) {}
 
   @Query(() => Channel, { description: '通道详情' })
@@ -119,5 +122,20 @@ export class ChannelResolver {
     const { name } = channel;
     const epolicies = await this.epolicyService.getEpolicies(auth);
     return epolicies?.filter((epolicy) => epolicy.channel === name);
+  }
+
+  @ResolveField(() => [Chaincode], {
+    nullable: true,
+    description: '合约',
+  })
+  async chaincode(
+    @Auth() auth: JwtAuth,
+    @Parent() channel: Channel,
+  ): Promise<Chaincode[]> {
+    const { name } = channel;
+    // TODO：dataload loadAll()
+    return await this.chaincodeService.getChaincodes(auth, {
+      channel: name,
+    });
   }
 }

@@ -16,6 +16,11 @@ query getChannel($name: String!) {
       name
       namespace
     }
+    chaincode {
+      name
+      version
+      phase
+    }
   }
 }
 

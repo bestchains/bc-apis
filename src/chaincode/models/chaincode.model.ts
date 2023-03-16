@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { ChaincodePhase } from './chaincode-phase.enum';
 
 @ObjectType()
@@ -14,4 +14,11 @@ export class Chaincode {
 
   /** 策略 */
   epolicy?: string;
+
+  /** chaincodebuild.spec.id */
+  @HideField()
+  id?: string;
+
+  /** 版本 */
+  version?: string;
 }

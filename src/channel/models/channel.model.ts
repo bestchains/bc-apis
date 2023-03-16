@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
@@ -18,8 +19,8 @@ export class Channel {
   /** 我的节点 */
   peers?: SpecPeer[];
 
-  /** 合约数量 */
-  // TODO
+  /** 合约 */
+  chaincode?: Chaincode[];
 
   /** 创建时间 */
   creationTimestamp?: string;
