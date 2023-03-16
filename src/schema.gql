@@ -2,6 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Chaincode {
+  """通道"""
+  channel: String
+
+  """策略"""
+  epolicy: String
+
+  """name"""
+  name: ID!
+
+  """状态"""
+  phase: ChaincodePhase
+
+  """版本"""
+  version: String
+}
+
+"""「通道」状态"""
+enum ChaincodePhase {
+  """投票通过"""
+  ChaincodeApproved
+
+  """等待投票"""
+  ChaincodePending
+
+  """已经安装，Pod正常运行"""
+  ChaincodeRunning
+
+  """投票不通过"""
+  ChaincodeUnapproved
+}
+
 type Chaincodebuild {
   """通道"""
   channels: [Channel!]
@@ -35,10 +67,13 @@ type Chaincodebuild {
 }
 
 type Channel {
+  """合约"""
+  chaincode: [Chaincode!]
+
   """我创建的"""
   createdByMe: Boolean
 
-  """合约数量"""
+  """创建时间"""
   creationTimestamp: String
 
   """描述"""
