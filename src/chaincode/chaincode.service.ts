@@ -30,7 +30,7 @@ export class ChaincodeService {
       phase: chaincode.status?.phase,
       channel: chaincode.spec?.channel,
       epolicy: chaincode.spec?.endorsePolicyRef?.name,
-      id: chaincode.spec?.id,
+      displayName: chaincode.spec?.id,
       version: chaincode.spec?.version,
     };
   }
@@ -105,6 +105,7 @@ export class ChaincodeService {
         endorsePolicyRef: {
           name: epolicy,
         },
+        externalBuilder: chaincodebuildName,
       },
     });
 

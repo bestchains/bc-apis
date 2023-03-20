@@ -6,6 +6,9 @@ type Chaincode {
   """通道"""
   channel: String
 
+  """名称(chaincodebuild.spec.id)"""
+  displayName: String
+
   """策略"""
   epolicy: String
 
@@ -59,7 +62,10 @@ type Chaincodebuild {
   """组织"""
   organizations: [Organization!]
 
-  """状态（Created时，才能部署升级）"""
+  """Pipeline Results"""
+  pipelineImageUrl: String
+
+  """状态（为Created且pipelineImageUrl有值时，才能部署升级）"""
   status: CrdStatusType
 
   """版本"""
@@ -404,7 +410,7 @@ type Network {
   """网络中的所有节点"""
   peers: [Ibppeer!]
 
-  """状态"""
+  """状态（网络运行中：Deployed，网络停止：NetworkDissolved）"""
   status: CrdStatusType
 
   """节点存储"""
@@ -464,7 +470,9 @@ input NewChannel {
   """发起者（组织）"""
   initiator: String!
 
-  """通道名称（channel name）"""
+  """
+  通道名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字`（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）`
+  """
   name: String!
 
   """配置成员（组织）"""
@@ -501,7 +509,7 @@ input NewFederationInput {
   initiator: String!
 
   """
-  联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  联盟名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字`（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）`
   """
   name: String!
 
@@ -526,7 +534,7 @@ input NewNetworkInput {
   initiator: String!
 
   """
-  网络名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  网络名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字`（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）`
   """
   name: String!
 
@@ -545,7 +553,7 @@ input NewOrganizationInput {
   displayName: String
 
   """
-  组织名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）
+  组织名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字`（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）`
   """
   name: String!
 }

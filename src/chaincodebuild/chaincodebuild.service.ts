@@ -30,10 +30,14 @@ export class ChaincodebuildService {
   logger = new Logger('ChaincodebuildService');
 
   format(ccb: CRD.ChaincodeBuild): Chaincodebuild {
+    const pipelineImageUrl = ccb.status?.pipelineResults?.find(
+      (d) => d.name === 'IMAGE_URL',
+    )?.value;
     return {
       name: ccb.metadata?.name,
       displayName: ccb.spec?.id,
       status: ccb.status?.type,
+      pipelineImageUrl,
       creationTimestamp: new Date(
         ccb.metadata?.creationTimestamp,
       ).toISOString(),

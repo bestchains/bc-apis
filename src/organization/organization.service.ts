@@ -1,11 +1,13 @@
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { compact } from 'lodash';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { JwtAuth } from 'src/types';
+import { UsersService } from 'src/users/users.service';
 import { NewOrganizationInput } from './dto/new-organization.input';
 import { UpdateOrganization } from './dto/update-organization.input';
 import { Organization } from './models/organization.model';
@@ -14,6 +16,7 @@ import { Organization } from './models/organization.model';
 export class OrganizationService {
   constructor(
     private readonly k8sService: KubernetesService,
+    private readonly userService: UsersService,
     @Inject(imageConfig.KEY)
     private imgConfig: ConfigType<typeof imageConfig>,
   ) {}
@@ -136,6 +139,12 @@ export class OrganizationService {
     org: UpdateOrganization,
   ): Promise<Organization> {
     const { users, admin } = org;
+    // 校验用户是否存在
+    const allUsers = await this.userService.getUsers(auth);
+    const allUserMap = new Map((allUsers || []).map((n) => [n.name, n]));
+    if (compact([...(users || []), admin]).some((n) => !allUserMap.has(n))) {
+      throw new ForbiddenException('The user does not exist');
+    }
     const { admin: orgAdmin } = await this.getOrganization(auth, name);
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.organization.patchMerge(name, {

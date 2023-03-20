@@ -71,10 +71,14 @@ query getNetwork($name: String!) {
       name
       members{
         name
+        joinedAt
       }
       peers {
         name
         namespace
+      }
+      chaincode {
+        name
       }
       creationTimestamp
       status

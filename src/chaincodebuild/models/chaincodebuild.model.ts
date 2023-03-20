@@ -14,9 +14,12 @@ export class Chaincodebuild {
 
   /** 状态 */
   @Field(() => CrdStatusType, {
-    description: '状态（Created时，才能部署升级）',
+    description: '状态（为Created且pipelineImageUrl有值时，才能部署升级）',
   })
   status?: string;
+
+  /** Pipeline Results */
+  pipelineImageUrl?: string;
 
   /** 版本 */
   version?: string;

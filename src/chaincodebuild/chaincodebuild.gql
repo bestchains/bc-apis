@@ -17,6 +17,7 @@ query getChaincodebuilds($network: String!) {
     creationTimestamp
     version
     status
+    pipelineImageUrl
     network
     initiator
     ibppeers {
@@ -36,6 +37,7 @@ query getChaincodebuild($name: String!) {
     creationTimestamp
     version
     status
+    pipelineImageUrl
     network
     initiator
     organizations {
