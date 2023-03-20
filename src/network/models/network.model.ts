@@ -25,7 +25,9 @@ export class Network {
   expiredTime?: string;
 
   /** 状态 */
-  @Field(() => CrdStatusType, { description: '状态' })
+  @Field(() => CrdStatusType, {
+    description: '状态（网络运行中：Deployed，网络停止：NetworkDissolved）',
+  })
   status?: string;
 
   /** 引擎类型 */
