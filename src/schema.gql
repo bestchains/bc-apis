@@ -53,6 +53,9 @@ type Chaincodebuild {
   """发起者（组织）"""
   initiator: String
 
+  """MinIO信息"""
+  minio: MinIO
+
   """metadata.name"""
   name: ID!
 
@@ -273,6 +276,11 @@ type K8sV1StatusDetails {
   kind: String
   name: String
   uid: String
+}
+
+type MinIO {
+  bucket: String
+  object: String
 }
 
 type Mutation {

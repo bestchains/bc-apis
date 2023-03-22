@@ -54,6 +54,10 @@ query getChaincodebuild($name: String!) {
         value
       }
     }
+    minio {
+      bucket
+      object
+    }
   }
 }
 
