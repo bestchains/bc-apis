@@ -41,4 +41,13 @@ export class Chaincodebuild {
 
   /** 通道 */
   channels?: Channel[];
+
+  /** MinIO信息 */
+  minio?: MinIO;
+}
+
+@ObjectType()
+class MinIO {
+  bucket?: string;
+  object?: string;
 }

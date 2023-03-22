@@ -22,6 +22,7 @@ export class MinioService {
       endPoint: this.config.endPoint,
       accessKey: this.config.accessKey,
       secretKey: this.config.secretKey,
+      port: 9000,
       useSSL: false,
     });
   }

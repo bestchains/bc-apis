@@ -44,6 +44,7 @@ export class ChaincodebuildService {
       version: ccb.spec?.version,
       network: ccb.spec?.network,
       initiator: ccb.spec?.initiator,
+      minio: ccb.spec?.pipelineRunSpec?.minio,
     };
   }
 
@@ -107,7 +108,7 @@ export class ChaincodebuildService {
     if (!exist) {
       await this.minioService.makeBucket(MINIO_BUCKET_NAME);
     }
-    // TODO: 测试是否兼容 文件夹
+
     let objectName: string;
     if (file) {
       const { createReadStream, filename } = await file;
