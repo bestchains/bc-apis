@@ -5,6 +5,9 @@ import { ChannelLoader } from './channel.loader';
 import { EpolicyModule } from 'src/epolicy/epolicy.module';
 import { ConfigmapModule } from 'src/configmap/configmap.module';
 import { ChaincodeModule } from 'src/chaincode/chaincode.module';
+import { ProposalModule } from 'src/proposal/proposal.module';
+import { NetworkModule } from 'src/network/network.module';
+import { OrganizationModule } from 'src/organization/organization.module';
 
 @Module({
   providers: [ChannelService, ChannelResolver, ChannelLoader],
@@ -13,6 +16,9 @@ import { ChaincodeModule } from 'src/chaincode/chaincode.module';
     forwardRef(() => EpolicyModule),
     forwardRef(() => ChaincodeModule),
     ConfigmapModule,
+    ProposalModule,
+    NetworkModule,
+    OrganizationModule,
   ],
 })
 export class ChannelModule {}

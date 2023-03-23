@@ -42,7 +42,7 @@ mutation createChannel($network: String!, $channel: NewChannel!) {
   }
 }
 
-# 更新通道
+# 更新通道（添加节点）
 mutation updateChannel($channel: UpdateChannel!, $name: String!) {
   channelUpdate(channel: $channel, name: $name) {
     name
@@ -56,6 +56,11 @@ mutation updateChannel($channel: UpdateChannel!, $name: String!) {
     creationTimestamp
     status
   }
+}
+
+# 更新通道（邀请组织）
+mutation updateMemberChannel($name: String!, $members: [String!]!) {
+  channelMemberUpdate(name: $name, members: $members)
 }
 
 # 通道连接文件

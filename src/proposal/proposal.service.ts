@@ -86,6 +86,7 @@ export class ProposalService {
       network,
       chaincode,
       chaincodebuild,
+      channel,
     } = pro;
     const k8s = await this.k8sService.getClient(auth);
 
@@ -127,6 +128,12 @@ export class ProposalService {
         chaincode,
         externalBuilder: chaincodebuild,
         members: [{ name: initiator, initiator: true }],
+      };
+    }
+    if (type === ProposalType.UpdateChannelMemberProposal) {
+      spec.updateChannelMember = {
+        channel,
+        members: organizations,
       };
     }
 

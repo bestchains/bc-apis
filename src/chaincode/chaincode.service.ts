@@ -101,7 +101,7 @@ export class ChaincodeService {
           accept: true,
         },
         channel,
-        initRequired: true,
+        initRequired: false,
         endorsePolicyRef: {
           name: epolicy,
         },

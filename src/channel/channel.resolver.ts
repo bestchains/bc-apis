@@ -58,6 +58,15 @@ export class ChannelResolver {
     return this.channelService.updateChannel(auth, name, channel);
   }
 
+  @Mutation(() => Boolean, { description: '邀请组织' })
+  async channelMemberUpdate(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+    @Args('members', { type: () => [String] }) members: string[],
+  ): Promise<boolean> {
+    return this.channelService.updateMemberChannel(auth, name, members);
+  }
+
   @ResolveField(() => Boolean, {
     description: '是否为我创建的',
   })

@@ -90,10 +90,10 @@ export class ChaincodebuildResolver {
     @Parent() ccb: Chaincodebuild,
     @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
   ): Promise<Channel[]> {
-    const { name, version } = ccb;
+    const { displayName, version } = ccb;
     // TODO: 优化Dataloader
     const ccs = await this.chaincodeService.getChaincodes(auth, {
-      id: name,
+      id: displayName,
       version,
     });
     const channelNames = (ccs as Chaincode[])?.map((cc) => cc.channel);
@@ -108,9 +108,9 @@ export class ChaincodebuildResolver {
     @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
   ): Promise<SpecPeer[]> {
     // TODO: 还不支持选择节点，暂时为channel的所有节点
-    const { name, version } = ccb;
+    const { displayName, version } = ccb;
     const ccs = await this.chaincodeService.getChaincodes(auth, {
-      id: name,
+      id: displayName,
       version,
     });
     const channelNames = (ccs as Chaincode[])?.map((cc) => cc.channel);
