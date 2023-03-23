@@ -305,6 +305,9 @@ type Mutation {
   """创建通道"""
   channelCreate(channel: NewChannel!, network: String!): Channel!
 
+  """邀请组织"""
+  channelMemberUpdate(members: [String!]!, name: String!): Boolean!
+
   """加入/去除Peer节点"""
   channelUpdate(channel: UpdateChannel!, name: String!): Channel!
 
@@ -725,6 +728,9 @@ enum ProposalType {
 
   """UnarchiveChannelProposal"""
   UnarchiveChannelProposal
+
+  """通道邀请组织的提议"""
+  UpdateChannelMemberProposal
 
   """更新合约时创建的提议"""
   UpgradeChaincodeProposal

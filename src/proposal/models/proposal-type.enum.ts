@@ -10,6 +10,7 @@ export enum ProposalType {
   UnarchiveChannelProposal = 'UnarchiveChannelProposal',
   DeployChaincodeProposal = 'DeployChaincodeProposal',
   UpgradeChaincodeProposal = 'UpgradeChaincodeProposal',
+  UpdateChannelMemberProposal = 'UpdateChannelMemberProposal',
 }
 
 registerEnumType(ProposalType, {
@@ -42,6 +43,9 @@ registerEnumType(ProposalType, {
     },
     UpgradeChaincodeProposal: {
       description: '更新合约时创建的提议',
+    },
+    UpdateChannelMemberProposal: {
+      description: '通道邀请组织的提议',
     },
   },
 });

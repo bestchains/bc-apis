@@ -18,4 +18,6 @@ export class NewProposal {
   chaincode?: string;
 
   chaincodebuild?: string;
+
+  channel?: string;
 }
