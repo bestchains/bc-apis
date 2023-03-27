@@ -5,15 +5,16 @@ import { ProposalModule } from 'src/proposal/proposal.module';
 import { ChannelModule } from 'src/channel/channel.module';
 import { NetworkModule } from 'src/network/network.module';
 import { OrganizationModule } from 'src/organization/organization.module';
+import { ChaincodeLoader } from './chaincode.loader';
 
 @Module({
-  providers: [ChaincodeService, ChaincodeResolver],
+  providers: [ChaincodeService, ChaincodeResolver, ChaincodeLoader],
   imports: [
     ProposalModule,
     forwardRef(() => ChannelModule),
     NetworkModule,
     OrganizationModule,
   ],
-  exports: [ChaincodeService],
+  exports: [ChaincodeService, ChaincodeLoader],
 })
 export class ChaincodeModule {}

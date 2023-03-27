@@ -189,31 +189,38 @@ export abstract class OrderedNestDataLoader<ID, Type>
     options: IOrderedNestDataLoaderOptions<ID, Type>,
   ): DataLoader<ID, Type> {
     const defaultTypeName = this.constructor.name.replace('Loader', '');
-    const loader = new DataLoader<ID, Type>(async (keys) => {
-      const query = options.query(keys);
-      let docs = [];
-      if (Array.isArray(query)) {
-        const items = await Promise.allSettled(query);
-        items?.forEach((item) => {
-          if (item.status === 'fulfilled') {
-            docs.push(item.value);
-          } else {
-            logRejected(item.reason, `${defaultTypeName}Load`);
-          }
+    const cacheMap = new Map();
+    const loader = new DataLoader<ID, Type>(
+      async (keys) => {
+        const query = options.query(keys);
+        let docs = [];
+        if (Array.isArray(query)) {
+          const items = await Promise.allSettled(query);
+          items?.forEach((item) => {
+            if (item.status === 'fulfilled') {
+              docs.push(item.value);
+            } else {
+              logRejected(item.reason, `${defaultTypeName}Load`);
+            }
+          });
+        } else {
+          docs = await query;
+        }
+        loader.clearAll();
+        return ensureOrder({
+          docs,
+          oLoader: loader,
+          keys,
+          prop: options.propertyKey || 'id',
+          error: (keyValue: string) =>
+            `${options.typeName || defaultTypeName} does not exist ${keyValue}`,
         });
-      } else {
-        docs = await query;
-      }
-      loader.clearAll();
-      return ensureOrder({
-        docs,
-        oLoader: loader,
-        keys,
-        prop: options.propertyKey || 'id',
-        error: (keyValue: string) =>
-          `${options.typeName || defaultTypeName} does not exist ${keyValue}`,
-      });
-    }, options.dataloaderConfig);
+      },
+      {
+        ...options.dataloaderConfig,
+        cacheMap,
+      },
+    );
 
     const loadMany: (keys: ArrayLike<ID>) => Promise<Array<Type | Error>> =
       loader.loadMany.bind(loader);
@@ -230,6 +237,12 @@ export abstract class OrderedNestDataLoader<ID, Type>
       });
     }
     loader.loadMany = _loadMany;
+    loader.loadAll = async () => {
+      // 初始化，触发options.query()，只有options.query(keys)的参数keys为空，此loadAll()才是得到的所有数据。如OrganizationLoader
+      await loader.load('__ALL__');
+      const ks = [...new Set(cacheMap.keys())];
+      return _loadMany(ks);
+    };
     return loader;
   }
 }

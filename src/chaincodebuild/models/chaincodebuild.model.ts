@@ -14,7 +14,8 @@ export class Chaincodebuild {
 
   /** 状态 */
   @Field(() => CrdStatusType, {
-    description: '状态（为Created且pipelineImageUrl有值时，才能部署升级）',
+    description:
+      '状态（为Created，显示「正常」才能部署升级，为Deploying，显示「准备中」）',
   })
   status?: string;
 

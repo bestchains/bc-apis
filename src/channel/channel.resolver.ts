@@ -6,14 +6,13 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import DataLoader from 'dataloader';
-import { ChaincodeService } from 'src/chaincode/chaincode.service';
+import { DataLoader } from 'src/common/dataloader/DataLoader';
+import { ChaincodeLoader } from 'src/chaincode/chaincode.loader';
 import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { decodeBase64 } from 'src/common/utils';
 import { ConfigmapService } from 'src/configmap/configmap.service';
-import { EpolicyService } from 'src/epolicy/epolicy.service';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
@@ -22,14 +21,13 @@ import { ChannelService } from './channel.service';
 import { NewChannel } from './dto/new-channel.input';
 import { UpdateChannel } from './dto/update-channel.input';
 import { Channel } from './models/channel.model';
+import { EpolicyLoader } from 'src/epolicy/epolicy.loader';
 
 @Resolver(() => Channel)
 export class ChannelResolver {
   constructor(
     private readonly channelService: ChannelService,
-    private readonly epolicyService: EpolicyService,
     private readonly configMapService: ConfigmapService,
-    private readonly chaincodeService: ChaincodeService,
   ) {}
 
   @Query(() => Channel, { description: '通道详情' })
@@ -128,12 +126,11 @@ export class ChannelResolver {
     description: '背书策略',
   })
   async epolicy(
-    @Auth() auth: JwtAuth,
     @Parent() channel: Channel,
+    @Loader(EpolicyLoader) epolicyLoader: DataLoader<Epolicy['name'], Epolicy>,
   ): Promise<Epolicy[]> {
     const { name } = channel;
-    // TODO: dataloader loadAll()
-    const epolicies = await this.epolicyService.getEpolicies(auth);
+    const epolicies = await epolicyLoader.loadAll();
     return epolicies?.filter((epolicy) => epolicy.channel === name);
   }
 
@@ -167,13 +164,13 @@ export class ChannelResolver {
     description: '合约',
   })
   async chaincode(
-    @Auth() auth: JwtAuth,
     @Parent() channel: Channel,
+    @Loader(ChaincodeLoader)
+    chaincodeLoader: DataLoader<Chaincode['name'], Chaincode>,
   ): Promise<Chaincode[]> {
     const { name } = channel;
-    // TODO：dataload loadAll()
-    return await this.chaincodeService.getChaincodes(auth, {
-      channel: name,
-    });
+    const ccAll = await chaincodeLoader.loadAll();
+    const ccs = ccAll?.filter((cc) => cc.channel === name);
+    return ccs;
   }
 }

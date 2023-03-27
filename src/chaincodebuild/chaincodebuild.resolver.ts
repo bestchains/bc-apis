@@ -6,8 +6,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import DataLoader from 'dataloader';
-import { ChaincodeService } from 'src/chaincode/chaincode.service';
+import { DataLoader } from 'src/common/dataloader/DataLoader';
 import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { ChannelLoader } from 'src/channel/channel.loader';
 import { Channel } from 'src/channel/models/channel.model';
@@ -22,13 +21,11 @@ import { ChaincodebuildService } from './chaincodebuild.service';
 import { NewChaincodebuild } from './dto/new-chaincodebuild.input';
 import { UpgradeChaincodebuild } from './dto/upgrade-chaincodebuild.input';
 import { Chaincodebuild } from './models/chaincodebuild.model';
+import { ChaincodeLoader } from 'src/chaincode/chaincode.loader';
 
 @Resolver(() => Chaincodebuild)
 export class ChaincodebuildResolver {
-  constructor(
-    private readonly ccbService: ChaincodebuildService,
-    private readonly chaincodeService: ChaincodeService,
-  ) {}
+  constructor(private readonly ccbService: ChaincodebuildService) {}
 
   @Query(() => [Chaincodebuild], { description: '合约列表' })
   async chaincodebuilds(
@@ -86,34 +83,35 @@ export class ChaincodebuildResolver {
 
   @ResolveField(() => [Channel], { description: '通道' })
   async channels(
-    @Auth() auth: JwtAuth,
     @Parent() ccb: Chaincodebuild,
     @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
+    @Loader(ChaincodeLoader)
+    chaincodeLoader: DataLoader<Chaincode['name'], Chaincode>,
   ): Promise<Channel[]> {
     const { displayName, version } = ccb;
-    // TODO: 优化Dataloader
-    const ccs = await this.chaincodeService.getChaincodes(auth, {
-      id: displayName,
-      version,
-    });
-    const channelNames = (ccs as Chaincode[])?.map((cc) => cc.channel);
+    const ccAll = await chaincodeLoader.loadAll();
+    const ccs = ccAll?.filter(
+      (cc) => cc.displayName === displayName && cc.version === version,
+    );
+    const channelNames = ccs?.map((cc) => cc.channel);
     const channels = await channelLoader.loadMany(channelNames);
     return channels as Channel[];
   }
 
   @ResolveField(() => [SpecPeer], { description: '节点' })
   async ibppeers(
-    @Auth() auth: JwtAuth,
     @Parent() ccb: Chaincodebuild,
     @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
+    @Loader(ChaincodeLoader)
+    chaincodeLoader: DataLoader<Chaincode['name'], Chaincode>,
   ): Promise<SpecPeer[]> {
     // TODO: 还不支持选择节点，暂时为channel的所有节点
     const { displayName, version } = ccb;
-    const ccs = await this.chaincodeService.getChaincodes(auth, {
-      id: displayName,
-      version,
-    });
-    const channelNames = (ccs as Chaincode[])?.map((cc) => cc.channel);
+    const ccAll = await chaincodeLoader.loadAll();
+    const ccs = ccAll?.filter(
+      (cc) => cc.displayName === displayName && cc.version === version,
+    );
+    const channelNames = ccs?.map((cc) => cc.channel);
     const channels = await channelLoader.loadMany(channelNames);
     const peers = [];
     for (const c of channels as Channel[]) {
