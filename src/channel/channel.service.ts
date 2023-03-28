@@ -44,6 +44,14 @@ export class ChannelService {
     return this.format(body);
   }
 
+  async getMyChannels(auth: JwtAuth): Promise<Channel[]> {
+    const networks = await this.networkService.getNetworks(auth);
+    const chanses = networks?.map((n) =>
+      n.channelNames?.map((c) => ({ name: c, network: n.name })),
+    );
+    return chanses?.flat();
+  }
+
   async getChannelsByNames(auth: JwtAuth, names: string[]): Promise<Channel[]> {
     const res = await Promise.allSettled(
       uniq(names).map((n) => n && this.getChannel(auth, n)),
