@@ -32,3 +32,6 @@ export const NETWORK_VERSION_RESOURCES = {
 };
 
 export const MINIO_BUCKET_NAME = 'bestchains';
+
+export const CLIENT_CONFIGURATION_PATH =
+  '/etc/bc-configmap/client-configuration.json';

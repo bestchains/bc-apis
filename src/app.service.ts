@@ -1,14 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as urllib from 'urllib';
 import oidcConfig from './config/oidc.config';
 import { GetTokenDto } from './common/models/get-token.dto';
+import { CLIENT_CONFIGURATION_PATH, IS_PROD } from './common/utils';
+import { readFileSync } from 'fs';
 
 @Injectable()
 export class AppService {
   constructor(
     @Inject(oidcConfig.KEY) private oidc: ConfigType<typeof oidcConfig>,
   ) {}
+
+  logger = new Logger('AppService');
 
   getHello(): string {
     return 'bc-apis is running.';
@@ -49,5 +53,18 @@ export class AppService {
       throw res.data;
     }
     return res.data;
+  }
+
+  async getClientConfiguration() {
+    if (!IS_PROD) {
+      return {};
+    }
+    try {
+      const fileContent = readFileSync(CLIENT_CONFIGURATION_PATH).toString();
+      return JSON.parse(fileContent);
+    } catch (error) {
+      this.logger.warn(`failed to get global configuration.`);
+      return {};
+    }
   }
 }

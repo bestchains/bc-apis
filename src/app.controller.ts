@@ -39,4 +39,9 @@ export class AppController {
   oidcLogin(@Res() res: Response) {
     res.render('bc-public/index');
   }
+
+  @Get('/configuration')
+  async configuration() {
+    return this.appService.getClientConfiguration();
+  }
 }
