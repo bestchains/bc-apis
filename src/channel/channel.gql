@@ -70,3 +70,11 @@ query getChannelProfile($name: String!) {
     profileJson
   }
 }
+
+# 我参与的通道(区块链浏览器)
+query getMyChannels{
+  channels {
+    name
+    network
+  }
+}

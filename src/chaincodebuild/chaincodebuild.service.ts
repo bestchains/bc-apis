@@ -1,6 +1,7 @@
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ChaincodeService } from 'src/chaincode/chaincode.service';
+import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { genNanoid, MINIO_BUCKET_NAME } from 'src/common/utils';
@@ -36,7 +37,7 @@ export class ChaincodebuildService {
     return {
       name: ccb.metadata?.name,
       displayName: ccb.spec?.id,
-      status: ccb.status?.type,
+      status: !pipelineImageUrl ? CrdStatusType.Deploying : ccb.status?.type,
       pipelineImageUrl,
       creationTimestamp: new Date(
         ccb.metadata?.creationTimestamp,
