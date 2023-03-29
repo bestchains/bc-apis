@@ -7,7 +7,11 @@ import { ChannelModule } from 'src/channel/channel.module';
 
 @Module({
   providers: [EpolicyService, EpolicyResolver],
-  imports: [OrganizationModule, NetworkModule, forwardRef(() => ChannelModule)],
+  imports: [
+    OrganizationModule,
+    forwardRef(() => NetworkModule),
+    forwardRef(() => ChannelModule),
+  ],
   exports: [EpolicyService],
 })
 export class EpolicyModule {}

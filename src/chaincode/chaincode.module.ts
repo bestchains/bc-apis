@@ -11,7 +11,7 @@ import { OrganizationModule } from 'src/organization/organization.module';
   imports: [
     ProposalModule,
     forwardRef(() => ChannelModule),
-    NetworkModule,
+    forwardRef(() => NetworkModule),
     OrganizationModule,
   ],
   exports: [ChaincodeService],

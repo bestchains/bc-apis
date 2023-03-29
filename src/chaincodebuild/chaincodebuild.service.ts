@@ -1,4 +1,10 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ChaincodeService } from 'src/chaincode/chaincode.service';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
@@ -21,8 +27,10 @@ export class ChaincodebuildService {
   constructor(
     private readonly k8sService: KubernetesService,
     private readonly minioService: MinioService,
+    @Inject(forwardRef(() => NetworkService))
     private readonly networkService: NetworkService,
     private readonly orgService: OrganizationService,
+    @Inject(forwardRef(() => ChaincodeService))
     private readonly chaincodeService: ChaincodeService,
     @Inject(imageConfig.KEY)
     private imgConfig: ConfigType<typeof imageConfig>,

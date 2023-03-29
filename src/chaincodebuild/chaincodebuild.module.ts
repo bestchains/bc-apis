@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ChaincodebuildService } from './chaincodebuild.service';
 import { ChaincodebuildResolver } from './chaincodebuild.resolver';
 import { MinioModule } from 'src/minio/minio.module';
@@ -8,6 +8,12 @@ import { ChaincodeModule } from 'src/chaincode/chaincode.module';
 
 @Module({
   providers: [ChaincodebuildService, ChaincodebuildResolver],
-  imports: [MinioModule, NetworkModule, OrganizationModule, ChaincodeModule],
+  imports: [
+    MinioModule,
+    forwardRef(() => NetworkModule),
+    OrganizationModule,
+    forwardRef(() => ChaincodeModule),
+  ],
+  exports: [ChaincodebuildService],
 })
 export class ChaincodebuildModule {}

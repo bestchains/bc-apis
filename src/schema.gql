@@ -6,6 +6,9 @@ type Chaincode {
   """通道"""
   channel: String
 
+  """我创建的"""
+  createdByMe: Boolean
+
   """名称(chaincodebuild.spec.id)"""
   displayName: String
 
@@ -385,6 +388,9 @@ type Mutation {
 
 """网络"""
 type Network {
+  """智能合约"""
+  chaincode: [Chaincode!]
+
   """通道列表"""
   channels: [Channel!]
 
@@ -753,7 +759,7 @@ type Query {
   channel(name: String!): Channel!
 
   """我参与的通道(区块链浏览器)"""
-  channels: [Channel!]!
+  channels: [Channel!]
 
   """创建策略时，可选的通道"""
   channelsForCreateEpolicy(network: String!): [Channel!]!

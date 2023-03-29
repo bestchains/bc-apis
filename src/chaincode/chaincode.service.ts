@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
@@ -19,7 +24,9 @@ export class ChaincodeService {
   constructor(
     private readonly k8sService: KubernetesService,
     private readonly proposalService: ProposalService,
+    @Inject(forwardRef(() => ChannelService))
     private readonly channelService: ChannelService,
+    @Inject(forwardRef(() => NetworkService))
     private readonly networkService: NetworkService,
     private readonly orgService: OrganizationService,
   ) {}

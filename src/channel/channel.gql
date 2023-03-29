@@ -76,5 +76,12 @@ query getMyChannels{
   channels {
     name
     network
+    peers {
+      name
+      namespace
+    }
+    chaincode {
+      name
+    }
   }
 }

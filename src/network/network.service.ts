@@ -1,6 +1,15 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { uniq } from 'lodash';
+import { compact, uniq } from 'lodash';
+import { ChaincodeService } from 'src/chaincode/chaincode.service';
+import { Chaincode } from 'src/chaincode/models/chaincode.model';
+import { ChaincodebuildService } from 'src/chaincodebuild/chaincodebuild.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import {
   DEFAULT_INGRESS_CLASS,
@@ -11,6 +20,7 @@ import imageConfig from 'src/config/image.config';
 import { FederationService } from 'src/federation/federation.service';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
+import { OrganizationService } from 'src/organization/organization.service';
 import { ProposalType } from 'src/proposal/models/proposal-type.enum';
 import { ProposalService } from 'src/proposal/proposal.service';
 import { JwtAuth } from 'src/types';
@@ -26,6 +36,11 @@ export class NetworkService {
     private readonly fedService: FederationService,
     @Inject(imageConfig.KEY)
     private imgConfig: ConfigType<typeof imageConfig>,
+    @Inject(forwardRef(() => ChaincodeService))
+    private readonly chaincodeService: ChaincodeService,
+    @Inject(forwardRef(() => ChaincodebuildService))
+    private readonly ccbService: ChaincodebuildService,
+    private readonly orgService: OrganizationService,
   ) {}
 
   private logger = new Logger('NetworkService');
@@ -199,5 +214,36 @@ export class NetworkService {
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.delete(name);
     return body;
+  }
+
+  async getResolveFieldChaincode(
+    auth: JwtAuth,
+    network: string,
+  ): Promise<Chaincode[]> {
+    const ccbs = await this.ccbService.getChaincodebuilds(auth, {
+      network,
+    });
+    const ccbIds = ccbs?.map((ccb) => ccb?.displayName);
+    const ccses = await Promise.all(
+      compact(ccbIds || []).map((ccbId) =>
+        this.chaincodeService.getChaincodes(auth, { id: ccbId }),
+      ),
+    );
+    const result = ccses.flat();
+    const ccdMap = new Map(
+      ccbs?.map((ccb) => [`${ccb.displayName}-${ccb.version}`, ccb.initiator]),
+    );
+    const { preferred_username } = auth;
+    const orgs = await this.orgService.getOrganizations(
+      auth,
+      preferred_username,
+    );
+    result.forEach((cc) => {
+      if (ccdMap.has(`${cc.displayName}-${cc.version}`)) {
+        const initiator = ccdMap.get(`${cc.displayName}-${cc.version}`);
+        cc.createdByMe = orgs?.findIndex((org) => org?.name === initiator) > -1;
+      }
+    });
+    return result;
   }
 }

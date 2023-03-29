@@ -1,3 +1,4 @@
+import { forwardRef, Inject } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -27,6 +28,7 @@ import { Chaincodebuild } from './models/chaincodebuild.model';
 export class ChaincodebuildResolver {
   constructor(
     private readonly ccbService: ChaincodebuildService,
+    @Inject(forwardRef(() => ChaincodeService))
     private readonly chaincodeService: ChaincodeService,
   ) {}
 

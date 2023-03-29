@@ -1,6 +1,13 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { filter, find, isEqual, uniq, uniqWith } from 'lodash';
 import { SpecMember } from 'src/common/models/spec-member.model';
+import { flattenArr } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -18,6 +25,7 @@ export class ChannelService {
   constructor(
     private readonly k8sService: KubernetesService,
     private readonly proposalService: ProposalService,
+    @Inject(forwardRef(() => NetworkService))
     private readonly networkService: NetworkService,
     private readonly orgService: OrganizationService,
   ) {}
@@ -46,10 +54,8 @@ export class ChannelService {
 
   async getMyChannels(auth: JwtAuth): Promise<Channel[]> {
     const networks = await this.networkService.getNetworks(auth);
-    const chanses = networks?.map((n) =>
-      n.channelNames?.map((c) => ({ name: c, network: n.name })),
-    );
-    return chanses?.flat();
+    const chanNameses = networks?.map((n) => n.channelNames);
+    return this.getChannelsByNames(auth, flattenArr(chanNameses));
   }
 
   async getChannelsByNames(auth: JwtAuth, names: string[]): Promise<Channel[]> {

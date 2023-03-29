@@ -20,4 +20,7 @@ export class Chaincode {
 
   /** 版本 */
   version?: string;
+
+  /** 我创建的 */
+  createdByMe?: boolean;
 }

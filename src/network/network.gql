@@ -85,6 +85,10 @@ query getNetwork($name: String!) {
       createdByMe
       iamInvolved
     }
+    chaincode {
+      name
+      createdByMe
+    }
   }
 }
 
