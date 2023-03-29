@@ -17,7 +17,7 @@ import { OrganizationModule } from 'src/organization/organization.module';
     forwardRef(() => ChaincodeModule),
     ConfigmapModule,
     ProposalModule,
-    NetworkModule,
+    forwardRef(() => NetworkModule),
     OrganizationModule,
   ],
 })

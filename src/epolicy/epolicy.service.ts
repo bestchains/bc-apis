@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { Channel } from 'src/channel/models/channel.model';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
@@ -15,7 +20,9 @@ import { Epolicy } from './models/epolicy.model';
 export class EpolicyService {
   constructor(
     private readonly k8sService: KubernetesService,
+    @Inject(forwardRef(() => NetworkService))
     private readonly networkService: NetworkService,
+    @Inject(forwardRef(() => ChannelService))
     private readonly channelService: ChannelService,
     private readonly orgService: OrganizationService,
   ) {}

@@ -7,6 +7,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import DataLoader from 'dataloader';
+import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { ChannelLoader } from 'src/channel/channel.loader';
 import { Channel } from 'src/channel/models/channel.model';
 import { Loader } from 'src/common/dataloader';
@@ -154,5 +155,17 @@ export class NetworkResolver {
           .catch(() => peer),
       ),
     );
+  }
+
+  @ResolveField(() => [Chaincode], {
+    nullable: true,
+    description: '智能合约',
+  })
+  async chaincode(
+    @Auth() auth: JwtAuth,
+    @Parent() network: Network,
+  ): Promise<Chaincode[]> {
+    const { name } = network;
+    return this.networkService.getResolveFieldChaincode(auth, name);
   }
 }

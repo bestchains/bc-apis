@@ -40,7 +40,10 @@ export class ChannelResolver {
     return this.channelService.getChannel(auth, name);
   }
 
-  @Query(() => [Channel], { description: '我参与的通道(区块链浏览器)' })
+  @Query(() => [Channel], {
+    nullable: true,
+    description: '我参与的通道(区块链浏览器)',
+  })
   async channels(@Auth() auth: JwtAuth): Promise<Channel[]> {
     return this.channelService.getMyChannels(auth);
   }

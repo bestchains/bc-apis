@@ -1,4 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
+import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { Channel } from 'src/channel/models/channel.model';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecResource } from 'src/common/models/spec-resource.model';
@@ -72,6 +73,9 @@ export class Network {
 
   /** 网络中的所有节点 */
   peers?: Ibppeer[];
+
+  /** 智能合约 */
+  chaincode?: Chaincode[];
 }
 
 @ObjectType({ description: '成员' })
