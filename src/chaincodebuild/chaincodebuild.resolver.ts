@@ -64,14 +64,13 @@ export class ChaincodebuildResolver {
     return this.ccbService.upgradeChaincodebuild(auth, chaincodebuild);
   }
 
-  @Mutation(() => [K8sV1Status], { description: '删除合约' })
+  @Mutation(() => K8sV1Status, { description: '删除合约' })
   async chaincodebuildDelete(
     @Auth() auth: JwtAuth,
-    @Args('displayName', { description: '合约名称（displayName, 非name）' })
-    displayName: string,
-    @Args('network', { description: '此合约所在网络' }) network: string,
-  ): Promise<K8sV1Status[]> {
-    return this.ccbService.deleteChaincodebuild(auth, displayName, network);
+    @Args('name', { description: '合约name' })
+    name: string,
+  ): Promise<K8sV1Status> {
+    return this.ccbService.deleteChaincodebuild(auth, name);
   }
 
   @ResolveField(() => [Organization], { description: '组织' })

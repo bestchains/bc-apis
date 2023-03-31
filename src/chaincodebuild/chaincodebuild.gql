@@ -62,8 +62,8 @@ query getChaincodebuild($name: String!) {
 }
 
 # 删除合约
-mutation deleteChaincodebuild($displayName: String!, $network: String!) {
-  chaincodebuildDelete(displayName: $displayName, network: $network) {
+mutation deleteChaincodebuild($name: String!) {
+  chaincodebuildDelete(name: $name) {
     code
     status
     reason

@@ -298,12 +298,9 @@ type Mutation {
 
   """删除合约"""
   chaincodebuildDelete(
-    """合约名称（displayName, 非name）"""
-    displayName: String!
-
-    """此合约所在网络"""
-    network: String!
-  ): [K8sV1Status!]!
+    """合约name"""
+    name: String!
+  ): K8sV1Status!
 
   """升级合约"""
   chaincodebuildUpgrade(chaincodebuild: UpgradeChaincodebuild!): Chaincodebuild!
