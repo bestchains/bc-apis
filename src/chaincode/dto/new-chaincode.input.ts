@@ -5,8 +5,8 @@ export class NewChaincode {
   /** 合约name */
   name: string;
 
-  /** 合约版本号 */
-  version: string;
+  /** 合约名称 */
+  displayName: string;
 
   /** 安装节点 */
   @Field(() => String, { description: '安装节点（暂不支持）' })

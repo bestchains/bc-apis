@@ -73,13 +73,12 @@ export class ChaincodeService {
     auth: JwtAuth,
     chaincode: NewChaincode,
   ): Promise<boolean> {
-    const { channel, name: chaincodebuildName, version } = chaincode;
+    const { channel, name: chaincodebuildName, displayName } = chaincode;
 
     // 1. 判断chaincode是否已存在
     const ccs = await this.getChaincodes(auth, {
-      id: chaincodebuildName,
+      id: displayName,
       channel,
-      version,
     });
     if (ccs && ccs.length > 0) {
       // 部署的合约版本的升级
