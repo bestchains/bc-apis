@@ -14,6 +14,7 @@ import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import {
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
+  genNanoid,
   NETWORK_VERSION_RESOURCES,
 } from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
@@ -132,7 +133,7 @@ export class NetworkService {
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.create({
       metadata: {
-        name,
+        name: genNanoid(name),
       },
       spec: {
         initialToken: token,
