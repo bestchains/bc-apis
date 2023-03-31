@@ -444,6 +444,9 @@ input NewChaincode {
   """通道"""
   channel: String!
 
+  """合约名称"""
+  displayName: String!
+
   """背书策略"""
   epolicy: String!
 
@@ -452,9 +455,6 @@ input NewChaincode {
 
   """合约name"""
   name: String!
-
-  """合约版本号"""
-  version: String!
 }
 
 input NewChaincodebuild {
