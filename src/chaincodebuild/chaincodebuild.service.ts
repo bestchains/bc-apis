@@ -209,33 +209,20 @@ export class ChaincodebuildService {
 
   async deleteChaincodebuild(
     auth: JwtAuth,
-    displayName: string,
-    network: string,
-  ): Promise<K8sV1Status[]> {
+    name: string,
+  ): Promise<K8sV1Status> {
+    const { displayName, version } = await this.getChaincodebuild(auth, name);
     // 1. 前置检查：没有被任何的Chaincode中被引用
     const ccs = await this.chaincodeService.getChaincodes(auth, {
       id: displayName,
+      version,
     });
     if (ccs && ccs.length > 0) {
       throw new ForbiddenException();
     }
-    // 2. 删除所有spec.id为displayName的chaincodebuild
-    const ccbs = await this.getChaincodebuilds(auth, {
-      id: displayName,
-      network,
-    });
     const k8s = await this.k8sService.getClient(auth);
-    const results = await Promise.allSettled(
-      ccbs.map((ccb) => k8s.chaincodeBuild.delete(ccb.name)),
-    );
-    return results.map((result) => {
-      if (result.status === 'fulfilled') {
-        return result.value.body;
-      } else {
-        this.logger.error('Delete failed', result.reason?.body);
-        return result.reason;
-      }
-    });
+    const { body } = await k8s.chaincodeBuild.delete(name);
+    return body;
   }
 
   async selectInitiator(auth: JwtAuth, network: string): Promise<SpecMember> {
