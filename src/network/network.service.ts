@@ -188,7 +188,7 @@ export class NetworkService {
     // 0. 检查是否可以解散网络
     const { channelNames } = await this.getNetwork(auth, name);
     if (channelNames && channelNames.length > 0) {
-      throw new ForbiddenException('channel also exist in the network');
+      throw new ForbiddenException('channels still exist in the network');
     }
     // 1. 发起提案
     await this.proposalService.createProposal(
@@ -210,7 +210,7 @@ export class NetworkService {
     // 0. 检查是否可以删除网络
     const { channelNames } = await this.getNetwork(auth, name);
     if (channelNames && channelNames.length > 0) {
-      throw new ForbiddenException('channel also exist in the network');
+      throw new ForbiddenException('channels still exist in the network');
     }
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.delete(name);
