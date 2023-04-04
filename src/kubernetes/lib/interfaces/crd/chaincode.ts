@@ -33,7 +33,7 @@ export interface Chaincode {
     /**
      * ExternalBuilder used, default is k8s
      */
-    externalBuilder?: string;
+    externalBuilder: string;
     /**
      * chaincode id
      */
@@ -47,7 +47,7 @@ export interface Chaincode {
       pullSecret?: string;
       [k: string]: any;
     };
-    initRequired: boolean;
+    initRequired: false;
     label?: string;
     /**
      * License should be accepted to install custom resources

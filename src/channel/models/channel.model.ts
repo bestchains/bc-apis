@@ -10,6 +10,9 @@ export class Channel {
   @Field(() => ID, { description: 'name' })
   name: string;
 
+  /** 名称 */
+  displayName?: string;
+
   /** 描述 */
   description?: string;
 

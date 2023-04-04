@@ -43,7 +43,7 @@ export interface Proposal {
     };
     deployChaincode?: {
       chaincode: string;
-      externalBuilder: string;
+      externalBuilder?: string;
       members: {
         initiator?: boolean;
         /**
@@ -80,9 +80,26 @@ export interface Proposal {
       description?: string;
       [k: string]: any;
     };
+    updateChannelMember?: {
+      channel: string;
+      members: {
+        initiator?: boolean;
+        /**
+         * JoinedAt is the proposal succ time
+         */
+        joinedAt?: string;
+        /**
+         * JoinedBy is the proposal name which joins this member into federation
+         */
+        joinedBy?: string;
+        name?: string;
+        [k: string]: any;
+      }[];
+      [k: string]: any;
+    };
     upgradeChaincode?: {
       chaincode: string;
-      externalBuilder: string;
+      externalBuilder?: string;
       members: {
         initiator?: boolean;
         /**

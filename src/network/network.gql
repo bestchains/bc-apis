@@ -69,6 +69,7 @@ query getNetwork($name: String!) {
     }
     channels {
       name
+      displayName
       members{
         name
         joinedAt
