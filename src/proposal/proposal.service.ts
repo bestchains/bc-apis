@@ -133,7 +133,7 @@ export class ProposalService {
     if (type === ProposalType.UpdateChannelMemberProposal) {
       spec.updateChannelMember = {
         channel,
-        members: organizations,
+        members: organizations?.map((org) => ({ name: org })),
       };
     }
 

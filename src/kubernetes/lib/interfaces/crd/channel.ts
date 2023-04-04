@@ -33,6 +33,10 @@ export interface Channel {
      */
     description?: string;
     /**
+     * ID Channel ID
+     */
+    id: string;
+    /**
      * License should be accepted by the user to be able to setup console
      */
     license: {

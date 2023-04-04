@@ -91,6 +91,9 @@ type Channel {
   """描述"""
   description: String
 
+  """名称"""
+  displayName: String
+
   """背书策略"""
   epolicy: [Epolicy!]
 
@@ -484,13 +487,11 @@ input NewChannel {
   """描述"""
   description: String
 
+  """通道名称"""
+  displayName: String!
+
   """发起者（组织）"""
   initiator: String!
-
-  """
-  通道名称，规则：小写字母、数字、“-”，开头和结尾只能是字母或数字`（[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*）`
-  """
-  name: String!
 
   """配置成员（组织）"""
   organizations: [String!]

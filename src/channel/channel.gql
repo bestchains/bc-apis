@@ -2,6 +2,7 @@
 query getChannel($name: String!) {
   channel(name: $name) {
     name
+    displayName
     description
     creationTimestamp
     epolicy {
@@ -30,6 +31,7 @@ query getChannel($name: String!) {
 mutation createChannel($network: String!, $channel: NewChannel!) {
   channelCreate(network: $network, channel: $channel) {
     name
+    displayName
     members{
       name
     }
@@ -46,6 +48,7 @@ mutation createChannel($network: String!, $channel: NewChannel!) {
 mutation updateChannel($channel: UpdateChannel!, $name: String!) {
   channelUpdate(channel: $channel, name: $name) {
     name
+    displayName
     members{
       name
     }
@@ -75,6 +78,7 @@ query getChannelProfile($name: String!) {
 query getMyChannels{
   channels {
     name
+    displayName
     network
     peers {
       name

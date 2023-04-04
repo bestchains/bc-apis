@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { filter, find, isEqual, uniq, uniqWith } from 'lodash';
 import { SpecMember } from 'src/common/models/spec-member.model';
-import { flattenArr } from 'src/common/utils';
+import { flattenArr, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -35,6 +35,7 @@ export class ChannelService {
   format(channel: CRD.Channel): Channel {
     return {
       name: channel.metadata.name,
+      displayName: channel.spec?.id,
       creationTimestamp: new Date(
         channel.metadata?.creationTimestamp,
       ).toISOString(),
@@ -78,7 +79,7 @@ export class ChannelService {
     network: string,
     channel: NewChannel,
   ): Promise<Channel> {
-    const { name, description, initiator, organizations, peers, policy } =
+    const { displayName, description, initiator, organizations, peers } =
       channel;
     const members = uniq((organizations || []).concat(initiator)).map((d) => ({
       name: d,
@@ -87,9 +88,10 @@ export class ChannelService {
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.channel.create({
       metadata: {
-        name,
+        name: genNanoid('channel'),
       },
       spec: {
+        id: displayName,
         license: {
           accept: true,
         },
