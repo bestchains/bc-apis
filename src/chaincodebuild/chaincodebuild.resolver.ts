@@ -36,8 +36,12 @@ export class ChaincodebuildResolver {
   async chaincodebuilds(
     @Auth() auth: JwtAuth,
     @Args('network', { description: '此合约所在网络' }) network: string,
+    @Args('displayName', { nullable: true, description: '此合约的名称' })
+    id: string,
+    @Args('version', { nullable: true, description: '此合约的版本' })
+    version: string,
   ): Promise<Chaincodebuild[]> {
-    return this.ccbService.getChaincodebuilds(auth, { network });
+    return this.ccbService.getChaincodebuilds(auth, { network, id, version });
   }
 
   @Query(() => Chaincodebuild, { description: '合约详情' })

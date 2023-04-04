@@ -749,8 +749,14 @@ type Query {
 
   """合约列表"""
   chaincodebuilds(
+    """此合约的名称"""
+    displayName: String
+
     """此合约所在网络"""
     network: String!
+
+    """此合约的版本"""
+    version: String
   ): [Chaincodebuild!]!
 
   """通道详情"""

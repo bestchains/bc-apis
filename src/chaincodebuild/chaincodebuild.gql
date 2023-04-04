@@ -10,8 +10,8 @@ mutation createChaincodebuild($displayName: String!, $description: String, $lang
 }
 
 # 合约列表
-query getChaincodebuilds($network: String!) {
-  chaincodebuilds(network: $network) {
+query getChaincodebuilds($network: String!, $version: String, $displayName: String) {
+  chaincodebuilds(network: $network, version: $version, displayName: $displayName) {
     name
     displayName
     creationTimestamp
