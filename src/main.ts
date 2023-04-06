@@ -8,11 +8,13 @@ import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { AppModule } from './app.module';
 import { IS_PROD, LOG_LEVELS } from './common/utils/constants';
 import { ValidationPipe } from './common/pipes/validation.pipe';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: IS_PROD ? (LOG_LEVELS.split(',') as LogLevel[]) : undefined,
   });
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   app.set('trust proxy', true);
   app.engine('html', ejs.renderFile);
