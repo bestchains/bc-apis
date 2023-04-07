@@ -30,6 +30,7 @@ import { EpolicyModule } from './epolicy/epolicy.module';
 import { MinioModule } from './minio/minio.module';
 import { ChaincodeModule } from './chaincode/chaincode.module';
 import { ChaincodebuildModule } from './chaincodebuild/chaincodebuild.module';
+import { RealtimeLogModule } from './realtime-log/realtime-log.module';
 import imageConfig from './config/image.config';
 import minioConfig from './config/minio.config';
 
@@ -103,6 +104,7 @@ const GRAPHQL_PATH = '/bff';
     MinioModule,
     ChaincodeModule,
     ChaincodebuildModule,
+    RealtimeLogModule,
   ],
   controllers: [AppController],
   providers: [

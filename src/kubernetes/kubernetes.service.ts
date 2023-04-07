@@ -86,6 +86,13 @@ export class KubernetesService {
     };
   }
 
+  async logClient(user: k8s.User) {
+    const cluster = this.k8sConfig.cluster;
+    const kc = new k8s.KubeConfig();
+    kc.loadFromClusterAndUser(cluster, user);
+    return new k8s.Log(kc);
+  }
+
   private async getClientBase(user: K8sUser, options: ClientOptions = {}) {
     const { cluster: specifiedCluster, interceptor = defaultInterceptor } =
       options;
