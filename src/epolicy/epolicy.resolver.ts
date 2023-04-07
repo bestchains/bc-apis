@@ -1,5 +1,15 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+import DataLoader from 'dataloader';
+import { ChannelLoader } from 'src/channel/channel.loader';
 import { Channel } from 'src/channel/models/channel.model';
+import { Loader } from 'src/common/dataloader';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { JwtAuth } from 'src/types';
@@ -43,5 +53,18 @@ export class EpolicyResolver {
     @Args('network') network: string,
   ): Promise<Channel[]> {
     return this.epolicyService.getChannelsForCreateEpolicy(auth, network);
+  }
+
+  @ResolveField(() => String, {
+    nullable: true,
+    description: '所在通道名称(displayName)',
+  })
+  async channelDisplayName(
+    @Parent() epolicy: Epolicy,
+    @Loader(ChannelLoader) channelLoader: DataLoader<Channel['name'], Channel>,
+  ): Promise<string> {
+    const { channel } = epolicy;
+    const chan = await channelLoader.load(channel);
+    return chan?.displayName;
   }
 }

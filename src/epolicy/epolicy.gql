@@ -35,6 +35,7 @@ mutation deleteEpolicy($name: String!) {
 query getChannelsForCreateEpolicy($network: String!) {
   channelsForCreateEpolicy(network: $network) {
     name
+    displayName
     members {
       name
     }

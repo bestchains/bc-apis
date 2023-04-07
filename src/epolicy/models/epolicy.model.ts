@@ -11,6 +11,9 @@ export class Epolicy {
   /** 所在通道 */
   channel: string;
 
+  /** 所在通道名称(displayName) */
+  channelDisplayName?: string;
+
   /** 描述 */
   description?: string;
 
