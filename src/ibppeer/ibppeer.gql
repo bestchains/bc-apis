@@ -10,6 +10,11 @@ query getIbppeers($organization: String!) {
     }
     channels
     networks
+    pod {
+      name
+      namespace
+      containers
+    }
   }
 }
 
