@@ -1,6 +1,6 @@
 import {
-  ForbiddenException,
   forwardRef,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
@@ -10,7 +10,11 @@ import { ChaincodeService } from 'src/chaincode/chaincode.service';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
-import { genNanoid, MINIO_BUCKET_NAME } from 'src/common/utils';
+import {
+  CustomException,
+  genNanoid,
+  MINIO_BUCKET_NAME,
+} from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
@@ -218,7 +222,11 @@ export class ChaincodebuildService {
       version,
     });
     if (ccs && ccs.length > 0) {
-      throw new ForbiddenException();
+      throw new CustomException(
+        'FORBIDDEN_CHAINCODEBUILD_IN_USE',
+        'the chaincodebuild is in use by chaincode',
+        HttpStatus.FORBIDDEN,
+      );
     }
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.chaincodeBuild.delete(name);

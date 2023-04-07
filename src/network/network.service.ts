@@ -1,6 +1,6 @@
 import {
-  ForbiddenException,
   forwardRef,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
@@ -12,6 +12,7 @@ import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { ChaincodebuildService } from 'src/chaincodebuild/chaincodebuild.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import {
+  CustomException,
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
   genNanoid,
@@ -188,7 +189,11 @@ export class NetworkService {
     // 0. 检查是否可以解散网络
     const { channelNames } = await this.getNetwork(auth, name);
     if (channelNames && channelNames.length > 0) {
-      throw new ForbiddenException('channels still exist in the network');
+      throw new CustomException(
+        'FORBIDDEN_CHANNEL_IN_NETWORK',
+        'channels still exist in the network',
+        HttpStatus.FORBIDDEN,
+      );
     }
     // 1. 发起提案
     await this.proposalService.createProposal(
@@ -210,7 +215,11 @@ export class NetworkService {
     // 0. 检查是否可以删除网络
     const { channelNames } = await this.getNetwork(auth, name);
     if (channelNames && channelNames.length > 0) {
-      throw new ForbiddenException('channels still exist in the network');
+      throw new CustomException(
+        'FORBIDDEN_CHANNEL_IN_NETWORK',
+        'channels still exist in the network',
+        HttpStatus.FORBIDDEN,
+      );
     }
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.delete(name);
