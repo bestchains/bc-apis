@@ -5,14 +5,16 @@ import { Server, WebSocket } from 'ws';
 import { Request } from 'express';
 import * as querystring from 'node:querystring';
 import { Logger } from '@nestjs/common';
+import { getAuthFromToken } from 'src/common/utils';
 
 interface RealtimeLogOptions {
   namespace: string;
   pod: string;
   container: string;
+  token: string;
 }
 
-@WebSocketGateway(8025, { path: '/bff-ws/k8s/logs' })
+@WebSocketGateway(8025, { path: '/bc-ws/k8s/logs' })
 export class RealtimeLogGateway {
   constructor(private readonly k8sService: KubernetesService) {}
 
@@ -27,16 +29,25 @@ export class RealtimeLogGateway {
       namespace = 'default',
       pod,
       container,
+      token,
     } = options as unknown as RealtimeLogOptions;
-    if (!namespace || !pod || !container) {
-      this.closeClient(
-        client,
-        'namespace, pod, container  in query is required.',
-      );
+    if (!namespace || !pod || !token) {
+      this.closeClient(client, 'namespace, pod, token in query is required.');
       return;
     }
     try {
-      const logClient = await this.k8sService.logClient();
+      const auth = getAuthFromToken(token);
+      const username = auth.name || 'N/A';
+      const ip = request.socket.remoteAddress;
+      this.logger.log(
+        `${username}@${ip} logs pod => ${namespace} > ${pod} > ${container}`,
+      );
+      const user = {
+        name: username,
+        token,
+        ip,
+      };
+      const logClient = await this.k8sService.logClient(user);
       const logStream = new PassThrough();
       logStream.on('data', (chunk) => {
         client.send(chunk.toString());

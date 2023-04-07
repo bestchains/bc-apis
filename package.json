@@ -28,11 +28,11 @@
   "dependencies": {
     "@kubernetes/client-node": "^0.18.0",
     "@nestjs/apollo": "^10.1.7",
-    "@nestjs/common": "^8.0.0",
+    "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.3.12",
     "@nestjs/graphql": "^10.1.7",
-    "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-express": "^9.4.0",
     "@nestjs/platform-ws": "^9.3.12",
     "@nestjs/serve-static": "^3.0.0",
     "@nestjs/websockets": "^9.3.12",
