@@ -1,13 +1,13 @@
 import {
-  ForbiddenException,
   forwardRef,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
 import { filter, find, isEqual, uniq, uniqWith } from 'lodash';
 import { SpecMember } from 'src/common/models/spec-member.model';
-import { flattenArr, genNanoid } from 'src/common/utils';
+import { CustomException, flattenArr, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -138,8 +138,10 @@ export class ChannelService {
     const oldMemberMap = new Map((oldMembers || []).map((d) => [d.name, d]));
     const existMs = members.filter((m) => oldMemberMap.has(m));
     if (existMs && existMs.length > 0) {
-      throw new ForbiddenException(
+      throw new CustomException(
+        'FORBIDDEN_ORGANIZATION_EXIST',
         `Organizations ${existMs.join(',')} already exist`,
+        HttpStatus.FORBIDDEN,
       );
     }
     await this.proposalService.createProposal(

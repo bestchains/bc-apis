@@ -1,13 +1,8 @@
-import {
-  ForbiddenException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { Channel } from 'src/channel/models/channel.model';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
-import { genNanoid } from 'src/common/utils';
+import { CustomException, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -99,8 +94,10 @@ export class EpolicyService {
       )
       ?.map((org) => org.name);
     if (!members.find((m) => myOrgs?.includes(m.name))) {
-      throw new ForbiddenException(
-        'your organization is not in the channel to which this policy belongs',
+      throw new CustomException(
+        'FORBIDDEN_ORGANIZATION_NOT_IN_CHANNEL',
+        'Your organization is not in the channel to which this policy belongs',
+        HttpStatus.FORBIDDEN,
       );
     }
     // TODO: 前置检查：此策略未被任何合约 chaincode 使用

@@ -1,13 +1,8 @@
-import {
-  ForbiddenException,
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ChannelService } from 'src/channel/channel.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
-import { genNanoid } from 'src/common/utils';
+import { CustomException, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -165,8 +160,10 @@ export class ChaincodeService {
     // 1. 只允许删除 chaincode.status.phase=ChaincodeUnapproved
     const chaincode = await this.getChaincode(auth, name);
     if (chaincode.phase !== ChaincodePhase.ChaincodeUnapproved) {
-      throw new ForbiddenException(
+      throw new CustomException(
+        'FORBIDDEN_CHAINCODE_UNAPPROVED',
         'Reject deletion when the status is ChaincodeUnapproved',
+        HttpStatus.FORBIDDEN,
       );
     }
     const k8s = await this.k8sService.getClient(auth);

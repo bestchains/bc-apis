@@ -1,8 +1,12 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { compact } from 'lodash';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
-import { DEFAULT_INGRESS_CLASS, DEFAULT_STORAGE_CLASS } from 'src/common/utils';
+import {
+  CustomException,
+  DEFAULT_INGRESS_CLASS,
+  DEFAULT_STORAGE_CLASS,
+} from 'src/common/utils';
 import imageConfig from 'src/config/image.config';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
@@ -143,7 +147,11 @@ export class OrganizationService {
     const allUsers = await this.userService.getUsers(auth);
     const allUserMap = new Map((allUsers || []).map((n) => [n.name, n]));
     if (compact([...(users || []), admin]).some((n) => !allUserMap.has(n))) {
-      throw new ForbiddenException('The user does not exist');
+      throw new CustomException(
+        'FORBIDDEN_USER_NOT_EXIST',
+        'The user does not exist',
+        HttpStatus.FORBIDDEN,
+      );
     }
     const { admin: orgAdmin } = await this.getOrganization(auth, name);
     const k8s = await this.k8sService.getClient(auth);
@@ -159,8 +167,10 @@ export class OrganizationService {
   async deleteOrganization(auth: JwtAuth, name: string): Promise<K8sV1Status> {
     const { federations } = await this.getOrganization(auth, name);
     if (federations && federations.length > 0) {
-      throw new ForbiddenException(
+      throw new CustomException(
+        'FORBIDDEN_ORGANIZATION_IS_INITIATOR_OF_FEDERATION',
         'the organization is initiator of one federation',
+        HttpStatus.FORBIDDEN,
       );
     }
     const k8s = await this.k8sService.getClient(auth);
