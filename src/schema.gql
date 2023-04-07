@@ -186,6 +186,9 @@ type Epolicy {
   """所在通道"""
   channel: String!
 
+  """所在通道名称(displayName)"""
+  channelDisplayName: String
+
   """创建时间"""
   creationTimestamp: String
 

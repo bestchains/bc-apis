@@ -25,6 +25,7 @@ query getChaincodebuilds($network: String!, $version: String, $displayName: Stri
     }
     channels {
       name
+      displayName
     }
   }
 }
@@ -49,6 +50,7 @@ query getChaincodebuild($name: String!) {
     }
     channels {
       name
+      displayName
       epolicy {
         name
         value
