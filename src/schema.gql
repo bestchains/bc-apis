@@ -254,6 +254,9 @@ type Ibppeer {
   """加入的网络"""
   networks: [String!]
 
+  """获取节点实时日志所需要的信息"""
+  pod: Pod!
+
   """运行状态"""
   status: CrdStatusType
 }
@@ -640,6 +643,18 @@ type Organization {
 
   """成员"""
   users: [User!]
+}
+
+"""pod 信息"""
+type Pod {
+  """容器"""
+  containers: [String!]!
+
+  """name"""
+  name: ID!
+
+  """namespace"""
+  namespace: String!
 }
 
 type Proposal {

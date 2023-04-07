@@ -19,13 +19,18 @@ import { Network } from 'src/network/models/network.model';
 import { NetworkLoader } from 'src/network/network.loader';
 import { Organization } from 'src/organization/models/organization.model';
 import { OrganizationLoader } from 'src/organization/organization.loader';
+import { Pod } from 'src/pod/models/pod.model';
+import { PodService } from 'src/pod/pod.service';
 import { JwtAuth } from 'src/types';
 import { IbppeerService } from './ibppeer.service';
 import { Ibppeer } from './models/ibppeer.model';
 
 @Resolver(() => Ibppeer)
 export class IbppeerResolver {
-  constructor(private readonly ibppeerService: IbppeerService) {}
+  constructor(
+    private readonly ibppeerService: IbppeerService,
+    private readonly podService: PodService,
+  ) {}
 
   @Query(() => [Ibppeer], { description: '获取组织下的节点列表' })
   async ibppeers(
@@ -120,5 +125,14 @@ export class IbppeerResolver {
     const { preferred_username } = auth;
     const { enrolluser } = ibppeer;
     return enrolluser === preferred_username;
+  }
+
+  @ResolveField(() => Pod, {
+    description: '获取节点实时日志所需要的信息',
+  })
+  async pod(@Auth() auth: JwtAuth, @Parent() ibppeer: Ibppeer): Promise<Pod> {
+    const { name, namespace } = ibppeer;
+    const pods = await this.podService.getPods(auth, namespace, { app: name });
+    return pods[0];
   }
 }
