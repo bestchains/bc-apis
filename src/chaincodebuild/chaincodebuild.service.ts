@@ -98,7 +98,13 @@ export class ChaincodebuildService {
     const { body } = await k8s.chaincodeBuild.list({
       labelSelector: labelSelector.join(','),
     });
-    return body.items.map((item) => this.format(item));
+    return body.items
+      .map((item) => this.format(item))
+      .sort(
+        (a, b) =>
+          new Date(b.creationTimestamp).valueOf() -
+          new Date(a.creationTimestamp).valueOf(),
+      );
   }
 
   async createChaincodebuild(
