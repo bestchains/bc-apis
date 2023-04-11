@@ -74,6 +74,26 @@ query getChannelProfile($name: String!) {
   }
 }
 
+# 通道中的Admin组织（用户作为admin管理的组织）
+query getChannelAdminOrganizations($name: String!) {
+  channel(name: $name) {
+    name
+    adminOrganizations {
+      name
+      admin
+    }
+    peers {
+      name
+      namespace
+    }
+  }
+}
+
+# 获取通道连接文件（针对组织和节点）
+query getChannelProfile($name: String!, $organization: String!, $peer: String!) {
+  channelProfile(name: $name, organization: $organization, peer: $peer)
+}
+
 # 我参与的通道(区块链浏览器)
 query getMyChannels{
   channels {

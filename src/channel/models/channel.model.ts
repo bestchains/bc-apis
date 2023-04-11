@@ -3,6 +3,7 @@ import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { CrdStatusType } from 'src/common/models/crd-statue-type.enum';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import { Epolicy } from 'src/epolicy/models/epolicy.model';
+import { Organization } from 'src/organization/models/organization.model';
 import { SpecPeer } from './spec-peer.model';
 
 @ObjectType()
@@ -18,6 +19,9 @@ export class Channel {
 
   /** 组织数量 */
   members?: SpecMember[];
+
+  /** 用户作为admin管理的组织 */
+  adminOrganizations?: Organization[];
 
   /** 我的节点 */
   peers?: SpecPeer[];
@@ -45,5 +49,9 @@ export class Channel {
   network?: string;
 
   /** 通道连接文件（profile.json）*/
+  @Field(() => String, {
+    description: '通道连接文件（profile.json）',
+    deprecationReason: '替代为query channelProfile()',
+  })
   profileJson?: string;
 }

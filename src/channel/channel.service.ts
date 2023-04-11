@@ -7,7 +7,13 @@ import {
 } from '@nestjs/common';
 import { filter, find, isEqual, uniq, uniqWith } from 'lodash';
 import { SpecMember } from 'src/common/models/spec-member.model';
-import { CustomException, flattenArr, genNanoid } from 'src/common/utils';
+import {
+  CustomException,
+  decodeBase64,
+  flattenArr,
+  genNanoid,
+} from 'src/common/utils';
+import { ConfigmapService } from 'src/configmap/configmap.service';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
 import { NetworkService } from 'src/network/network.service';
@@ -28,6 +34,7 @@ export class ChannelService {
     @Inject(forwardRef(() => NetworkService))
     private readonly networkService: NetworkService,
     private readonly orgService: OrganizationService,
+    private readonly configMapService: ConfigmapService,
   ) {}
 
   private logger = new Logger('ChannelService');
@@ -177,5 +184,41 @@ export class ChannelService {
       members.find((m) => adminMembers.includes(m.name)) ||
       members.find((m) => clientMembers.includes(m.name));
     return [federation, initiator, members];
+  }
+
+  async getChannelProfile(
+    auth: JwtAuth,
+    name: string,
+    org: string,
+    peer: string,
+  ): Promise<string> {
+    const { preferred_username } = auth;
+    const { network, displayName } = await this.getChannel(auth, name);
+    const { binaryData } = await this.configMapService.getConfigmap(
+      auth,
+      `chan-${name}-connection-profile`,
+      org,
+    );
+    const result = {
+      id: network,
+      platform: 'bestchains',
+    };
+    try {
+      const profileJson = decodeBase64(binaryData['profile.json']);
+      const profile = JSON.parse(profileJson);
+      result['fabProfile'] = {
+        channel: displayName,
+        organization: org,
+        user: profile.organizations[org].users[preferred_username],
+        endpoint: profile.peers[`${org}-${peer}`],
+      };
+    } catch (error) {
+      throw new CustomException(
+        'ERROR_PARSE_CONFIGMAP',
+        `Failed to parse configmap chan-${name}-connection-profile in namespace ${org}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return JSON.stringify(result);
   }
 }
