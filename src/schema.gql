@@ -79,6 +79,9 @@ type Chaincodebuild {
 }
 
 type Channel {
+  """用户作为admin管理的组织"""
+  adminOrganizations: [Organization!]
+
   """合约"""
   chaincode: [Chaincode!]
 
@@ -113,7 +116,7 @@ type Channel {
   peers: [SpecPeer!]
 
   """通道连接文件（profile.json）"""
-  profileJson: String
+  profileJson: String @deprecated(reason: "替代为query channelProfile()")
 
   """状态"""
   status: CrdStatusType
@@ -779,6 +782,9 @@ type Query {
 
   """通道详情"""
   channel(name: String!): Channel!
+
+  """通道连接文件（target：组织、节点）"""
+  channelProfile(name: String!, organization: String!, peer: String!): String
 
   """我参与的通道(区块链浏览器)"""
   channels: [Channel!]

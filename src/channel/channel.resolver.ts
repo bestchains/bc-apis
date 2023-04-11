@@ -75,6 +75,19 @@ export class ChannelResolver {
     return this.channelService.updateMemberChannel(auth, name, members);
   }
 
+  @Query(() => String, {
+    nullable: true,
+    description: '通道连接文件（target：组织、节点）',
+  })
+  async channelProfile(
+    @Auth() auth: JwtAuth,
+    @Args('name') name: string,
+    @Args('organization') org: string,
+    @Args('peer') peer: string,
+  ): Promise<string> {
+    return this.channelService.getChannelProfile(auth, name, org, peer);
+  }
+
   @ResolveField(() => Boolean, {
     description: '是否为我创建的',
   })
@@ -148,6 +161,7 @@ export class ChannelResolver {
   @ResolveField(() => String, {
     nullable: true,
     description: '通道连接文件',
+    deprecationReason: '替代为query channelProfile()',
   })
   async profileJson(
     @Auth() auth: JwtAuth,
@@ -183,5 +197,24 @@ export class ChannelResolver {
     return await this.chaincodeService.getChaincodes(auth, {
       channel: name,
     });
+  }
+
+  @ResolveField(() => [Organization], {
+    nullable: true,
+    description: '用户作为admin管理的组织',
+  })
+  async adminOrganizations(
+    @Auth() auth: JwtAuth,
+    @Parent() channel: Channel,
+    @Loader(OrganizationLoader)
+    orgLoader: DataLoader<Organization['name'], Organization>,
+  ): Promise<Organization[]> {
+    const { members } = channel;
+    const { preferred_username } = auth;
+    const orgs = await orgLoader.loadMany(members?.map((m) => m.name));
+    const adminMembers = (orgs as Organization[])?.filter(
+      (m) => m.admin === preferred_username,
+    );
+    return adminMembers;
   }
 }
