@@ -38,7 +38,7 @@ export class OrganizationResolver {
     @Args('admin', { nullable: true, description: '根据组织管理员搜索' })
     admin: string,
   ): Promise<Organization[]> {
-    return this.orgService.getOrganizations(auth, admin);
+    return this.orgService.getOrganizationsForList(auth, admin);
   }
 
   @Query(() => Organization, { description: '组织详情' })

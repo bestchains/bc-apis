@@ -63,6 +63,19 @@ export class OrganizationService {
     return orgs.items.map((org) => this.format(org));
   }
 
+  async getOrganizationsForList(
+    auth: JwtAuth,
+    admin?: string,
+  ): Promise<Organization[]> {
+    const { preferred_username } = auth;
+    const orgs = await this.getOrganizations(auth, admin);
+    return orgs.filter(
+      (org) =>
+        org.admin === preferred_username ||
+        (org.clients || []).includes(preferred_username),
+    );
+  }
+
   async getOrganization(auth: JwtAuth, name: string): Promise<Organization> {
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.organization.read(name);

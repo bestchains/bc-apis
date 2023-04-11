@@ -66,14 +66,6 @@ mutation updateMemberChannel($name: String!, $members: [String!]!) {
   channelMemberUpdate(name: $name, members: $members)
 }
 
-# 通道连接文件
-query getChannelProfile($name: String!) {
-  channel(name: $name) {
-    name
-    profileJson
-  }
-}
-
 # 通道中的Admin组织（用户作为admin管理的组织）
 query getChannelAdminOrganizations($name: String!) {
   channel(name: $name) {

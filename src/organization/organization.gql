@@ -91,3 +91,19 @@ query getIbppeersForCreateChannel($members: [String!]!) {
     }
   }
 }
+
+# 概览页面
+query getOverviewInfo{
+  organizations {
+    name
+    ibppeers {
+      name
+    }
+  }
+  federations {
+    name
+  }
+  networks {
+    name
+  }
+}
