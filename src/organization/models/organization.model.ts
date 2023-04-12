@@ -27,6 +27,9 @@ export class Organization {
   /** 成员 */
   users?: User[];
 
+  /** 我是否参与（作为组织的Admin或Client） */
+  iAmIn?: boolean;
+
   /** Users | ServiceAccounts */
   @HideField()
   clients?: string[];

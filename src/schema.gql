@@ -626,6 +626,9 @@ type Organization {
   """所在联盟"""
   federations: [String!]
 
+  """我是否参与（作为组织的Admin或Client）"""
+  iAmIn: Boolean
+
   """所有节点"""
   ibppeers: [Ibppeer!]
 

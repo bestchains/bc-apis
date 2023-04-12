@@ -7,6 +7,7 @@ query getOrganizations($admin: String) {
     creationTimestamp
     lastHeartbeatTime
     admin
+    iAmIn
     status
     reason
     networks {
@@ -25,6 +26,7 @@ query getOrganization($name: String!) {
     creationTimestamp
     lastHeartbeatTime
     admin
+    iAmIn
     status
     reason
     networks {
@@ -96,6 +98,7 @@ query getIbppeersForCreateChannel($members: [String!]!) {
 query getOverviewInfo{
   organizations {
     name
+    iAmIn
     ibppeers {
       name
     }
