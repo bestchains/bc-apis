@@ -38,7 +38,7 @@ export class OrganizationResolver {
     @Args('admin', { nullable: true, description: '根据组织管理员搜索' })
     admin: string,
   ): Promise<Organization[]> {
-    return this.orgService.getOrganizationsForList(auth, admin);
+    return this.orgService.getOrganizations(auth, admin);
   }
 
   @Query(() => Organization, { description: '组织详情' })
@@ -108,6 +108,21 @@ export class OrganizationResolver {
         joinedAt,
       };
     });
+  }
+
+  @ResolveField(() => Boolean, {
+    description: '我是否参与（作为组织的Admin或Client）',
+  })
+  async iAmIn(
+    @Auth() auth: JwtAuth,
+    @Parent() org: Organization,
+  ): Promise<boolean> {
+    const { preferred_username } = auth;
+    const { admin, clients } = org;
+    return (
+      admin === preferred_username ||
+      (clients || []).includes(preferred_username)
+    );
   }
 
   @ResolveField(() => [Network], {
