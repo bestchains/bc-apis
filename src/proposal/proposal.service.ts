@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { get } from 'lodash';
+import { get, uniq } from 'lodash';
 import { camelCaseToKebabCase, genNanoid } from 'src/common/utils';
 import { KubernetesService } from 'src/kubernetes/kubernetes.service';
 import { CRD } from 'src/kubernetes/lib';
@@ -64,7 +64,7 @@ export class ProposalService {
       return [...p, ...ps];
     }, []);
     return Promise.all(
-      (proposalNames as string[])?.map((p) => this.getProposal(auth, p)),
+      (uniq(proposalNames) as string[])?.map((p) => this.getProposal(auth, p)),
     );
   }
 
