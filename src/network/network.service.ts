@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { compact, uniq } from 'lodash';
 import { ChaincodeService } from 'src/chaincode/chaincode.service';
@@ -12,7 +6,6 @@ import { Chaincode } from 'src/chaincode/models/chaincode.model';
 import { ChaincodebuildService } from 'src/chaincodebuild/chaincodebuild.service';
 import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import {
-  CustomException,
   DEFAULT_INGRESS_CLASS,
   DEFAULT_STORAGE_CLASS,
   genNanoid,
@@ -186,15 +179,6 @@ export class NetworkService {
     federation: string,
     initiator: string,
   ): Promise<boolean> {
-    // 0. 检查是否可以解散网络
-    const { channelNames } = await this.getNetwork(auth, name);
-    if (channelNames && channelNames.length > 0) {
-      throw new CustomException(
-        'FORBIDDEN_CHANNEL_IN_NETWORK',
-        'channels still exist in the network',
-        HttpStatus.FORBIDDEN,
-      );
-    }
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,
@@ -212,15 +196,6 @@ export class NetworkService {
   }
 
   async deleteNetwork(auth: JwtAuth, name: string): Promise<K8sV1Status> {
-    // 0. 检查是否可以删除网络
-    const { channelNames } = await this.getNetwork(auth, name);
-    if (channelNames && channelNames.length > 0) {
-      throw new CustomException(
-        'FORBIDDEN_CHANNEL_IN_NETWORK',
-        'channels still exist in the network',
-        HttpStatus.FORBIDDEN,
-      );
-    }
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.network.delete(name);
     return body;
