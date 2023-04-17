@@ -108,8 +108,8 @@ mutation createNetwork($network: NewNetworkInput!) {
 }
 
 # 释放网络
-mutation dissolveNetwork($name: String!, $federation: String!, $initiator: String!) {
-  networkDissolve(name: $name, federation: $federation, initiator: $initiator)
+mutation dissolveNetwork($name: String!, $federation: String!) {
+  networkDissolve(name: $name, federation: $federation)
 }
 
 # 删除网络

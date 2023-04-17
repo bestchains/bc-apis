@@ -376,9 +376,6 @@ type Mutation {
   networkDissolve(
     """所属联盟"""
     federation: String!
-
-    """网络发起者（组织）"""
-    initiator: String!
     name: String!
   ): Boolean!
 
