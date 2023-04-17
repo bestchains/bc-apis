@@ -7,6 +7,7 @@ query getChannel($name: String!) {
     creationTimestamp
     epolicy {
       name
+      displayName
       description
       creationTimestamp
     }
