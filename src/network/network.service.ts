@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { compact, uniq } from 'lodash';
 import { ChaincodeService } from 'src/chaincode/chaincode.service';
@@ -177,15 +183,28 @@ export class NetworkService {
     auth: JwtAuth,
     name: string,
     federation: string,
-    initiator: string,
   ): Promise<boolean> {
+    // 0. 当前用户的组织作为发起者
+    const { preferred_username } = auth;
+    const orgs = await this.orgService.getOrganizations(auth);
+    const initiator = orgs.find(
+      (org) =>
+        (org?.admin === preferred_username ||
+          org?.clients?.includes(preferred_username)) &&
+        org.federations?.includes(federation),
+    );
+
+    if (!initiator) {
+      throw new InternalServerErrorException('The initiator is invalid.');
+    }
+
     // 1. 发起提案
     await this.proposalService.createProposal(
       auth,
       ProposalType.DissolveNetworkProposal,
       {
         federation,
-        initiator,
+        initiator: initiator?.name,
         network: name,
       },
     );

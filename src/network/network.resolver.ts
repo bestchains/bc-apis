@@ -60,14 +60,8 @@ export class NetworkResolver {
     @Auth() auth: JwtAuth,
     @Args('name') name: string,
     @Args('federation', { description: '所属联盟' }) federation: string,
-    @Args('initiator', { description: '网络发起者（组织）' }) initiator: string,
   ): Promise<boolean> {
-    return this.networkService.dissolveNetwork(
-      auth,
-      name,
-      federation,
-      initiator,
-    );
+    return this.networkService.dissolveNetwork(auth, name, federation);
   }
 
   @Mutation(() => K8sV1Status, { description: '删除网络' })
