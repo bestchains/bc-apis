@@ -32,6 +32,7 @@ import { ChaincodeModule } from './chaincode/chaincode.module';
 import { ChaincodebuildModule } from './chaincodebuild/chaincodebuild.module';
 import { RealtimeLogModule } from './realtime-log/realtime-log.module';
 import { PodModule } from './pod/pod.module';
+import { ContractModule } from './contract/contract.module';
 import imageConfig from './config/image.config';
 import minioConfig from './config/minio.config';
 
@@ -107,6 +108,7 @@ const GRAPHQL_PATH = '/bff';
     ChaincodebuildModule,
     RealtimeLogModule,
     PodModule,
+    ContractModule,
   ],
   controllers: [AppController],
   providers: [

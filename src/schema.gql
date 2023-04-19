@@ -130,6 +130,27 @@ input ChannelPeer {
   namespace: String!
 }
 
+"""智能合约"""
+type Contract {
+  """描述"""
+  description: String!
+
+  """来源"""
+  from: String!
+
+  """name"""
+  name: ID!
+
+  """项目"""
+  package: String!
+
+  """状态"""
+  status: String!
+
+  """版本"""
+  version: String!
+}
+
 """IBPCR 状态"""
 enum CrdStatusType {
   """ChannelArchived"""
@@ -294,6 +315,15 @@ type K8sV1StatusDetails {
   kind: String
   name: String
   uid: String
+}
+
+"""可切换的语言"""
+enum Lang {
+  """英文"""
+  en
+
+  """中文"""
+  zh
 }
 
 type MinIO {
@@ -791,6 +821,12 @@ type Query {
 
   """创建策略时，可选的通道"""
   channelsForCreateEpolicy(network: String!): [Channel!]!
+
+  """智能合约列表"""
+  contracts(
+    """本地语言"""
+    lang: Lang
+  ): [Contract!]
 
   """策略列表"""
   epolicies(network: String): [Epolicy!]!

@@ -1,0 +1,11 @@
+# 获取智能合约列表
+query getContracts($lang: Lang){
+  contracts(lang: $lang) {
+    name
+    version
+    from
+    description
+    package
+    status
+  }
+}
