@@ -32,3 +32,7 @@ export const NETWORK_VERSION_RESOURCES = {
 };
 
 export const MINIO_BUCKET_NAME = 'bestchains';
+
+export const BESTCHAINS_CONTRACTS_BUCKET = 'official-contracts';
+export const BESTCHAINS_CONTRACTS_GIT =
+  'https://raw.githubusercontent.com/bestchains/bestchains-contracts/main/';
