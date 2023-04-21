@@ -138,6 +138,9 @@ type Contract {
   """来源"""
   from: String!
 
+  """接口"""
+  interfaces: [ContractInterface!]
+
   """name"""
   name: ID!
 
@@ -149,6 +152,20 @@ type Contract {
 
   """版本"""
   version: String!
+}
+
+type ContractInterface {
+  """参数"""
+  args: [String!]!
+
+  """条件"""
+  condition: String!
+
+  """简介"""
+  description: String!
+
+  """名称"""
+  name: String!
 }
 
 """IBPCR 状态"""

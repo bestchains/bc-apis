@@ -7,6 +7,12 @@ query getContracts($lang: Lang){
     description
     package
     status
+    interfaces {
+      name
+      args
+      description
+      condition
+    }
   }
 }
 
