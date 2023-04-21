@@ -120,7 +120,6 @@ export class ChaincodebuildService {
       network,
       fileRelativePaths,
     } = chaincodebuild;
-    const { name: initiator } = await this.selectInitiator(auth, network);
 
     // 1. 上传文件到MinIO
     const exist = await this.minioService.bucketExists(MINIO_BUCKET_NAME);
@@ -168,6 +167,25 @@ export class ChaincodebuildService {
       }
     }
 
+    // 2. 创建合约
+    return this.createChaincodebuildCR(auth, objectName, {
+      network,
+      version,
+      description,
+      displayName,
+    });
+  }
+
+  async createChaincodebuildCR(
+    auth: JwtAuth,
+    minioObjectName: string,
+    chaincodebuild: Pick<
+      NewChaincodebuild,
+      'network' | 'version' | 'displayName' | 'description'
+    >,
+  ): Promise<Chaincodebuild> {
+    const { displayName, version, description, network } = chaincodebuild;
+    const { name: initiator } = await this.selectInitiator(auth, network);
     const metadataName = genNanoid('chaincodebuild');
     const k8s = await this.k8sService.getClient(auth);
     const { body } = await k8s.chaincodeBuild.create({
@@ -186,12 +204,12 @@ export class ChaincodebuildService {
         pipelineRunSpec: {
           minio: {
             bucket: MINIO_BUCKET_NAME,
-            object: objectName,
+            object: minioObjectName,
           },
           dockerBuild: {
             appImage: `${this.imgConfig.namespace}/${metadataName}:${version}`,
-            context: `${MINIO_BUCKET_NAME}/${objectName}`,
-            dockerfile: `${MINIO_BUCKET_NAME}/${objectName}/Dockerfile`,
+            context: `${MINIO_BUCKET_NAME}/${minioObjectName}`,
+            dockerfile: `${MINIO_BUCKET_NAME}/${minioObjectName}/Dockerfile`,
             pushSecret: 'dockerhub-secret',
           },
         },

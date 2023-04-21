@@ -1,4 +1,4 @@
-# 获取智能合约列表
+# 获取官方合约列表
 query getContracts($lang: Lang){
   contracts(lang: $lang) {
     name
@@ -8,4 +8,9 @@ query getContracts($lang: Lang){
     package
     status
   }
+}
+
+# 导入官方合约
+mutation importContract($name: String!, $network: String!) {
+  contractImport(name: $name, network: $network)
 }

@@ -356,6 +356,9 @@ type Mutation {
   """加入/去除Peer节点"""
   channelUpdate(channel: UpdateChannel!, name: String!): Channel!
 
+  """导入官方合约到网络"""
+  contractImport(name: String!, network: String!): Boolean
+
   """创建策略"""
   epolicyCreate(epolicy: NewEpolicyInput!): Epolicy!
 
@@ -822,7 +825,7 @@ type Query {
   """创建策略时，可选的通道"""
   channelsForCreateEpolicy(network: String!): [Channel!]!
 
-  """智能合约列表"""
+  """官方合约列表"""
   contracts(
     """本地语言"""
     lang: Lang
