@@ -54,4 +54,29 @@ export class MinioService {
   ): Promise<UploadedObjectInfo> {
     return this.minioClient.putObject(bucket, name, stream);
   }
+
+  async fgetObject(
+    bucket: string,
+    name: string,
+    filePath: string,
+  ): Promise<void> {
+    return this.minioClient.fGetObject(bucket, name, filePath);
+  }
+
+  async fputObject(
+    bucket: string,
+    name: string,
+    filePath: string,
+  ): Promise<UploadedObjectInfo> {
+    return this.minioClient.fPutObject(bucket, name, filePath);
+  }
+
+  async copyObject(
+    bucket: string,
+    name: string,
+    targetPath: string,
+  ): Promise<Minio.BucketItemCopy> {
+    const conds = new Minio.CopyConditions();
+    return this.minioClient.copyObject(bucket, name, targetPath, conds);
+  }
 }
