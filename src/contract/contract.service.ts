@@ -45,11 +45,14 @@ export class ContractService {
           objectName,
         );
         const chunks = [];
+        let size = 0;
         dataStream.on('data', (chunk) => {
           chunks.push(chunk);
+          size += chunk.length;
         });
         dataStream.on('end', () => {
-          resolve(chunks.toString());
+          const bufs = Buffer.concat(chunks, size);
+          resolve(bufs.toString());
         });
         dataStream.on('error', (e) => {
           this.logger.error(e.stack);
@@ -100,7 +103,7 @@ export class ContractService {
   ): Promise<boolean> {
     // 0. 获取详情
     const contracts = await this.getContracts(Lang.en);
-    const contract = contracts.find((d) => d.name === name);
+    const contract = contracts?.find((d) => d.name === name);
     if (!contract) {
       throw new CustomException(
         'FORBIDDEN_CONTRACT_NOT_EXIST',
