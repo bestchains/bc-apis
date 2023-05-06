@@ -26,6 +26,14 @@ export class FederationService {
   private logger = new Logger('FederationService');
 
   format(fed: CRD.Federation): Federation {
+    const endAt =
+      fed.metadata?.annotations?.[
+        'bestchains.federation.creation.proposal.endAt'
+      ];
+    const isExpired =
+      fed.status?.type === CrdStatusType.FederationPending &&
+      endAt &&
+      Math.floor(Date.now() / 1000) > endAt;
     return {
       name: fed.metadata.name,
       description: fed.spec?.description,
@@ -36,7 +44,7 @@ export class FederationService {
         fed.metadata?.creationTimestamp,
       ).toISOString(),
       policy: fed.spec?.policy,
-      status: fed.status?.type,
+      status: isExpired ? CrdStatusType.FederationFailed : fed.status?.type,
     };
   }
 
