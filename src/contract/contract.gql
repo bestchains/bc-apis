@@ -16,6 +16,24 @@ query getContracts($lang: Lang){
   }
 }
 
+# 获取官方合约详情
+query getContract($name: String!, $lang: Lang){
+  contract(name: $name, lang: $lang) {
+    name
+    version
+    from
+    description
+    package
+    status
+    interfaces {
+      name
+      args
+      description
+      condition
+    }
+  }
+}
+
 # 导入官方合约
 mutation importContract($name: String!, $network: String!) {
   contractImport(name: $name, network: $network)

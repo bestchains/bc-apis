@@ -96,6 +96,19 @@ export class ContractService {
     }
   }
 
+  async getContract(name: string, lang?: Lang): Promise<Contract> {
+    const contracts = await this.getContracts(lang);
+    const contract = contracts?.find((d) => d.name === name);
+    if (!contract) {
+      throw new CustomException(
+        'FORBIDDEN_CONTRACT_NOT_EXIST',
+        'the contract does not exist',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    return contract;
+  }
+
   async importContract(
     auth: JwtAuth,
     name: string,
