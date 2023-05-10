@@ -842,6 +842,13 @@ type Query {
   """创建策略时，可选的通道"""
   channelsForCreateEpolicy(network: String!): [Channel!]!
 
+  """官方合约详情"""
+  contract(
+    """本地语言"""
+    lang: Lang
+    name: String!
+  ): Contract
+
   """官方合约列表"""
   contracts(
     """本地语言"""

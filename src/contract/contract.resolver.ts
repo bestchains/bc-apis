@@ -17,6 +17,15 @@ export class ContractResolver {
     return this.contractService.getContracts(lang);
   }
 
+  @Query(() => Contract, { nullable: true, description: '官方合约详情' })
+  async contract(
+    @Args('name') name: string,
+    @Args('lang', { type: () => Lang, nullable: true, description: '本地语言' })
+    lang: Lang,
+  ): Promise<Contract> {
+    return this.contractService.getContract(name, lang);
+  }
+
   @Mutation(() => Boolean, {
     nullable: true,
     description: '导入官方合约到网络',
