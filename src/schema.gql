@@ -132,6 +132,9 @@ input ChannelPeer {
 
 """智能合约"""
 type Contract {
+  """发布时间"""
+  createdAt: String!
+
   """描述"""
   description: String!
 
@@ -141,6 +144,9 @@ type Contract {
   """接口"""
   interfaces: [ContractInterface!]
 
+  """语言"""
+  language: String!
+
   """name"""
   name: ID!
 
@@ -149,6 +155,9 @@ type Contract {
 
   """状态"""
   status: String!
+
+  """更新时间"""
+  updatedAt: String!
 
   """版本"""
   version: String!

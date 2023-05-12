@@ -4,6 +4,9 @@ query getContracts($lang: Lang){
     name
     version
     from
+    language
+    createdAt
+    updatedAt
     description
     package
     status
@@ -22,6 +25,9 @@ query getContract($name: String!, $lang: Lang){
     name
     version
     from
+    language
+    createdAt
+    updatedAt
     description
     package
     status

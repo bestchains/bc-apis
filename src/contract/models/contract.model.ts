@@ -12,6 +12,15 @@ export class Contract {
   /** 来源 */
   from: string;
 
+  /** 语言 */
+  language: string;
+
+  /** 发布时间 */
+  createdAt: string;
+
+  /** 更新时间 */
+  updatedAt: string;
+
   /** 描述 */
   description: string;
 
