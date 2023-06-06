@@ -50,11 +50,13 @@ export class FederationService {
 
   async federations(auth: JwtAuth): Promise<Federation[]> {
     const { preferred_username } = auth;
-    const adminOrgs = await this.organizationService.getOrganizations(
-      auth,
-      preferred_username,
+    const orgs = await this.organizationService.getOrganizations(auth);
+    const myOrgs = orgs?.filter(
+      (org) =>
+        org?.admin === preferred_username ||
+        org?.clients?.includes(preferred_username),
     );
-    const fedNames = adminOrgs?.reduce((p, o) => {
+    const fedNames = myOrgs?.reduce((p, o) => {
       const feds = o.federations || [];
       return p.concat(feds);
     }, []);
