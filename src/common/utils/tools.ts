@@ -1,10 +1,12 @@
 import * as jwt from 'jsonwebtoken';
 import { Jwt } from 'jsonwebtoken';
 import { customAlphabet } from 'nanoid';
+import { BinaryLike, createHash } from 'node:crypto';
 import { numbers, lowercase } from 'nanoid-dictionary';
 import { TokenException } from './errors';
 import type { JwtAuth, Request } from '../../types';
 import { compact, isEqual, uniqWith } from 'lodash';
+import { Readable } from 'node:stream';
 
 /**
  * 从 token 中解析用户认证信息
@@ -90,3 +92,38 @@ export const genNanoid = (prefix: string) => `${prefix}-${nanoid()}`;
  */
 export const flattenArr = (arr: any[][]) =>
   uniqWith(compact(arr.flat()), isEqual);
+
+/**
+ * 根据内容生成hash
+ * @param {BinaryLike} data
+ * @returns
+ */
+export const genContentHash = (data: BinaryLike) => {
+  const hash = createHash('sha256');
+  hash.update(data);
+  return hash.digest('hex');
+};
+
+/**
+ * 根据内容生成hash
+ * @param {Readable} readable
+ * @returns
+ */
+export const genContentHashByReadable = (
+  readable: Readable,
+): Promise<string> => {
+  const hash = createHash('sha256');
+  return new Promise((resolve, reject) => {
+    const stream = readable.pipe(hash).setEncoding('hex');
+    let data = '';
+    stream.on('data', (d) => {
+      data += d;
+    });
+    stream.on('end', () => {
+      resolve(data);
+    });
+    stream.on('error', (e) => {
+      reject(e);
+    });
+  });
+};
