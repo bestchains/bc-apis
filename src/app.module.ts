@@ -35,8 +35,7 @@ import { PodModule } from './pod/pod.module';
 import { ContractModule } from './contract/contract.module';
 import imageConfig from './config/image.config';
 import minioConfig from './config/minio.config';
-
-const GRAPHQL_PATH = '/bff';
+import { GRAPHQL_PATH } from './common/utils';
 
 @Module({
   imports: [

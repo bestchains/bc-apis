@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import * as ejs from 'ejs';
 import * as graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { AppModule } from './app.module';
-import { IS_PROD, LOG_LEVELS } from './common/utils/constants';
+import { GRAPHQL_PATH, IS_PROD, LOG_LEVELS } from './common/utils/constants';
 import { ValidationPipe } from './common/pipes/validation.pipe';
 import { WsAdapter } from '@nestjs/platform-ws';
 
@@ -28,7 +28,10 @@ async function bootstrap() {
       crossOriginEmbedderPolicy: false,
     }),
   );
-  app.use(graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 100 }));
+  app.use(
+    GRAPHQL_PATH,
+    graphqlUploadExpress({ maxFileSize: 1000000, maxFiles: 100 }),
+  );
 
   await app.listen(8024);
   console.log(`bc-apis is running on: ${await app.getUrl()}`);

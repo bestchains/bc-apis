@@ -1,15 +1,21 @@
 import {
   Controller,
   Get,
+  Post,
   InternalServerErrorException,
   Logger,
   Query,
   Res,
   StreamableFile,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { MinioService } from './minio.service';
 import * as archiver from 'archiver';
 import { Response } from 'src/types';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
+import { genContentHash, DEPOSITORY_BUCKET_NAME } from 'src/common/utils';
 
 @Controller('minio')
 export class MinioController {
@@ -68,5 +74,28 @@ export class MinioController {
       `attachment;filename="${object}.zip"`,
     );
     return new StreamableFile(archive);
+  }
+
+  @Post('/upload')
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 1000000 } }))
+  async upload(@UploadedFile() file: Express.Multer.File) {
+    const exist = await this.minioService.bucketExists(DEPOSITORY_BUCKET_NAME);
+    if (!exist) {
+      await this.minioService.makeBucket(DEPOSITORY_BUCKET_NAME);
+    }
+
+    const { originalname, buffer } = file;
+    const lastN = originalname.lastIndexOf('.');
+    const suffix = lastN > 0 ? originalname.substring(lastN) : '';
+    const hashFilename = genContentHash(buffer) + suffix;
+
+    await this.minioService.putObject(
+      DEPOSITORY_BUCKET_NAME,
+      hashFilename,
+      buffer,
+    );
+    return {
+      id: hashFilename,
+    };
   }
 }

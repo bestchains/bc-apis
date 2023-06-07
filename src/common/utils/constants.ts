@@ -6,6 +6,8 @@ export const IS_PROD = env.NODE_ENV === 'production';
 
 export const LOG_LEVELS = env.LOG_LEVELS || 'log,error,warn';
 
+export const GRAPHQL_PATH = '/bff';
+
 export const DEFAULT_STORAGE_CLASS = env.DEFAULT_STORAGE_CLASS;
 
 export const DEFAULT_INGRESS_CLASS = env.DEFAULT_INGRESS_CLASS;
@@ -32,6 +34,7 @@ export const NETWORK_VERSION_RESOURCES = {
 };
 
 export const MINIO_BUCKET_NAME = 'bestchains';
+export const DEPOSITORY_BUCKET_NAME = 'depository';
 
 export const BESTCHAINS_CONTRACTS_BUCKET = 'official-contracts';
 export const BESTCHAINS_CONTRACTS_GIT =

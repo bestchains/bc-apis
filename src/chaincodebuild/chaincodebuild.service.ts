@@ -12,6 +12,7 @@ import { K8sV1Status } from 'src/common/models/k8s-v1-status.model';
 import { SpecMember } from 'src/common/models/spec-member.model';
 import {
   CustomException,
+  genContentHashByReadable,
   genNanoid,
   MINIO_BUCKET_NAME,
 } from 'src/common/utils';
@@ -130,13 +131,12 @@ export class ChaincodebuildService {
     let objectName: string;
     if (file) {
       const { createReadStream, filename } = await file;
+      const hash = await genContentHashByReadable(createReadStream());
       const lastN = filename.lastIndexOf('.');
       const hashFilename =
         lastN > 0
-          ? `${filename.slice(0, lastN)}-${Date.now()}${filename.substring(
-              lastN,
-            )}`
-          : `${filename}-${Date.now()}`;
+          ? `${filename.slice(0, lastN)}-${hash}${filename.substring(lastN)}`
+          : `${filename}-${hash}`;
       objectName = hashFilename;
       await this.minioService.putObject(
         MINIO_BUCKET_NAME,
