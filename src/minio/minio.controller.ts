@@ -9,6 +9,7 @@ import {
   StreamableFile,
   UseInterceptors,
   UploadedFile,
+  Body,
 } from '@nestjs/common';
 import { MinioService } from './minio.service';
 import * as archiver from 'archiver';
@@ -16,6 +17,7 @@ import { Response } from 'src/types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { genContentHash, DEPOSITORY_BUCKET_NAME } from 'src/common/utils';
+import { UploadDto } from './dto/upload.dto';
 
 @Controller('minio')
 export class MinioController {
@@ -78,10 +80,14 @@ export class MinioController {
 
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 1000000 } }))
-  async upload(@UploadedFile() file: Express.Multer.File) {
-    const exist = await this.minioService.bucketExists(DEPOSITORY_BUCKET_NAME);
+  async upload(
+    @Body() body: UploadDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const { bucket = DEPOSITORY_BUCKET_NAME } = body;
+    const exist = await this.minioService.bucketExists(bucket);
     if (!exist) {
-      await this.minioService.makeBucket(DEPOSITORY_BUCKET_NAME);
+      await this.minioService.makeBucket(bucket);
     }
 
     const { originalname, buffer } = file;
@@ -89,11 +95,7 @@ export class MinioController {
     const suffix = lastN > 0 ? originalname.substring(lastN) : '';
     const hashFilename = genContentHash(buffer) + suffix;
 
-    await this.minioService.putObject(
-      DEPOSITORY_BUCKET_NAME,
-      hashFilename,
-      buffer,
-    );
+    await this.minioService.putObject(bucket, hashFilename, buffer);
     return {
       id: hashFilename,
     };
