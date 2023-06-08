@@ -54,6 +54,9 @@ export class AllExceptionFilter implements GqlExceptionFilter {
       if (exception.extensions?.exception) {
         exception.extensions.exception.stacktrace = exception.stack.split('\n');
       }
+      if (exception.response) {
+        exception.originalError = exception.response;
+      }
     }
     const req = httpHost.getRequest();
     Logger.error(
