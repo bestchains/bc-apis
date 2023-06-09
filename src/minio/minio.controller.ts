@@ -31,7 +31,7 @@ export class MinioController {
     @Query('object') object: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const isFile = /^.+\d+\.\w+$/.test(object);
+    const isFile = /^.+\.\w+$/.test(object);
     if (isFile) {
       const stream = await this.minioService.getObject(bucket, object);
       response.setHeader('Content-Type', 'application/octet-stream');
