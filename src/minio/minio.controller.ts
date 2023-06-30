@@ -79,7 +79,7 @@ export class MinioController {
   }
 
   @Post('/upload')
-  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 1000000 } }))
+  @UseInterceptors(FileInterceptor('file', { limits: { fileSize: 10000000 } }))
   async upload(
     @Body() body: UploadDto,
     @UploadedFile() file: Express.Multer.File,
@@ -93,7 +93,10 @@ export class MinioController {
     const { originalname, buffer } = file;
     const lastN = originalname.lastIndexOf('.');
     const suffix = lastN > 0 ? originalname.substring(lastN) : '';
-    const hashFilename = genContentHash(buffer) + suffix;
+    // bucket depository 存证文件不需要后缀，不提供下载功能
+    const hashFilename = `${genContentHash(buffer)}${
+      bucket === DEPOSITORY_BUCKET_NAME ? '' : suffix
+    }`;
 
     await this.minioService.putObject(bucket, hashFilename, buffer);
     return {
